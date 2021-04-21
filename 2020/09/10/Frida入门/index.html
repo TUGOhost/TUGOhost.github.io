@@ -4,15 +4,24 @@
   <meta charset="utf-8">
   
   
-  <title>TUGOhost&#39;s Blog</title>
+  <title>Frida入门 | TUGOhost&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="TUGOhost&#39;s Blog">
-<meta property="og:url" content="http://example.com/index.html">
+  <meta name="description" content="Frida 安装pyenv参考这个链接即可：https:&#x2F;&#x2F;gist.github.com&#x2F;cedricbonhomme&#x2F;ababe00d0a675ea5c69d777276e8f375 123456789101112131415161718192021# Installation of a decent editor, emacs$ sudo apt install emacs# Prerequ">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Frida入门">
+<meta property="og:url" content="http://example.com/2020/09/10/Frida%E5%85%A5%E9%97%A8/index.html">
 <meta property="og:site_name" content="TUGOhost&#39;s Blog">
+<meta property="og:description" content="Frida 安装pyenv参考这个链接即可：https:&#x2F;&#x2F;gist.github.com&#x2F;cedricbonhomme&#x2F;ababe00d0a675ea5c69d777276e8f375 123456789101112131415161718192021# Installation of a decent editor, emacs$ sudo apt install emacs# Prerequ">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2020/09/10/Frida%E5%85%A5%E9%97%A8/497.png">
+<meta property="og:image" content="http://example.com/2020/09/10/Frida%E5%85%A5%E9%97%A8/498.png">
+<meta property="og:image" content="http://example.com/2020/09/10/Frida%E5%85%A5%E9%97%A8/499.png">
+<meta property="article:published_time" content="2020-09-10T03:11:07.000Z">
+<meta property="article:modified_time" content="2021-04-21T03:13:21.983Z">
 <meta property="article:author" content="tu9oh0st">
+<meta property="article:tag" content="安卓逆向">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2020/09/10/Frida%E5%85%A5%E9%97%A8/497.png">
   
     <link rel="alternate" href="/atom.xml" title="TUGOhost's Blog" type="application/atom+xml">
   
@@ -69,154 +78,7 @@
 </header>
 
       <div class="outer">
-        <section id="main">
-  
-    <article id="post-hello-world" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2021/04/21/hello-world/" class="article-date">
-  <time class="dt-published" datetime="2021-04-21T02:42:05.728Z" itemprop="datePublished">2021-04-21</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2021/04/21/hello-world/">Hello World</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h1 id="Hello-World"><a href="#Hello-World" class="headerlink" title="Hello World"></a>Hello World</h1>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2021/04/21/hello-world/" data-id="cknqup47j0000vq754gdk7fxt" data-title="Hello World" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-编译Xposed并魔改去特征" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2020/12/24/%E7%BC%96%E8%AF%91Xposed%E5%B9%B6%E9%AD%94%E6%94%B9%E5%8E%BB%E7%89%B9%E5%BE%81/" class="article-date">
-  <time class="dt-published" datetime="2020-12-24T03:01:22.000Z" itemprop="datePublished">2020-12-24</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2020/12/24/%E7%BC%96%E8%AF%91Xposed%E5%B9%B6%E9%AD%94%E6%94%B9%E5%8E%BB%E7%89%B9%E5%BE%81/">编译Xposed并魔改去特征</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><p>ubuntu 16.04</p>
-<p>aosp7.1.2r8源码</p>
-<h2 id="编译Xposed"><a href="#编译Xposed" class="headerlink" title="编译Xposed"></a>编译Xposed</h2><p>首先需要将xposed相关项目都clone到本地</p>
-<blockquote>
-<p><a target="_blank" rel="noopener" href="https://github.com/rovo89/Xposed.git">https://github.com/rovo89/Xposed.git</a></p>
-<p><a target="_blank" rel="noopener" href="https://github.com/rovo89/XposedBridge.git">https://github.com/rovo89/XposedBridge.git</a></p>
-<p><a target="_blank" rel="noopener" href="https://github.com/rovo89/android_art.git">https://github.com/rovo89/android_art.git</a></p>
-<p><a target="_blank" rel="noopener" href="https://github.com/rovo89/XposedTools.git">https://github.com/rovo89/XposedTools.git</a></p>
-<p><a target="_blank" rel="noopener" href="https://github.com/rovo89/XposedInstaller.git">https://github.com/rovo89/XposedInstaller.git</a></p>
-</blockquote>
-<h3 id="XposedBridge"><a href="#XposedBridge" class="headerlink" title="XposedBridge"></a>XposedBridge</h3><p>使用AS打开XposedBridge项目，直接build，在项目的<code>app/build/outputs/apk</code>下将<code>app-release-unsigned.apk</code>重命名为<code>XposedBridge.jar</code>。</p>
-<p>将这个jar包放在aosp源码目录下的<code>/out/target/product/sailfish/system/framework/</code>目录下。</p>
-<p>/out/java/</p>
-<h3 id="android-art"><a href="#android-art" class="headerlink" title="android_art"></a>android_art</h3><p>将该项目直接替换源码目录的art目录</p>
-<h3 id="Xposed"><a href="#Xposed" class="headerlink" title="Xposed"></a>Xposed</h3><p>将xposed目录复制到<code>aosp712r8/frameworks/base/cmds/</code>目录下</p>
-<h3 id="XposedTools"><a href="#XposedTools" class="headerlink" title="XposedTools"></a>XposedTools</h3><p>复制<code>build.conf.sample</code>并重命名为<code>build.conf</code></p>
-<p>修改其中内容：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">[General]</span><br><span class="line">outdir &#x3D; &#x2F;home&#x2F;tg&#x2F;Desktop&#x2F;COMPILE&#x2F;aosp712r8&#x2F;out</span><br><span class="line">javadir &#x3D; &#x2F;home&#x2F;tg&#x2F;Desktop&#x2F;COMPILE&#x2F;aosp712r8&#x2F;out&#x2F;java</span><br><span class="line"></span><br><span class="line">[Build]</span><br><span class="line"># Please keep the base version number and add your custom suffix</span><br><span class="line">version &#x3D; 89 (custom build by TG &#x2F; %s)</span><br><span class="line"># makeflags &#x3D; -j4</span><br><span class="line"></span><br><span class="line">[GPG]</span><br><span class="line">sign &#x3D; release</span><br><span class="line">user &#x3D; 852109AA!</span><br><span class="line"></span><br><span class="line"># Root directories of the AOSP source tree per SDK version</span><br><span class="line">[AospDir]</span><br><span class="line">25 &#x3D; &#x2F;home&#x2F;tg&#x2F;Desktop&#x2F;COMPILE&#x2F;aosp712r8</span><br><span class="line"># SDKs to be used for compiling BusyBox</span><br><span class="line"># Needs https:&#x2F;&#x2F;github.com&#x2F;rovo89&#x2F;android_external_busybox</span><br><span class="line">[BusyBox]</span><br><span class="line">arm &#x3D; 25</span><br><span class="line">x86 &#x3D; 25</span><br><span class="line">armv5 &#x3D; 25</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>outdir指向的路径是xposed编译之后生成的文件的存放路径。<br>version的值和后边的参数是自己设置的。编译之后会写入到xposed.prop文件中。<br>makeflags是设置在后边编译过程中使用的线程数。<br>AospDir指向的路径是android源码存放的路径，前边的值是源码对应的SDK的版本号。这里我指向的是android5.1.1的源码，对应的android sdk的版本是22。</p>
-</blockquote>
-<p>修改完之后需要下载一些perl的库。</p>
-<blockquote>
-<p>sudo apt-get install libauthen-ntlm-perl libclass-load-perl libcrypt-ssleay-perl libdata-uniqid-perl libdigest-hmac-perl libdist-checkconflicts-perl libfile-copy-recursive-perl libfile-tail-perl</p>
-<p>perl -MCPAN -e ‘install File::ReadBackwards’</p>
-</blockquote>
-<p>使用build.pl进行编译<code>./build.pl -t arm:25</code></p>
-<p>将生成的xposed.zip发布到web上，以供XposedInstall安装使用。</p>
-<h3 id="XposedInstall"><a href="#XposedInstall" class="headerlink" title="XposedInstall"></a>XposedInstall</h3><p>修改<code>de.robv.android.xppsed.installer.util.DownloadsUtil</code>其中的setUrl函数</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> Builder <span class="title">setUrl</span><span class="params">(String url)</span> </span>&#123;</span><br><span class="line">            <span class="comment">//mUrl = url;</span></span><br><span class="line">    		<span class="comment">// 改成XposedTools生成的XPosed.zip</span></span><br><span class="line">            mUrl = <span class="string">&quot;&quot;</span>;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
-
-<p>然后安装，installXposed即可。</p>
-<p><img src="../images/40.jpg"></p>
-<h2 id="魔改去特征"><a href="#魔改去特征" class="headerlink" title="魔改去特征"></a>魔改去特征</h2><h3 id="XposedInstall-1"><a href="#XposedInstall-1" class="headerlink" title="XposedInstall"></a>XposedInstall</h3><p><img src="../images/507.png"></p>
-<p>直接修改包名即可。</p>
-<p>全局替换<code>de.robv.android.xposed.installer</code>，改为<code>de.robv.android.xppsed.installer</code>。</p>
-<p><code>de.robv.android.xppsed.installer.XposedApp</code>中的<code>XPOSED_PROP_FILES</code>内容改为：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String[] XPOSED_PROP_FILES = <span class="keyword">new</span> String[]&#123;</span><br><span class="line">            <span class="string">&quot;/su/xposed/xppsed.prop&quot;</span>, <span class="comment">// official systemless</span></span><br><span class="line">            <span class="string">&quot;/system/xppsed.prop&quot;</span>,    <span class="comment">// classical</span></span><br><span class="line">    &#125;;</span><br></pre></td></tr></table></figure>
-
-<p>再build-&gt;clean project。</p>
-<h3 id="XposedBridge-art-jar"><a href="#XposedBridge-art-jar" class="headerlink" title="XposedBridge-art.jar"></a>XposedBridge-art.jar</h3><p>替换包名为<code>de.robv.android.xppsed</code>，全局替换<code>de.robv.android.xposed，</code> 改为<code>de.robv.android.xppsed</code>。</p>
-<p>生成出来的jar包也改为<code>XppsedBridge.jar</code>。</p>
-<p>gradle使用<code>jarStubsSorce</code>和<code>jarStubs</code>生产api.jar包，给自己编写Xposed插件使用。</p>
-<h3 id="Xposed-1"><a href="#Xposed-1" class="headerlink" title="Xposed"></a>Xposed</h3><p><code>libxposed_art.cpp</code>改为<code>libxppxosed_art.cpp</code></p>
-<p><code>xposed.h</code></p>
-<figure class="highlight h"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> XPOSED_PROP_FILE <span class="meta-string">&quot;/system/xppsed.prop&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> XPOSED_LIB_ART           XPOSED_LIB_DIR <span class="meta-string">&quot;libxppsed_art.so&quot;</span></span></span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> XPOSED_CLASS_DOTS_ZYGOTE <span class="meta-string">&quot;de.robv.android.xppsed.XposedBridge&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> XPOSED_CLASS_DOTS_TOOLS  <span class="meta-string">&quot;de.robv.android.xppsed.XposedBridge$ToolEntryPoint&quot;</span></span></span><br></pre></td></tr></table></figure>
-
-<p><code>libxposed_common.h</code></p>
-<figure class="highlight h"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> CLASS_XPOSED_BRIDGE  <span class="meta-string">&quot;de/robv/android/xppsed/XposedBridge&quot;</span></span></span><br><span class="line">...</span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> CLASS_ZYGOTE_SERVICE <span class="meta-string">&quot;de/robv/android/xppsed/services/ZygoteService&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> CLASS_FILE_RESULT    <span class="meta-string">&quot;de/robv/android/xppsed/services/FileResult&quot;</span></span></span><br></pre></td></tr></table></figure>
-
-<p><code>xposed_service.cpp</code></p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">IMPLEMENT_META_INTERFACE</span>(XposedService, <span class="string">&quot;de.robv.android.xppsed.IXposedService&quot;</span>);</span><br></pre></td></tr></table></figure>
-
-<p><code>xposed_shared.h</code></p>
-<figure class="highlight h"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> XPOSED_DIR <span class="meta-string">&quot;/data/user_de/0/de.robv.android.xppsed.installer/&quot;</span></span></span><br><span class="line"></span><br><span class="line">...</span><br><span class="line">    </span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> XPOSED_DIR <span class="meta-string">&quot;/data/data/de.robv.android.xppsed.installer/&quot;</span></span></span><br></pre></td></tr></table></figure>
-
-<p><code>ART.mk</code></p>
-<figure class="highlight mk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">LOCAL_SRC_FILES += \</span><br><span class="line">  libxposed_common.cpp \</span><br><span class="line">  libxppsed_art.cpp</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line">LOCAL_MODULE := libxppsed_art</span><br></pre></td></tr></table></figure>
-
-<p>并将<code>libxposed_art.cpp</code>文件名改为<code>libxppsed_art.cpp</code></p>
-<h3 id="XposedTools-1"><a href="#XposedTools-1" class="headerlink" title="XposedTools"></a>XposedTools</h3><p><code>build.pl</code>中的<code>xposed.prop</code>改为<code>xpposed.prop</code>，将<code>libxposed_art</code>改为<code>libxppsed_art</code>，将<code>XposedBridge.jar</code>改为<code>XppsedBridge.jar</code></p>
-<p><code>zipstatic/_all/META-INF/com/google/android/flash-script.sh</code>中将<code>xposed.prop</code>改为<code>xpposed.prop</code>，将<code>libxposed_art</code>改为<code>libxppsed_art</code>，将<code>XposedBridge.jar</code>改为<code>XppsedBridge.jar</code></p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/6471bab49cb1">https://www.jianshu.com/p/6471bab49cb1</a></li>
-<li><a target="_blank" rel="noopener" href="https://bbs.pediy.com/thread-255836.htm">https://bbs.pediy.com/thread-255836.htm</a></li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2020/12/24/%E7%BC%96%E8%AF%91Xposed%E5%B9%B6%E9%AD%94%E6%94%B9%E5%8E%BB%E7%89%B9%E5%BE%81/" data-id="cknqvhkn30000sb754iwe0mx2" data-title="编译Xposed并魔改去特征" class="article-share-link">Share</a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%AE%89%E5%8D%93%E9%80%86%E5%90%91/" rel="tag">安卓逆向</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-Frida入门" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+        <section id="main"><article id="post-Frida入门" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2020/09/10/Frida%E5%85%A5%E9%97%A8/" class="article-date">
   <time class="dt-published" datetime="2020-09-10T03:11:07.000Z" itemprop="datePublished">2020-09-10</time>
@@ -229,8 +91,8 @@
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2020/09/10/Frida%E5%85%A5%E9%97%A8/">Frida入门</a>
+    <h1 class="p-name article-title" itemprop="headline name">
+      Frida入门
     </h1>
   
 
@@ -295,11 +157,23 @@
     </footer>
   </div>
   
-</article>
-
-
+    
+<nav id="article-nav">
+  
+    <a href="/2020/12/24/%E7%BC%96%E8%AF%91Xposed%E5%B9%B6%E9%AD%94%E6%94%B9%E5%8E%BB%E7%89%B9%E5%BE%81/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          编译Xposed并魔改去特征
+        
+      </div>
+    </a>
+  
+  
+</nav>
 
   
+</article>
 
 
 </section>
