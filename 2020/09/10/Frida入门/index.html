@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Frida入门 | TUGOhost</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Frida 安装pyenv参考这个链接即可：https:&#x2F;&#x2F;gist.github.com&#x2F;cedricbonhomme&#x2F;ababe00d0a675ea5c69d777276e8f375 123456789101112131415161718192021# Installation of a decent editor, emacs$ sudo apt install emacs# Prerequ">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Frida入门">
+<meta property="og:url" content="http://tugohost.github.io.com/2020/09/10/Frida%E5%85%A5%E9%97%A8/index.html">
+<meta property="og:site_name" content="TUGOhost">
+<meta property="og:description" content="Frida 安装pyenv参考这个链接即可：https:&#x2F;&#x2F;gist.github.com&#x2F;cedricbonhomme&#x2F;ababe00d0a675ea5c69d777276e8f375 123456789101112131415161718192021# Installation of a decent editor, emacs$ sudo apt install emacs# Prerequ">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://tugohost.github.io.com/2020/09/10/Frida%E5%85%A5%E9%97%A8/1.png">
+<meta property="og:image" content="http://tugohost.github.io.com/2020/09/10/Frida%E5%85%A5%E9%97%A8/2.png">
+<meta property="og:image" content="http://tugohost.github.io.com/2020/09/10/Frida%E5%85%A5%E9%97%A8/3.png">
+<meta property="article:published_time" content="2020-09-10T02:28:25.000Z">
+<meta property="article:modified_time" content="2022-10-06T14:45:41.295Z">
+<meta property="article:author" content="TUGOhost">
+<meta property="article:tag" content="逆向">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://tugohost.github.io.com/2020/09/10/Frida%E5%85%A5%E9%97%A8/1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="TUGOhost" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">TUGOhost</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://TUGOhost.github.io.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-Frida入门" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/09/10/Frida%E5%85%A5%E9%97%A8/" class="article-date">
+  <time class="dt-published" datetime="2020-09-10T02:28:25.000Z" itemprop="datePublished">2020-09-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      Frida入门
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="Frida-安装"><a href="#Frida-安装" class="headerlink" title="Frida 安装"></a>Frida 安装</h2><h3 id="pyenv"><a href="#pyenv" class="headerlink" title="pyenv"></a>pyenv</h3><p>参考这个链接即可：<a target="_blank" rel="noopener" href="https://gist.github.com/cedricbonhomme/ababe00d0a675ea5c69d777276e8f375">https://gist.github.com/cedricbonhomme/ababe00d0a675ea5c69d777276e8f375</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"># Installation of a decent editor, emacs</span><br><span class="line">$ sudo apt install emacs</span><br><span class="line"></span><br><span class="line"># Prerequisites to build Python</span><br><span class="line">$ sudo apt install make build-essential libssl-dev zlib1g-dev libbz2-dev \</span><br><span class="line">libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \</span><br><span class="line">xz-utils tk-dev libffi-dev liblzma-dev python-openssl</span><br><span class="line"></span><br><span class="line"># Installation of pyenv</span><br><span class="line">$ curl https://pyenv.run | bash</span><br><span class="line"></span><br><span class="line"># Always use the latest stable version of Python</span><br><span class="line">$ pyenv install 3.8.0</span><br><span class="line">$ pyenv global 3.8.0</span><br><span class="line"></span><br><span class="line"># Installation of pipx</span><br><span class="line">$ python -m pip install --user pipx</span><br><span class="line">$ python -m userpath append ~/.local/bin</span><br><span class="line"></span><br><span class="line"># Installation of poetry</span><br><span class="line">$ curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python</span><br></pre></td></tr></table></figure>
+<h3 id="新建一个Android项目"><a href="#新建一个Android项目" class="headerlink" title="新建一个Android项目"></a>新建一个Android项目</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> myapplication.example.com.frida_demo;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> androidx.appcompat.app.AppCompatActivity;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.os.Bundle;</span><br><span class="line"><span class="keyword">import</span> android.util.Log;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MainActivity</span> <span class="keyword">extends</span> <span class="title class_">AppCompatActivity</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="type">String</span> <span class="variable">total</span> <span class="operator">=</span> <span class="string">&quot;@@@###@@@&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">onCreate</span><span class="params">(Bundle savedInstanceState)</span> &#123;</span><br><span class="line">        <span class="built_in">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span>(<span class="literal">true</span>)&#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                Thread.sleep(<span class="number">1000</span>);</span><br><span class="line">            &#125;<span class="keyword">catch</span> (InterruptedException e)&#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">            fun(<span class="number">50</span>, <span class="number">30</span>);</span><br><span class="line">            Log.d(<span class="string">&quot;T.G.string&quot;</span>, fun(<span class="string">&quot;LoWeRcAsE Me!!!!!!!!&quot;</span>));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">fun</span><span class="params">(<span class="type">int</span> x,<span class="type">int</span> y)</span>&#123;</span><br><span class="line">        Log.d(<span class="string">&quot;T.G.Sum&quot;</span>, String.valueOf(x + y));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    String <span class="title function_">fun</span><span class="params">(String x)</span>&#123;</span><br><span class="line">        total += x;</span><br><span class="line">        <span class="keyword">return</span> total.toLowerCase();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    String <span class="title function_">secret</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> total;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>功能主要是打印日志。</p>
+<p>执行命令即可看到</p>
+<blockquote>
+<p>adb logcat | grep T.G.string</p>
+</blockquote>
+<p><img src="/2020/09/10/Frida%E5%85%A5%E9%97%A8/1.png"></p>
+<h2 id="Frida使用"><a href="#Frida使用" class="headerlink" title="Frida使用"></a>Frida使用</h2><p>首先需要在firda的releases界面中找到测试机的abi版本注意需要是server端。</p>
+<p>firda releases：<a target="_blank" rel="noopener" href="https://github.com/frida/frida/releases">https://github.com/frida/frida/releases</a></p>
+<p>将下载好的frida-server push到手机上</p>
+<blockquote>
+<p>adb push frida-server &#x2F;data&#x2F;local&#x2F;tmp&#x2F;</p>
+</blockquote>
+<p>frida的开发环境：<a target="_blank" rel="noopener" href="https://github.com/oleavr/frida-agent-example">https://github.com/oleavr/frida-agent-example</a></p>
+<p>按照官方中的教程：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ git clone git://github.com/oleavr/frida-agent-example.git</span><br><span class="line">$ cd frida-agent-example/</span><br><span class="line">$ npm install</span><br><span class="line">$ frida -U -f com.example.android --no-pause -l _agent.js</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>在<code>agent</code>目录下创建<code>s1.js</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;Script loaded successfully &quot;</span>);</span><br><span class="line"><span class="title class_">Java</span>.<span class="title function_">perform</span>(<span class="keyword">function</span> <span class="title function_">x</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;Inside java perform function&quot;</span>);</span><br><span class="line">    <span class="comment">//定位类</span></span><br><span class="line">    <span class="keyword">var</span> my_class = <span class="title class_">Java</span>.<span class="title function_">use</span>(<span class="string">&quot;myapplication.example.com.frida_demo.MainActivity&quot;</span>);</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;Java.Use.Successfully!&quot;</span>);<span class="comment">//定位类成功！</span></span><br><span class="line">    <span class="keyword">var</span> string_class = <span class="title class_">Java</span>.<span class="title function_">use</span>(<span class="string">&quot;java.lang.String&quot;</span>); <span class="comment">//获取String类型</span></span><br><span class="line"></span><br><span class="line">    my_class.<span class="property">fun</span>.<span class="title function_">overload</span>(<span class="string">&quot;java.lang.String&quot;</span>).<span class="property">implementation</span> = <span class="keyword">function</span> (<span class="params">x</span>) &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;*************************************&quot;</span>);</span><br><span class="line">        <span class="keyword">var</span> my_string = string_class.$new(<span class="string">&quot;My TeSt String#####&quot;</span>); <span class="comment">//new一个新字符串</span></span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;Original arg: &quot;</span> + x);</span><br><span class="line">        <span class="keyword">var</span> ret = <span class="variable language_">this</span>.<span class="title function_">fun</span>(my_string); <span class="comment">// 用新的参数替换旧的参数，然后调用原函数获取结果</span></span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;Return value: &quot;</span> + ret);</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;*************************************&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> ret;</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="comment">//在这里更改类的方法的实现（implementation）</span></span><br><span class="line">    my_class.<span class="property">fun</span>.<span class="property">implementation</span> = <span class="keyword">function</span> (<span class="params">x, y</span>) &#123;</span><br><span class="line">        <span class="comment">//打印替换前的参数</span></span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;original call: fun(&quot;</span> + x + <span class="string">&quot;, &quot;</span> + y + <span class="string">&quot;)&quot;</span>);</span><br><span class="line">        <span class="comment">//把参数替换成2和5，依旧调用原函数</span></span><br><span class="line">        <span class="keyword">var</span> ret_value = <span class="variable language_">this</span>.<span class="title function_">fun</span>(<span class="number">2</span>, <span class="number">5</span>);</span><br><span class="line">        <span class="keyword">return</span> ret_value;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>调用js脚本的<code>loader.py</code>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> frida</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">my_message_handler</span>(<span class="params">message , payload</span>): <span class="comment">#定义错误处理</span></span><br><span class="line">	<span class="built_in">print</span>(message)</span><br><span class="line">	<span class="built_in">print</span>(payload)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 连接安卓机上的frida-server</span></span><br><span class="line">device = frida.get_usb_device()</span><br><span class="line"><span class="comment"># 启动`demo02`这个app</span></span><br><span class="line">pid = device.spawn([<span class="string">&quot;myapplication.example.com.frida_demo&quot;</span>])</span><br><span class="line">device.resume(pid)</span><br><span class="line">time.sleep(<span class="number">1</span>)</span><br><span class="line">session = device.attach(pid)</span><br><span class="line"><span class="comment"># 加载s1.js脚本</span></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&quot;s1.js&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    script = session.create_script(f.read())</span><br><span class="line">script.on(<span class="string">&quot;message&quot;</span>, my_message_handler)</span><br><span class="line">script.load()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 脚本会持续运行等待输入</span></span><br><span class="line"><span class="built_in">input</span>()</span><br></pre></td></tr></table></figure>
+
+<p>然后adb shell 进入手机，不过frida需要root，需要事先root的手机。</p>
+<p>执行命令：</p>
+<blockquote>
+<p>chmod +x frida-server</p>
+<p>.&#x2F;frida-server</p>
+</blockquote>
+<p>在客户端（也就是自己的电脑）输入<code>frida-ps U </code>检测frida-server是否运行成功。</p>
+<p><img src="/2020/09/10/Frida%E5%85%A5%E9%97%A8/2.png"></p>
+<p>运行<code>python3 loader.py</code></p>
+<p><img src="/2020/09/10/Frida%E5%85%A5%E9%97%A8/3.png"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://tugohost.github.io.com/2020/09/10/Frida%E5%85%A5%E9%97%A8/" data-id="cl8x7xxbd0008e8756lo57534" data-title="Frida入门" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%80%86%E5%90%91/" rel="tag">逆向</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/11/10/Frida_%E5%AE%89%E8%A3%85/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Frida 安装
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E5%88%87%E7%89%87%E7%9A%84%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0%E5%92%8C%E5%9F%BA%E7%A1%80%E5%8A%9F%E8%83%BD/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Go语言中切片的内部实现和基础功能</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CTF/" rel="tag">CTF</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Golang/" rel="tag">Golang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LLVM/" rel="tag">LLVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8/" rel="tag">安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%BC%8F%E6%B4%9E/" rel="tag">漏洞</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%9E%8E%E6%8A%98%E8%85%BE/" rel="tag">瞎折腾</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%80%86%E5%90%91/" rel="tag">逆向</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Android/" style="font-size: 15px;">Android</a> <a href="/tags/C/" style="font-size: 12.5px;">C++</a> <a href="/tags/CTF/" style="font-size: 10px;">CTF</a> <a href="/tags/Golang/" style="font-size: 17.5px;">Golang</a> <a href="/tags/LLVM/" style="font-size: 15px;">LLVM</a> <a href="/tags/%E5%AE%89%E5%85%A8/" style="font-size: 10px;">安全</a> <a href="/tags/%E6%BC%8F%E6%B4%9E/" style="font-size: 10px;">漏洞</a> <a href="/tags/%E7%9E%8E%E6%8A%98%E8%85%BE/" style="font-size: 10px;">瞎折腾</a> <a href="/tags/%E9%80%86%E5%90%91/" style="font-size: 20px;">逆向</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">October 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/06/">June 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">April 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">January 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">December 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">October 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/09/">September 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">February 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/10/06/KUbuntu%2020%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/">KUbuntu20 环境配置</a>
+          </li>
+        
+          <li>
+            <a href="/2022/06/09/LLVM_IR%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/">LLVM从小白到放弃（三）- LLVM IR概述与常用指令</a>
+          </li>
+        
+          <li>
+            <a href="/2022/06/08/LLVM_Pass/">LLVM从小白到放弃（二）- LLVM Pass</a>
+          </li>
+        
+          <li>
+            <a href="/2022/04/22/Android%E5%8A%A0%E8%BD%BDSO%E6%95%B4%E4%B8%AA%E6%B5%81%E7%A8%8B/">Android加载SO整个流程</a>
+          </li>
+        
+          <li>
+            <a href="/2022/04/14/LLVM%E6%A6%82%E8%BF%B0%E4%B8%8ELLVM%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/">LLVM从小白到放弃（一）- LLVM概述与LLVM环境搭建</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2022 TUGOhost<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

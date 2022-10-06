@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Go语言中的打包和工具链 | TUGOhost</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="包所有Go语言的程序都会组织成若干组文件，每组文件被称为一个包。这样每个包的代码都可以作为很小的复用单元，被其他项目引用。 包名惯例给包命名的惯例是使用包所在目录的名字。并不需要所有包的名字都与别的包不同，因为导入包时是使用全路径的，所以可以区分同名的不同包。 main包Go语言的编译程序会试图把这种名字的包编译为二进制可执行文件。所有用Go语言编译的可执行程序都必须有一个名为main的包。  命">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Go语言中的打包和工具链">
+<meta property="og:url" content="http://tugohost.github.io.com/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E7%9A%84%E6%89%93%E5%8C%85%E5%92%8C%E5%B7%A5%E5%85%B7%E9%93%BE/index.html">
+<meta property="og:site_name" content="TUGOhost">
+<meta property="og:description" content="包所有Go语言的程序都会组织成若干组文件，每组文件被称为一个包。这样每个包的代码都可以作为很小的复用单元，被其他项目引用。 包名惯例给包命名的惯例是使用包所在目录的名字。并不需要所有包的名字都与别的包不同，因为导入包时是使用全路径的，所以可以区分同名的不同包。 main包Go语言的编译程序会试图把这种名字的包编译为二进制可执行文件。所有用Go语言编译的可执行程序都必须有一个名为main的包。  命">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://tugohost.github.io.com/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E7%9A%84%E6%89%93%E5%8C%85%E5%92%8C%E5%B7%A5%E5%85%B7%E9%93%BE/1.png">
+<meta property="article:published_time" content="2019-05-20T02:28:25.000Z">
+<meta property="article:modified_time" content="2022-10-06T14:35:58.822Z">
+<meta property="article:author" content="TUGOhost">
+<meta property="article:tag" content="Golang">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://tugohost.github.io.com/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E7%9A%84%E6%89%93%E5%8C%85%E5%92%8C%E5%B7%A5%E5%85%B7%E9%93%BE/1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="TUGOhost" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">TUGOhost</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://TUGOhost.github.io.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-Go语言中的打包和工具链" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E7%9A%84%E6%89%93%E5%8C%85%E5%92%8C%E5%B7%A5%E5%85%B7%E9%93%BE/" class="article-date">
+  <time class="dt-published" datetime="2019-05-20T02:28:25.000Z" itemprop="datePublished">2019-05-20</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      Go语言中的打包和工具链
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="包"><a href="#包" class="headerlink" title="包"></a>包</h2><p>所有Go语言的程序都会组织成若干组文件，每组文件被称为一个包。这样每个包的代码都可以作为很小的复用单元，被其他项目引用。</p>
+<h3 id="包名惯例"><a href="#包名惯例" class="headerlink" title="包名惯例"></a>包名惯例</h3><p>给包命名的惯例是使用包所在目录的名字。并不需要所有包的名字都与别的包不同，因为导入包时是使用全路径的，所以可以区分同名的不同包。</p>
+<h3 id="main包"><a href="#main包" class="headerlink" title="main包"></a>main包</h3><p>Go语言的编译程序会试图把这种名字的包编译为二进制可执行文件。所有用Go语言编译的可执行程序都必须有一个名为main的包。</p>
+<hr>
+<p><code>命令和包</code> Go文档里经常使用命令（command）这个词来指代可执行程序，如命令行应用程序。这会让新手在阅读文档时产生困惑。记住，在Go语言里，命令是指任何可执行程序。作为对比，包更常用来指语义上可导入的功能单元。</p>
+<hr>
+<h2 id="导入"><a href="#导入" class="headerlink" title="导入"></a>导入</h2><p><code>import</code>语句告诉编译器到磁盘的哪里去找想要导入的包。导入包需要使用关键字import，它会告诉编译器你想引用该位置的包内的代码。如果需要导入多个包，习惯上是将import语句包装在一个导入块中：</p>
+<p><code>import (	&quot;fmt&quot;	&quot;net/http&quot;	&quot;github.com/PuerkitoBio/goquery&quot;	&quot;strconv&quot;)</code></p>
+<p>标准库中的包会在安装Go的位置找到。Go开发者创建的包会在GOPATH环境变量指定的目录里查找。</p>
+<h3 id="远程导入"><a href="#远程导入" class="headerlink" title="远程导入"></a>远程导入</h3><p>目前的大趋势是，使用分布式版本控制系统（DVCS）来分析代码，如GitHub。Go语言的工具链本身就支持从这些网站及类似网站获取源代码。Go工具链会使用导入路径确定需要获取的代码在网络的什么地方。<br>例如：</p>
+<p><code>import &quot;github.com/PuerkitoBio/goquery&quot;</code></p>
+<p>如果路径包含URL，可以使用Go工具链从DVCS获取包，并把包的源代码保存在GOPATH指向的路径里与URL匹配的目录里。这个获取过程使用<code>go get</code>命令完成。go get将获取任意指定的URL的包，或者一个已经导入的包所依赖的其他包。</p>
+<h3 id="命名导入"><a href="#命名导入" class="headerlink" title="命名导入"></a>命名导入</h3><p>崇明的包可以通过命名导入来导入。命名导入时指，在import语句给出的包路径的左侧定义一个名字，将导入的包命名为新名字。<br>例如：</p>
+<p><code>package mainimport &#123;    &quot;fmt&quot;    myfmt &quot;mylib/fmt&quot;&#125;func main()&#123;    fmt.Println(&quot;Standard Library&quot;)    myfmt.Println(&quot;mylib/fmt&quot;)&#125;</code></p>
+<p>当你导入了一个不在代码里使用的包时，Go编译器会编译失败，并输出一个错误。<br>有时，用户可能需要导入一个包，但是不需要引用这个包的标识符。在这种情况下，可以使用空白标识符<code>_</code>来重命名这个导入。</p>
+<hr>
+<p><code>空白标识符</code> 下划线字符（_）在Go语言里称为空白标识符，有很多用法。这个标识符用来抛弃不想继续使用的值，如给导入的包赋予一个空名字，或者忽略函数返回的你不感兴趣的值。</p>
+<hr>
+<h2 id="函数init"><a href="#函数init" class="headerlink" title="函数init"></a>函数init</h2><p>每个包可以包含任意多个init函数，这些函数都会在程序执行开始的时候被调用。所有被编译器发现的init函数都会安排在main函数之前执行。init函数用在设置包、初始化变量或者其他要在程序运行前优先完成的引导工作。</p>
+<h2 id="使用Go的工具"><a href="#使用Go的工具" class="headerlink" title="使用Go的工具"></a>使用Go的工具</h2><p><code>go</code><br><img src="/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E7%9A%84%E6%89%93%E5%8C%85%E5%92%8C%E5%B7%A5%E5%85%B7%E9%93%BE/1.png"></p>
+<p><code>go build</code>编译程序。<br><code>go clean</code>删除编译生成的可执行文件。<br><code>go run</code>会先构建.go文件里包含的程序，然后执行构建后的程序。</p>
+<h2 id="进一步介绍Go开发工具"><a href="#进一步介绍Go开发工具" class="headerlink" title="进一步介绍Go开发工具"></a>进一步介绍Go开发工具</h2><h3 id="go-vet"><a href="#go-vet" class="headerlink" title="go vet"></a>go vet</h3><p>vet命令会帮开发人员检测代码的常见错误。</p>
+<h3 id="Go代码格式化"><a href="#Go代码格式化" class="headerlink" title="Go代码格式化"></a>Go代码格式化</h3><p>fmt命令自动格式化开发人员指定的源代码文件并保存。</p>
+<h3 id="Go语言的文档"><a href="#Go语言的文档" class="headerlink" title="Go语言的文档"></a>Go语言的文档</h3><p>go doc</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://tugohost.github.io.com/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E7%9A%84%E6%89%93%E5%8C%85%E5%92%8C%E5%B7%A5%E5%85%B7%E9%93%BE/" data-id="cl8x7xxbl000ne8750gylcub4" data-title="Go语言中的打包和工具链" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Golang/" rel="tag">Golang</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E6%95%B0%E7%BB%84%E7%9A%84%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0%E5%92%8C%E5%9F%BA%E7%A1%80%E5%8A%9F%E8%83%BD/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Go语言中数组的内部实现和基础功能
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/05/18/Golang%E8%AF%AD%E8%A8%80%E7%BB%86%E8%8A%82%E5%B0%8F%E7%BB%93/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Golang语言细节小结</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CTF/" rel="tag">CTF</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Golang/" rel="tag">Golang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LLVM/" rel="tag">LLVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8/" rel="tag">安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%BC%8F%E6%B4%9E/" rel="tag">漏洞</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%9E%8E%E6%8A%98%E8%85%BE/" rel="tag">瞎折腾</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%80%86%E5%90%91/" rel="tag">逆向</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Android/" style="font-size: 15px;">Android</a> <a href="/tags/C/" style="font-size: 12.5px;">C++</a> <a href="/tags/CTF/" style="font-size: 10px;">CTF</a> <a href="/tags/Golang/" style="font-size: 17.5px;">Golang</a> <a href="/tags/LLVM/" style="font-size: 15px;">LLVM</a> <a href="/tags/%E5%AE%89%E5%85%A8/" style="font-size: 10px;">安全</a> <a href="/tags/%E6%BC%8F%E6%B4%9E/" style="font-size: 10px;">漏洞</a> <a href="/tags/%E7%9E%8E%E6%8A%98%E8%85%BE/" style="font-size: 10px;">瞎折腾</a> <a href="/tags/%E9%80%86%E5%90%91/" style="font-size: 20px;">逆向</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">October 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/06/">June 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">April 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">January 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">December 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">October 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/09/">September 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">February 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/10/06/KUbuntu%2020%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/">KUbuntu20 环境配置</a>
+          </li>
+        
+          <li>
+            <a href="/2022/06/09/LLVM_IR%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/">LLVM从小白到放弃（三）- LLVM IR概述与常用指令</a>
+          </li>
+        
+          <li>
+            <a href="/2022/06/08/LLVM_Pass/">LLVM从小白到放弃（二）- LLVM Pass</a>
+          </li>
+        
+          <li>
+            <a href="/2022/04/22/Android%E5%8A%A0%E8%BD%BDSO%E6%95%B4%E4%B8%AA%E6%B5%81%E7%A8%8B/">Android加载SO整个流程</a>
+          </li>
+        
+          <li>
+            <a href="/2022/04/14/LLVM%E6%A6%82%E8%BF%B0%E4%B8%8ELLVM%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/">LLVM从小白到放弃（一）- LLVM概述与LLVM环境搭建</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2022 TUGOhost<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

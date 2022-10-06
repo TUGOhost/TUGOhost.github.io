@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>CISCN2018-WP | TUGOhost</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="MISC验证码用token登录 输入好验证码就可以得到flag  Picture图片隐写，一下就想到binwalk或者winhex打开试试  binwalk打开无果   将这段数据ctrl+shift+c复制出来 用下面python脚本生成zip文件。 123456789101112131415161718import zlib&#96;import binasciiimport base64id&#x3D;””r">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CISCN2018-WP">
+<meta property="og:url" content="http://tugohost.github.io.com/2018/04/30/CISCN2018-WP/index.html">
+<meta property="og:site_name" content="TUGOhost">
+<meta property="og:description" content="MISC验证码用token登录 输入好验证码就可以得到flag  Picture图片隐写，一下就想到binwalk或者winhex打开试试  binwalk打开无果   将这段数据ctrl+shift+c复制出来 用下面python脚本生成zip文件。 123456789101112131415161718import zlib&#96;import binasciiimport base64id&#x3D;””r">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://tugohost.github.io.com/2018/04/30/CISCN2018-WP/1.png">
+<meta property="og:image" content="http://tugohost.github.io.com/2018/04/30/CISCN2018-WP/2.png">
+<meta property="og:image" content="http://tugohost.github.io.com/2018/04/30/CISCN2018-WP/3.jpg">
+<meta property="og:image" content="http://tugohost.github.io.com/2018/04/30/CISCN2018-WP/3.png">
+<meta property="og:image" content="http://tugohost.github.io.com/2018/04/30/CISCN2018-WP/1.jpg">
+<meta property="og:image" content="http://tugohost.github.io.com/2018/04/30/CISCN2018-WP/4.png">
+<meta property="og:image" content="http://tugohost.github.io.com/2018/04/30/CISCN2018-WP/2.jpg">
+<meta property="og:image" content="http://tugohost.github.io.com/2018/04/30/CISCN2018-WP/5.png">
+<meta property="og:image" content="http://tugohost.github.io.com/2018/04/30/CISCN2018-WP/4.jpg">
+<meta property="og:image" content="http://tugohost.github.io.com/2018/04/30/CISCN2018-WP/6.png">
+<meta property="og:image" content="http://tugohost.github.io.com/2018/04/30/CISCN2018-WP/7.png">
+<meta property="og:image" content="http://tugohost.github.io.com/2018/04/30/CISCN2018-WP/5.jpg">
+<meta property="og:image" content="http://tugohost.github.io.com/2018/04/30/CISCN2018-WP/6.jpg">
+<meta property="og:image" content="http://tugohost.github.io.com/2018/04/30/CISCN2018-WP/7.jpg">
+<meta property="og:image" content="http://tugohost.github.io.com/2018/04/30/CISCN2018-WP/8.jpg">
+<meta property="og:image" content="http://tugohost.github.io.com/2018/04/30/CISCN2018-WP/9.jpg">
+<meta property="og:image" content="http://tugohost.github.io.com/2018/04/30/CISCN2018-WP/8.png">
+<meta property="og:image" content="http://tugohost.github.io.com/2018/04/30/CISCN2018-WP/9.png">
+<meta property="og:image" content="http://tugohost.github.io.com/2018/04/30/CISCN2018-WP/10.png">
+<meta property="og:image" content="http://tugohost.github.io.com/2018/04/30/CISCN2018-WP/11.png">
+<meta property="og:image" content="http://tugohost.github.io.com/2018/04/30/CISCN2018-WP/10.jpg">
+<meta property="og:image" content="http://tugohost.github.io.com/2018/04/30/CISCN2018-WP/11.jpg">
+<meta property="article:published_time" content="2018-04-30T02:28:25.000Z">
+<meta property="article:modified_time" content="2022-10-06T14:14:29.513Z">
+<meta property="article:author" content="TUGOhost">
+<meta property="article:tag" content="CTF">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://tugohost.github.io.com/2018/04/30/CISCN2018-WP/1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="TUGOhost" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">TUGOhost</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://TUGOhost.github.io.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-CISCN2018-WP" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/04/30/CISCN2018-WP/" class="article-date">
+  <time class="dt-published" datetime="2018-04-30T02:28:25.000Z" itemprop="datePublished">2018-04-30</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      CISCN2018-WP
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="MISC"><a href="#MISC" class="headerlink" title="MISC"></a>MISC</h2><h3 id="验证码"><a href="#验证码" class="headerlink" title="验证码"></a>验证码</h3><p>用token登录</p>
+<p>输入好验证码就可以得到flag</p>
+<p><img src="/2018/04/30/CISCN2018-WP/1.png"></p>
+<h3 id="Picture"><a href="#Picture" class="headerlink" title="Picture"></a>Picture</h3><p>图片隐写，一下就想到binwalk或者winhex打开试试</p>
+<p><img src="/2018/04/30/CISCN2018-WP/2.png"></p>
+<p>binwalk打开无果</p>
+<p><img src="/2018/04/30/CISCN2018-WP/3.jpg"></p>
+<p><img src="/2018/04/30/CISCN2018-WP/3.png"></p>
+<p>将这段数据ctrl+shift+c复制出来</p>
+<p>用下面python脚本生成zip文件。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">import</span> zlib`</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> binascii</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"></span><br><span class="line"><span class="built_in">id</span>=””</span><br><span class="line"></span><br><span class="line">r = zlib.decompress(binascii.unhexlify(<span class="built_in">id</span>))</span><br><span class="line"></span><br><span class="line">r = base64.b64decode(result)</span><br><span class="line"></span><br><span class="line">fount = <span class="built_in">open</span>(<span class="string">r&quot;2.zip&quot;</span>,<span class="string">&quot;wb&quot;</span>)</span><br><span class="line"></span><br><span class="line">fount.write(r)</span><br><span class="line"></span><br><span class="line">fount.close()</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2018/04/30/CISCN2018-WP/1.jpg"></p>
+<p>压缩包提示。</p>
+<p>根据这个“ZeroDivisionError:”搜索</p>
+<p><img src="/2018/04/30/CISCN2018-WP/4.png"></p>
+<p>然就知道压缩密码了。</p>
+<p><img src="/2018/04/30/CISCN2018-WP/2.jpg"></p>
+<p>打开弹出这个信息。</p>
+<p>然后又拿出winhex看了下</p>
+<p><img src="/2018/04/30/CISCN2018-WP/5.png"></p>
+<p>然后输入压缩密码打开</p>
+<p>发现code文件如下</p>
+<p><img src="/2018/04/30/CISCN2018-WP/4.jpg"></p>
+<p>Uuencode解码即可</p>
+<p>得到flag：</p>
+<p><img src="/2018/04/30/CISCN2018-WP/6.png"></p>
+<h3 id="RUN"><a href="#RUN" class="headerlink" title="RUN"></a>RUN</h3><p><img src="/2018/04/30/CISCN2018-WP/7.png"></p>
+<p>根据提示，要沙箱逃逸？</p>
+<p>然后getshell。</p>
+<p>然后百度谷歌了遍</p>
+<p>命令都是瞎凑的。</p>
+<p><img src="/2018/04/30/CISCN2018-WP/5.jpg"></p>
+<p>然后发现很多库和命令都被ban了。</p>
+<p>逃逸这个词，一开始我不是很理解。</p>
+<p>然后群里管理员说是有点web</p>
+<p>可能这些命令都被‘过滤’了吧。</p>
+<p>然后一个个试绕过。</p>
+<p><img src="/2018/04/30/CISCN2018-WP/6.jpg"></p>
+<p><img src="/2018/04/30/CISCN2018-WP/7.jpg"></p>
+<p>得到flag。</p>
+<p>这里很坑的是func_globals也会被‘过滤’。</p>
+<h2 id="CRYPTO"><a href="#CRYPTO" class="headerlink" title="CRYPTO"></a>CRYPTO</h2><h3 id="flag-in-your-hand"><a href="#flag-in-your-hand" class="headerlink" title="flag_in_your_hand"></a>flag_in_your_hand</h3><p>下载文件解压</p>
+<p>得到html和js</p>
+<p><img src="/2018/04/30/CISCN2018-WP/8.jpg"></p>
+<p><img src="/2018/04/30/CISCN2018-WP/9.jpg"></p>
+<p><img src="/2018/04/30/CISCN2018-WP/8.png"></p>
+<p>算出</p>
+<p><img src="/2018/04/30/CISCN2018-WP/9.png"></p>
+<p>然后有个很坑的地方：这题的flag不是ciscn{}规范的。导致我按了很多次get flag按键，然后随便提交一个，导致被禁赛30min。</p>
+<p><img src="/2018/04/30/CISCN2018-WP/10.png"></p>
+<p>得到flag。</p>
+<h2 id="Web"><a href="#Web" class="headerlink" title="Web"></a>Web</h2><h3 id="easyweb"><a href="#easyweb" class="headerlink" title="easyweb"></a>easyweb</h3><p><img src="/2018/04/30/CISCN2018-WP/11.png"></p>
+<p><img src="/2018/04/30/CISCN2018-WP/10.jpg"></p>
+<p>复制这个token</p>
+<p><img src="/2018/04/30/CISCN2018-WP/11.jpg"></p>
+<p>得到flag。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://tugohost.github.io.com/2018/04/30/CISCN2018-WP/" data-id="cl8x7xxba0003e875g4up2zg9" data-title="CISCN2018-WP" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CTF/" rel="tag">CTF</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/05/18/Golang%E8%AF%AD%E8%A8%80%E7%BB%86%E8%8A%82%E5%B0%8F%E7%BB%93/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Golang语言细节小结
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/02/13/%E8%A1%A5%E5%A4%A9%E4%BB%98%E8%B4%B9%E5%8E%82%E5%95%86%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E5%B0%8F%E6%8A%80%E5%B7%A7/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">补天付费厂商漏洞挖掘小技巧</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CTF/" rel="tag">CTF</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Golang/" rel="tag">Golang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LLVM/" rel="tag">LLVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8/" rel="tag">安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%BC%8F%E6%B4%9E/" rel="tag">漏洞</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%9E%8E%E6%8A%98%E8%85%BE/" rel="tag">瞎折腾</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%80%86%E5%90%91/" rel="tag">逆向</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Android/" style="font-size: 15px;">Android</a> <a href="/tags/C/" style="font-size: 12.5px;">C++</a> <a href="/tags/CTF/" style="font-size: 10px;">CTF</a> <a href="/tags/Golang/" style="font-size: 17.5px;">Golang</a> <a href="/tags/LLVM/" style="font-size: 15px;">LLVM</a> <a href="/tags/%E5%AE%89%E5%85%A8/" style="font-size: 10px;">安全</a> <a href="/tags/%E6%BC%8F%E6%B4%9E/" style="font-size: 10px;">漏洞</a> <a href="/tags/%E7%9E%8E%E6%8A%98%E8%85%BE/" style="font-size: 10px;">瞎折腾</a> <a href="/tags/%E9%80%86%E5%90%91/" style="font-size: 20px;">逆向</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">October 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/06/">June 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">April 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">January 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">December 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">October 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/09/">September 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">February 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/10/06/KUbuntu%2020%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/">KUbuntu20 环境配置</a>
+          </li>
+        
+          <li>
+            <a href="/2022/06/09/LLVM_IR%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/">LLVM从小白到放弃（三）- LLVM IR概述与常用指令</a>
+          </li>
+        
+          <li>
+            <a href="/2022/06/08/LLVM_Pass/">LLVM从小白到放弃（二）- LLVM Pass</a>
+          </li>
+        
+          <li>
+            <a href="/2022/04/22/Android%E5%8A%A0%E8%BD%BDSO%E6%95%B4%E4%B8%AA%E6%B5%81%E7%A8%8B/">Android加载SO整个流程</a>
+          </li>
+        
+          <li>
+            <a href="/2022/04/14/LLVM%E6%A6%82%E8%BF%B0%E4%B8%8ELLVM%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/">LLVM从小白到放弃（一）- LLVM概述与LLVM环境搭建</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2022 TUGOhost<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

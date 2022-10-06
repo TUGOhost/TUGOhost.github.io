@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>LLVM从小白到放弃（三）- LLVM IR概述与常用指令 | TUGOhost</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="LLVM IR概述 优化是对LLVM IR进行操作：   什么是LLVM IR LLVM IR 是一门低级语言，语法类似于汇编 任何高级编程语言（如C++）都可以用LLVM IR表示 基于LLVM IR可以很方便地进行代码优化  LLVM IR的两种表示方法 第一种是人类可以阅读的文本形式，文件后缀为.ll 第二种是易于机器处理的二进制格式，文件后缀为.bc   LLVM IR结构 源代码被编译为">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LLVM从小白到放弃（三）- LLVM IR概述与常用指令">
+<meta property="og:url" content="http://tugohost.github.io.com/2022/06/09/LLVM_IR%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/index.html">
+<meta property="og:site_name" content="TUGOhost">
+<meta property="og:description" content="LLVM IR概述 优化是对LLVM IR进行操作：   什么是LLVM IR LLVM IR 是一门低级语言，语法类似于汇编 任何高级编程语言（如C++）都可以用LLVM IR表示 基于LLVM IR可以很方便地进行代码优化  LLVM IR的两种表示方法 第一种是人类可以阅读的文本形式，文件后缀为.ll 第二种是易于机器处理的二进制格式，文件后缀为.bc   LLVM IR结构 源代码被编译为">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://tugohost.github.io.com/2022/06/09/LLVM_IR%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/1.png">
+<meta property="og:image" content="http://tugohost.github.io.com/2022/06/09/LLVM_IR%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/2.png">
+<meta property="og:image" content="http://tugohost.github.io.com/2022/06/09/LLVM_IR%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/3.png">
+<meta property="og:image" content="http://tugohost.github.io.com/2022/06/09/LLVM_IR%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/4.png">
+<meta property="og:image" content="http://tugohost.github.io.com/2022/06/09/LLVM_IR%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/5.png">
+<meta property="og:image" content="http://tugohost.github.io.com/2022/06/09/LLVM_IR%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/6.png">
+<meta property="article:published_time" content="2022-06-09T02:28:25.000Z">
+<meta property="article:modified_time" content="2022-10-06T15:18:42.652Z">
+<meta property="article:author" content="TUGOhost">
+<meta property="article:tag" content="LLVM">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://tugohost.github.io.com/2022/06/09/LLVM_IR%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="TUGOhost" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">TUGOhost</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://TUGOhost.github.io.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-LLVM_IR概述与常用指令" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/06/09/LLVM_IR%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/" class="article-date">
+  <time class="dt-published" datetime="2022-06-09T02:28:25.000Z" itemprop="datePublished">2022-06-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      LLVM从小白到放弃（三）- LLVM IR概述与常用指令
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h3 id="LLVM-IR概述"><a href="#LLVM-IR概述" class="headerlink" title="LLVM IR概述"></a>LLVM IR概述</h3><ul>
+<li>优化是对LLVM IR进行操作：</li>
+</ul>
+<p><img src="/2022/06/09/LLVM_IR%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/1.png"></p>
+<h4 id="什么是LLVM-IR"><a href="#什么是LLVM-IR" class="headerlink" title="什么是LLVM IR"></a>什么是LLVM IR</h4><ul>
+<li>LLVM IR 是一门低级语言，语法类似于汇编</li>
+<li>任何高级编程语言（如C++）都可以用LLVM IR表示</li>
+<li>基于LLVM IR可以很方便地进行代码优化</li>
+</ul>
+<h4 id="LLVM-IR的两种表示方法"><a href="#LLVM-IR的两种表示方法" class="headerlink" title="LLVM IR的两种表示方法"></a>LLVM IR的两种表示方法</h4><ul>
+<li>第一种是人类可以阅读的文本形式，文件后缀为.ll</li>
+<li>第二种是易于机器处理的二进制格式，文件后缀为.bc</li>
+</ul>
+<p><img src="/2022/06/09/LLVM_IR%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/2.png"></p>
+<h4 id="LLVM-IR结构"><a href="#LLVM-IR结构" class="headerlink" title="LLVM IR结构"></a>LLVM IR结构</h4><ul>
+<li>源代码被编译为LLVM IR后，具有以下结构：</li>
+</ul>
+<p><img src="/2022/06/09/LLVM_IR%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/3.png"></p>
+<h5 id="LLVM-IR结构：模块-Module"><a href="#LLVM-IR结构：模块-Module" class="headerlink" title="LLVM IR结构：模块 Module"></a>LLVM IR结构：模块 Module</h5><ul>
+<li>一个源代码对应LLVM IR中的一个模块。</li>
+<li>头部信息包含程序的目标平台，如X86、ARM等，和一些其他信息。</li>
+<li>全局符号包含全局变量、函数的定义与声明。</li>
+</ul>
+<p><img src="/2022/06/09/LLVM_IR%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/4.png"></p>
+<h5 id="LLVM-IR结构：函数-Function"><a href="#LLVM-IR结构：函数-Function" class="headerlink" title="LLVM IR结构：函数 Function"></a>LLVM IR结构：函数 Function</h5><ul>
+<li>LLVM IR中的函数表示源代码中的某个函数。</li>
+<li>参数，顾名思义为函数的参数。</li>
+<li>一个函数由若干基本块组成，其中函数最先执行的基本块为入口块。</li>
+</ul>
+<p><img src="/2022/06/09/LLVM_IR%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/5.png"></p>
+<h5 id="LLVM-IR结构：基本块-BasicBlock"><a href="#LLVM-IR结构：基本块-BasicBlock" class="headerlink" title="LLVM IR结构：基本块 BasicBlock"></a>LLVM IR结构：基本块 BasicBlock</h5><ul>
+<li>一个基本块由若干个指令和标签组成。</li>
+<li>正常情况下，基本块的最后一条指令为跳转指令（br或者switch），或返回指令（retn），也叫作终结指令（Terminator Instruction）。</li>
+<li>PHI指令是一种特殊的指令。</li>
+</ul>
+<p><img src="/2022/06/09/LLVM_IR%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/6.png"></p>
+<h5 id="LLVM-IR结构-1"><a href="#LLVM-IR结构-1" class="headerlink" title="LLVM IR结构"></a>LLVM IR结构</h5><ul>
+<li>了解LLVM IR的结构是我们学习代码混淆的基础，举个例子<ul>
+<li>以函数为基本单位的混淆：控制流平坦化</li>
+<li>以基本块为基本单位的混淆：虚假控制流</li>
+<li>以指令为基本单位的混淆：指令替代</li>
+</ul>
+</li>
+</ul>
+<h3 id="LLVM-IR常用指令讲解"><a href="#LLVM-IR常用指令讲解" class="headerlink" title="LLVM IR常用指令讲解"></a>LLVM IR常用指令讲解</h3><ul>
+<li><p>终结指令 Terminator Instructions</p>
+<ul>
+<li>ret指令<ul>
+<li>函数返回指令，对应C&#x2F;C++中的return。</li>
+</ul>
+</li>
+<li>br指令<ul>
+<li>br是“分支”的英文branch的缩写，分为非条件分支和条件分支，对应C&#x2F;C++的if语句</li>
+<li>无条件分支类似有x86汇编中的jmp指令，条件分支类似于x86汇编中的jnz，je等条件跳转指令。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>比较指令</p>
+<ul>
+<li>icmp指令<ul>
+<li>整数或指针的比较指令</li>
+<li>条件cond可以是eq（相等），ne（不相等），ugt（无符号相等）</li>
+</ul>
+</li>
+<li>fcmp指令<ul>
+<li>浮点数的比较指令</li>
+<li>条件cond可以是oeq（ordered and equal），ueq（unordered or equal）</li>
+</ul>
+</li>
+<li>switch指令<ul>
+<li>分支指令，可看做是br指令的升级版，支持的分支更多，但使用也更复杂，对应C&#x2F;C++中的switch。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>二元运算 Binary Operations</p>
+<ul>
+<li>add指令</li>
+<li>sub指令</li>
+<li>mul指令</li>
+<li>udiv指令<ul>
+<li>无符号整数除法指令</li>
+</ul>
+</li>
+<li>sdiv指令<ul>
+<li>有符号整数除法指令</li>
+</ul>
+</li>
+<li>urem指令<ul>
+<li>无符号整数取余指令</li>
+</ul>
+</li>
+<li>srem指令<ul>
+<li>有符号整数取余指令</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>按位二元运算 Bitwise Binary Operations</p>
+<ul>
+<li>shl指令<ul>
+<li>整数左移操作指令</li>
+</ul>
+</li>
+<li>lshr指令<ul>
+<li>整数右移指令</li>
+</ul>
+</li>
+<li>ashr指令<ul>
+<li>整数算数右移指令</li>
+</ul>
+</li>
+<li>and指令<ul>
+<li>整数按位与运算指令</li>
+</ul>
+</li>
+<li>or指令<ul>
+<li>整数按位或运算指令</li>
+</ul>
+</li>
+<li>xor指令<ul>
+<li>整数按位异或运算指令</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>内存访问和寻址操作 Memory Access and Addressing Operations</p>
+<ul>
+<li>alloca指令<ul>
+<li>内存分配指令，在栈中分配一块空间并获得指向该空间的指针，类似与C&#x2F;C++中的malloc函数</li>
+</ul>
+</li>
+<li>store指令<ul>
+<li>内存存储指令，向指针指向的内存中存储数据，类似与C&#x2F;C++中的指针引用后的赋值操作</li>
+<li></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>类型转换操作 Conversion Operations</p>
+<ul>
+<li>trunc..to指令<ul>
+<li>截断指令，将一种类型的变量截断为另一种类型的变量。</li>
+</ul>
+</li>
+<li>zext..to指令<ul>
+<li>零扩展指令，将一种类型的变量拓展为另一种类型的变量，高位补0。</li>
+</ul>
+</li>
+<li>sext..to指令<ul>
+<li>符号位拓展指令，通过复制符号位（最高位）将一种类型的变量拓展为另一种类型的变量。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>其他操作 Other Operations</p>
+<ul>
+<li><p>phi指令：由静态单赋值引起的问题</p>
+</li>
+<li><p>select指令</p>
+<ul>
+<li>? : 三元运算符</li>
+</ul>
+</li>
+<li><p>call指令</p>
+<ul>
+<li>call指令用来调用某个函数，对应C&#x2F;C++中的函数调用，与x86汇编中的call指令类似。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://tugohost.github.io.com/2022/06/09/LLVM_IR%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/" data-id="cl8x7xxbk000ke875bz81dfd3" data-title="LLVM从小白到放弃（三）- LLVM IR概述与常用指令" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/LLVM/" rel="tag">LLVM</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2022/10/06/KUbuntu%2020%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          KUbuntu20 环境配置
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2022/06/08/LLVM_Pass/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">LLVM从小白到放弃（二）- LLVM Pass</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CTF/" rel="tag">CTF</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Golang/" rel="tag">Golang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LLVM/" rel="tag">LLVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8/" rel="tag">安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%BC%8F%E6%B4%9E/" rel="tag">漏洞</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%9E%8E%E6%8A%98%E8%85%BE/" rel="tag">瞎折腾</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%80%86%E5%90%91/" rel="tag">逆向</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Android/" style="font-size: 15px;">Android</a> <a href="/tags/C/" style="font-size: 12.5px;">C++</a> <a href="/tags/CTF/" style="font-size: 10px;">CTF</a> <a href="/tags/Golang/" style="font-size: 17.5px;">Golang</a> <a href="/tags/LLVM/" style="font-size: 15px;">LLVM</a> <a href="/tags/%E5%AE%89%E5%85%A8/" style="font-size: 10px;">安全</a> <a href="/tags/%E6%BC%8F%E6%B4%9E/" style="font-size: 10px;">漏洞</a> <a href="/tags/%E7%9E%8E%E6%8A%98%E8%85%BE/" style="font-size: 10px;">瞎折腾</a> <a href="/tags/%E9%80%86%E5%90%91/" style="font-size: 20px;">逆向</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">October 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/06/">June 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">April 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">January 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">December 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">October 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/09/">September 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">February 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/10/06/KUbuntu%2020%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/">KUbuntu20 环境配置</a>
+          </li>
+        
+          <li>
+            <a href="/2022/06/09/LLVM_IR%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/">LLVM从小白到放弃（三）- LLVM IR概述与常用指令</a>
+          </li>
+        
+          <li>
+            <a href="/2022/06/08/LLVM_Pass/">LLVM从小白到放弃（二）- LLVM Pass</a>
+          </li>
+        
+          <li>
+            <a href="/2022/04/22/Android%E5%8A%A0%E8%BD%BDSO%E6%95%B4%E4%B8%AA%E6%B5%81%E7%A8%8B/">Android加载SO整个流程</a>
+          </li>
+        
+          <li>
+            <a href="/2022/04/14/LLVM%E6%A6%82%E8%BF%B0%E4%B8%8ELLVM%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/">LLVM从小白到放弃（一）- LLVM概述与LLVM环境搭建</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2022 TUGOhost<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
