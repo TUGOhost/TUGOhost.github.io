@@ -1,1471 +1,425 @@
 <!DOCTYPE html>
-<html>
+<html lang=en>
 <head>
-  <meta charset="utf-8">
-  
-  
-  <title>TUGOhost</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta property="og:type" content="website">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta property="og:type" content="website">
 <meta property="og:title" content="TUGOhost">
 <meta property="og:url" content="http://tugohost.github.io.com/page/2/index.html">
 <meta property="og:site_name" content="TUGOhost">
 <meta property="og:locale" content="en_US">
 <meta property="article:author" content="TUGOhost">
 <meta name="twitter:card" content="summary">
-  
-    <link rel="alternate" href="/atom.xml" title="TUGOhost" type="application/atom+xml">
-  
-  
-    <link rel="shortcut icon" href="/favicon.png">
-  
-  
     
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
-
-  
-  
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>TUGOhost</title>
+    <!-- styles -->
+    
 <link rel="stylesheet" href="/css/style.css">
 
-  
+    <!-- persian styles -->
     
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
-
-  
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
 <meta name="generator" content="Hexo 6.3.0"></head>
 
-<body>
-  <div id="container">
-    <div id="wrap">
-      <header id="header">
-  <div id="banner"></div>
-  <div id="header-outer" class="outer">
-    <div id="header-title" class="inner">
-      <h1 id="logo-wrap">
-        <a href="/" id="logo">TUGOhost</a>
-      </h1>
-      
+<body class="max-width mx-auto px3 ltr">
+    
+    <div class="content index py4">
+        
+          <header id="header">
+  <a href="/">
+  
+    
+      <div id="logo" style="background-image: url(/images/logo.png);"></div>
+    
+  
+    <div id="title">
+      <h1>TUGOhost</h1>
     </div>
-    <div id="header-inner" class="inner">
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"></a>
-        
-          <a class="main-nav-link" href="/">Home</a>
-        
-          <a class="main-nav-link" href="/archives">Archives</a>
-        
-      </nav>
-      <nav id="sub-nav">
-        
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
-        
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
-      </nav>
-      <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://TUGOhost.github.io.com"></form>
-      </div>
-    </div>
+  </a>
+  <div id="nav">
+    <ul>
+      <li class="icon">
+        <a href="#" aria-label="Menu"><i class="fas fa-bars fa-2x"></i></a>
+      </li>
+      <!--
+     --><li><a href="/">Home</a></li><!--
+   --><!--
+     --><li><a href="/about/">About</a></li><!--
+   --><!--
+     --><li><a href="/archives/">Writing</a></li><!--
+   --><!--
+     --><li><a target="_blank" rel="noopener" href="https://github.com/TUGOhost">Projects</a></li><!--
+   -->
+    </ul>
   </div>
 </header>
 
-      <div class="outer">
-        <section id="main">
-  
-    <article id="post-C++核心知识" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2021/03/08/C++%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86/" class="article-date">
-  <time class="dt-published" datetime="2021-03-08T02:28:25.000Z" itemprop="datePublished">2021-03-08</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
         
+        <section id="about">
   
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2021/03/08/C++%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86/">C++核心知识</a>
-    </h1>
   
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>主要针对C++面向对象编程技术做详细讲解，探讨C++中的核心和精髓。</p>
-<h2 id="1-内存分区模型"><a href="#1-内存分区模型" class="headerlink" title="1.内存分区模型"></a>1.内存分区模型</h2><p>C++程序在执行时，将内存大方向划分为4个区域</p>
-<ul>
-<li>代码区：存放函数体的二进制代码，由操作系统进行管理</li>
-<li>全局区：存放全局变量和静态变量以及常量</li>
-<li>栈区：由编译器自动分配释放，存放函数的参数值，局部变量等</li>
-<li>堆区：由程序员分配和释放，若程序员不释放，程序结束时由操作系统回收</li>
-</ul>
-<p>内存四区意义：</p>
-<p>不同区域存放的数据，赋予不同的生命周期，给我们更大的灵活编程</p>
-<h3 id="1-1-程序运行前"><a href="#1-1-程序运行前" class="headerlink" title="1.1 程序运行前"></a>1.1 程序运行前</h3><p>在程序编译后，生成了exe可执行程序，未执行该程序前分为两个区域</p>
-<p><strong>代码区</strong>：</p>
-<ul>
-<li>存放CPU执行的机器指令</li>
-<li>代码区是共享的，共享的目的是对于频繁被执行的程序，只需要在内存中有一份代码即可</li>
-<li>代码区是只读的，使其只读的原因是防止程序意外地修改了它的指令</li>
-</ul>
-<p><strong>全局区</strong>：</p>
-<ul>
-<li>全局变量和静态变量存放在此</li>
-<li>全局区还包含了常量区，字符串常量和其他常量（const修饰的全局变量）也存放在此</li>
-<li>该区域的数据在程序结束后由操作系统释放</li>
-</ul>
-<h3 id="1-2-程序运行后"><a href="#1-2-程序运行后" class="headerlink" title="1.2 程序运行后"></a>1.2 程序运行后</h3><p><strong>栈区</strong>：</p>
-<ul>
-<li>由编译自动分配释放，存放函数的参数值、局部变量等</li>
-</ul>
-<p>注意事项：不要返回局部变量的地址，因为栈区开辟的数据由编译器自动释放</p>
-<p><strong>堆区</strong></p>
-<ul>
-<li>由程序员分配释放，若程序员不释放，程序结束时由操作系统回收</li>
-</ul>
-<p>在C++中主要利用new在堆区开辟内存</p>
-<h3 id="1-3-new操作符"><a href="#1-3-new操作符" class="headerlink" title="1.3 new操作符"></a>1.3 new操作符</h3><p>C++中利用new操作符在堆区开辟数据</p>
-<p>堆区开辟的数据，由程序员手动开辟，手动释放，释放利用操作符delete</p>
-<p>语法：<code>new 数据类型</code></p>
-<p>利用new创建的数据，会返回该数据对应的类型的指针</p>
-<h2 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h2><h3 id="2-1引用的基本使用"><a href="#2-1引用的基本使用" class="headerlink" title="2.1引用的基本使用"></a>2.1引用的基本使用</h3><p>作用：给变量起别名</p>
-<p>语法：<code>数据类型 &amp;别名= 原名</code></p>
-<h3 id="2-2-引用注意事项"><a href="#2-2-引用注意事项" class="headerlink" title="2.2 引用注意事项"></a>2.2 引用注意事项</h3><ul>
-<li>引用必须初始化</li>
-<li>引用在初始化后，不可以改变</li>
-</ul>
-<h3 id="2-3-引用做函数参数"><a href="#2-3-引用做函数参数" class="headerlink" title="2.3 引用做函数参数"></a>2.3 引用做函数参数</h3><p>作用：函数传参时，可以利用引用的技术让形参修饰实参</p>
-<p>优点：可以简化指针修改实参</p>
-<p>总结：通过引用参数产生的效果同按地址传递是一样的。引用的语法更清楚简单</p>
-<h3 id="2-4-引用做函数的返回值"><a href="#2-4-引用做函数的返回值" class="headerlink" title="2.4 引用做函数的返回值"></a>2.4 引用做函数的返回值</h3><p>作用：引用可以作为函数的返回值存在的</p>
-<p>注意：不要返回局部变量音乐</p>
-<p>用法：函数调用作为左值</p>
-<h3 id="2-5引用的本质"><a href="#2-5引用的本质" class="headerlink" title="2.5引用的本质"></a>2.5引用的本质</h3><p>本质：引用的本质在C++内部实现一个指针常量</p>
-<h3 id="2-6-常量引用"><a href="#2-6-常量引用" class="headerlink" title="2.6 常量引用"></a>2.6 常量引用</h3><p>作用：常量引用主要用来修饰形参，防止误操作</p>
-<p>在函数形参列表中，可以加const修饰形参，防止形参改变实参</p>
-<h2 id="3-函数提高"><a href="#3-函数提高" class="headerlink" title="3 函数提高"></a>3 函数提高</h2><h3 id="3-1-函数默认参数"><a href="#3-1-函数默认参数" class="headerlink" title="3.1 函数默认参数"></a>3.1 函数默认参数</h3><p>在C++中，函数的形参列表中的形参是可以有默认值的。</p>
-<p>语法：<code>返回值类型 函数名(参数 = 默认值)&#123;&#125;</code></p>
-<p>注意事项：</p>
-<ol>
-<li>如果某个位置已经有了默认参数，那么从这个位置往后，从左到右都必须有默认值</li>
-<li>如果函数的声明有默认参数，函数实现就不能有默认参数。声明和实现只能有一个有默认参数</li>
-</ol>
-<h3 id="3-2-函数占位参数"><a href="#3-2-函数占位参数" class="headerlink" title="3.2 函数占位参数"></a>3.2 函数占位参数</h3><p>C++中函数的形参列表里可以占位参数，用来做占位，调用函数时必须填补该位置</p>
-<p>语法：<code>返回值类型 函数名(数据类型)&#123;&#125;</code></p>
-<h3 id="3-3-函数重载"><a href="#3-3-函数重载" class="headerlink" title="3.3 函数重载"></a>3.3 函数重载</h3><h4 id="3-3-1-函数重载概述"><a href="#3-3-1-函数重载概述" class="headerlink" title="3.3.1 函数重载概述"></a>3.3.1 函数重载概述</h4><p>作用：函数名可以相同，提高复用性</p>
-<p>函数重载满足条件：</p>
-<ul>
-<li>同一个作用域下</li>
-<li>函数名称相同</li>
-<li>函数参数类型不同 或者 个数不同 或者 顺序不同</li>
-</ul>
-<p>注意：函数的返回值不可以作为函数重载的条件</p>
-<h4 id="3-3-2-函数重载注意事项"><a href="#3-3-2-函数重载注意事项" class="headerlink" title="3.3.2 函数重载注意事项"></a>3.3.2 函数重载注意事项</h4><ul>
-<li>引用作为重载条件</li>
-<li>函数重载碰到函数默认参数</li>
-</ul>
-<h2 id="4-类和对象"><a href="#4-类和对象" class="headerlink" title="4 类和对象"></a>4 类和对象</h2><p>C++面向对象的三大特性为：封装、继承、多态</p>
-<p>C++ 认为万事万物都皆为对象，对象上有其属性和行为</p>
-<h3 id="4-1-封装"><a href="#4-1-封装" class="headerlink" title="4.1 封装"></a>4.1 封装</h3><h4 id="4-1-1-封装的意义"><a href="#4-1-1-封装的意义" class="headerlink" title="4.1.1 封装的意义"></a>4.1.1 封装的意义</h4><p>封装是C++面向对象三大特性之一</p>
-<p>封装的意义：</p>
-<ul>
-<li>将属性和行为作为一个整体，表现生活中的事物</li>
-<li>将属性和行为加以权限控制</li>
-</ul>
-<p>封装意义一：</p>
-<p>​	在设计类的时候，属性和行为写在一起，表现事物</p>
-<p>语法：<code>class 类名&#123; 访问权限: 属性 / 行为&#125;;</code></p>
-<p>示例：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="type">const</span> <span class="type">double</span> PI = <span class="number">3.14</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Circle</span></span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// 半径</span></span><br><span class="line">    <span class="type">int</span> m_r;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//获取圆的周长</span></span><br><span class="line">    <span class="function"><span class="type">double</span> <span class="title">calculate</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">2</span> * m_r * PI;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 通过圆类 创建具体的圆</span></span><br><span class="line">    Circle circle;</span><br><span class="line">    circle.m_r = <span class="number">10</span>;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot; 圆的周长： &quot;</span> &lt;&lt; circle.<span class="built_in">calculate</span>() &lt;&lt; endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>封装意义二：</p>
-<p>类在设计时，可以把属性和行为放在不同的权限下，加以控制</p>
-<p>访问权限有三种：</p>
-<ol>
-<li>public 公共权限 成员 类内可以访问 类外可以访问</li>
-<li>protected 保护权限 成员 类内可以访问 类外不可以访问 儿子可以访问父亲中的保护内容</li>
-<li>private  私有权限 成员 类内可以访问 类外不可以访问 儿子不可以访问父亲的私有内容</li>
-</ol>
-<h4 id="4-1-2-struct和class区别"><a href="#4-1-2-struct和class区别" class="headerlink" title="4.1.2 struct和class区别"></a>4.1.2 struct和class区别</h4><p>在C++中struct和class唯一的区别就在于默认的访问权限不同</p>
-<p>区别：</p>
-<ul>
-<li>struct默认权限为公共</li>
-<li>class默认权限为私有</li>
-</ul>
-<h4 id="4-1-3-成员属性设置为私有"><a href="#4-1-3-成员属性设置为私有" class="headerlink" title="4.1.3 成员属性设置为私有"></a>4.1.3 成员属性设置为私有</h4><p>优点：</p>
-<ul>
-<li>将所有成员属性设置为私有，可以自己控制读写权限</li>
-<li>对于写权限，我们可以检测数据的有效性</li>
-</ul>
-<h3 id="4-2-对象的初始化和清理"><a href="#4-2-对象的初始化和清理" class="headerlink" title="4.2 对象的初始化和清理"></a>4.2 对象的初始化和清理</h3><ul>
-<li>生活中我们买的电子产品都基本会有出厂设置，在某一天我们不用时候也会删除一些自己信息数据保证安全</li>
-<li>C++中的面向对象来源与生活，每个对象也都会有初始设置以及对象销毁前的清理数据的设置</li>
-</ul>
-<h4 id="4-2-1-构造函数和析构函数"><a href="#4-2-1-构造函数和析构函数" class="headerlink" title="4.2.1 构造函数和析构函数"></a>4.2.1 构造函数和析构函数</h4><p>对象的初始化和清理也是两个非常重要的安全问题</p>
-<p>​	一个对象或者变量没有初始状态，对其使用后果是未知</p>
-<p>​	同样的使用完一个对象或变量，没有及时清理，也会造成一定的安全问题</p>
-<p>C++利用了构造函数和析构函数解决上述问题，这两个函数将会被编译器自动调用，完成对象初始化和清理工作。</p>
-<p>对象的初始化和清理工作是编译器强制要我们做的事情，因此如果我们不提供构造和析构，编译器会提供编译器提供的构造函数和析构函数是空实现。</p>
-<ul>
-<li>构造函数：主要作用在于创建对象的成员属性赋值，构造函数由编译器自动调用，无须手动调用</li>
-<li>析构函数：主要作用在于对象销毁前系统自动调用，执行一些清理工作</li>
-</ul>
-<p>构造函数语法：<code>类名()&#123;&#125;</code></p>
-<ol>
-<li>构造函数，没有返回值也不写void</li>
-<li>函数名称与类名相同</li>
-<li>构造函数可以有参数，因此可以发生重载</li>
-<li>程序在调用对象时候会自动调用构造，无须手动调用，而且只会调用一次</li>
-</ol>
-<p>析构函数语法：<code>~类名()&#123;&#125;</code></p>
-<ol>
-<li>析构函数，没有返回值也不写void</li>
-<li>函数名称与类名相同，在名称前加上符号~</li>
-<li>析构函数不可以有参数，因此不可以发生重载</li>
-<li>程序在对象销毁前会自动调用析构，无须手动调用，而且只会调用一次</li>
-</ol>
-<p>示例：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span></span><br><span class="line">&#123;   </span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Person</span>()</span><br><span class="line">    &#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;Person 构造函数的调用&quot;</span> &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line">    ~<span class="built_in">Person</span>()</span><br><span class="line">    &#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;Person 析构函数的调用 &quot;</span> &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Person person;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="4-2-2-构造函数的分类及调用"><a href="#4-2-2-构造函数的分类及调用" class="headerlink" title="4.2.2 构造函数的分类及调用"></a>4.2.2 构造函数的分类及调用</h4><p>两种分类方式：</p>
-<ul>
-<li>按参数分为：有参构造和无参构造</li>
-<li>按类型分为：普通构造和拷贝构造</li>
-</ul>
-<p>三种调用方式：</p>
-<ul>
-<li>括号法</li>
-<li>显示法</li>
-<li>隐式转换法</li>
-</ul>
-<p>示例：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span></span><br><span class="line">&#123;   </span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Person</span>()</span><br><span class="line">    &#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;Person 无参构造函数的调用&quot;</span> &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">Person</span>(<span class="type">int</span> a)</span><br><span class="line">    &#123;</span><br><span class="line">        age = a;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;Person 有参构造函数的调用&quot;</span> &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">//拷贝构造函数</span></span><br><span class="line">    <span class="built_in">Person</span>(<span class="type">const</span> Person &amp;person)</span><br><span class="line">    &#123;</span><br><span class="line">        age = person.age;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;Person 拷贝构造函数的调用&quot;</span> &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ~<span class="built_in">Person</span>()</span><br><span class="line">    &#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;Person 析构函数的调用 &quot;</span> &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="type">int</span> age;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">//括号法</span></span><br><span class="line">    Person p; <span class="comment">//默认构造函数的调用</span></span><br><span class="line">    <span class="function">Person <span class="title">p2</span><span class="params">(<span class="number">10</span>)</span></span>; <span class="comment">// 有参构造函数的调用</span></span><br><span class="line">    <span class="function">Person <span class="title">p3</span><span class="params">(p2)</span></span>; <span class="comment">// 拷贝构造函数的调用</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 调用默认构造函数不要是加()</span></span><br><span class="line">    <span class="comment">// 因为下面的代码，编译器会认为是一个函数的声明，不会认为在创建对象</span></span><br><span class="line">    <span class="comment">//Person p(); </span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//显示法</span></span><br><span class="line">    Person p21;</span><br><span class="line">    Person p22 = <span class="built_in">Person</span>(<span class="number">10</span>);</span><br><span class="line">    Person p23 = <span class="built_in">Person</span>(p22);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">Person</span>(<span class="number">10</span>); <span class="comment">// 匿名对象 特点：当前行执行结束后，系统会立即回收掉匿名对象</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 不要利用拷贝构造函数 初始化匿名对象 编译器会认为Person (p23) === Person p23; 对象的声明</span></span><br><span class="line">    <span class="comment">//Person(p23);</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//隐式转换法</span></span><br><span class="line"></span><br><span class="line">    Person p4 = <span class="number">10</span>; <span class="comment">// 相当于 写了 Person p4 = Person(10);</span></span><br><span class="line">    Person p5 = p4; <span class="comment">// 拷贝构造</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="拷贝构造函数调用时机"><a href="#拷贝构造函数调用时机" class="headerlink" title="拷贝构造函数调用时机"></a>拷贝构造函数调用时机</h4><p>C++中拷贝构造函数调用时机通常有三种情况：</p>
-<ul>
-<li>使用一个已经创建完毕的对象来初始化一个新对象</li>
-<li>值传递的方式给函数参数传值</li>
-<li>以值方式返回局部对象</li>
-</ul>
-<p>示例：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>: </span><br><span class="line">    <span class="built_in">Person</span>()</span><br><span class="line">    &#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;Person 无参构造函数的调用&quot;</span> &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">Person</span>(<span class="type">int</span> a)</span><br><span class="line">    &#123;</span><br><span class="line">        age = a;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;Person 有参构造函数的调用&quot;</span> &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">Person</span>(<span class="type">const</span> Person &amp;person)</span><br><span class="line">    &#123;</span><br><span class="line">        age = person.age;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;Person 拷贝构造函数的调用&quot;</span> &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ~<span class="built_in">Person</span>()</span><br><span class="line">    &#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;Person 析构函数的调用 &quot;</span> &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="type">int</span> age;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">doWork</span><span class="params">(Person p)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">Person <span class="title">doWork1</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Person p1;</span><br><span class="line">    <span class="keyword">return</span> p1;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 使用一个已经创建完毕的对象来初始化一个新对象</span></span><br><span class="line">    <span class="function">Person <span class="title">p1</span><span class="params">(<span class="number">20</span>)</span></span>;</span><br><span class="line">    <span class="function">Person <span class="title">p2</span><span class="params">(p1)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 值传递的方式给函数参数传值</span></span><br><span class="line">    <span class="built_in">doWork</span>(p1);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 以值方式返回局部对象</span></span><br><span class="line">    Person p3 = <span class="built_in">doWork1</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="4-2-4-构造函数的调用规则"><a href="#4-2-4-构造函数的调用规则" class="headerlink" title="4.2.4 构造函数的调用规则"></a>4.2.4 构造函数的调用规则</h4><p>默认情况下，C++编译器至少给一个类添加3个函数</p>
-<ol>
-<li>默认构造函数（无参，函数体为空）</li>
-<li>默认析构函数（无参，函数体为空）</li>
-<li>默认拷贝构造函数，对属性进行值拷贝</li>
-</ol>
-<p>构造函数调用规则如下：</p>
-<ul>
-<li>如果用户定义有参构造函数，C++不在提供默认无参构造，但是会提供默认拷贝构造</li>
-<li>如果用户定义拷贝构造函数，C++不会再提供其他构造函数</li>
-</ul>
-<h4 id="深拷贝与浅拷贝"><a href="#深拷贝与浅拷贝" class="headerlink" title="深拷贝与浅拷贝"></a>深拷贝与浅拷贝</h4><p>深拷贝是面试经典问题，也是常见的一个坑</p>
-<p>浅拷贝：简单的复制拷贝操作</p>
-<p>深拷贝：在堆区重新申请空间，进行拷贝操作</p>
-<p>示例：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>: </span><br><span class="line">    <span class="built_in">Person</span>()</span><br><span class="line">    &#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;Person 无参构造函数的调用&quot;</span> &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">Person</span>(<span class="type">int</span> a, <span class="type">int</span> h)</span><br><span class="line">    &#123;</span><br><span class="line">        age = a;</span><br><span class="line">        height = <span class="keyword">new</span> <span class="built_in">int</span>(h);</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;Person 有参构造函数的调用&quot;</span> &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">Person</span>(<span class="type">const</span> Person &amp;person)</span><br><span class="line">    &#123;</span><br><span class="line">        age = person.age;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;Person 拷贝构造函数的调用&quot;</span> &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 自己实现拷贝构造函数 解决浅拷贝带来的问题</span></span><br><span class="line">    <span class="built_in">Person</span>(<span class="type">const</span> Person &amp;p)</span><br><span class="line">    &#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;Person 拷贝构造函数调用&quot;</span> &lt;&lt; endl;</span><br><span class="line">        age = p.age;</span><br><span class="line">        <span class="comment">//height = p.height; // 浅拷贝，编译器提供的拷贝构造函数</span></span><br><span class="line">        height = <span class="keyword">new</span> <span class="built_in">int</span>(*p.height); <span class="comment">// 深拷贝</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ~<span class="built_in">Person</span>()</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 析构函数，将堆区开辟数据做释放操作</span></span><br><span class="line">        <span class="keyword">if</span> (height != <span class="literal">NULL</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">delete</span> height;</span><br><span class="line">            height = <span class="literal">NULL</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;Person 析构函数的调用 &quot;</span> &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="type">int</span> age;</span><br><span class="line">    <span class="type">int</span> *height;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">test01</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="function">Person <span class="title">p1</span><span class="params">(<span class="number">18</span>, <span class="number">160</span>)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">Person <span class="title">p2</span><span class="params">(p1)</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">test01</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="4-2-6-初始化列表"><a href="#4-2-6-初始化列表" class="headerlink" title="4.2.6 初始化列表"></a>4.2.6 初始化列表</h4><p>作用：C++提供了初始化列表语法，用来初始化属性</p>
-<p>语法：<code>构造函数(): 属性1(值1) 属性2(值2)...&#123;&#125;</code></p>
-<h4 id="4-2-7-类对象作为类成员"><a href="#4-2-7-类对象作为类成员" class="headerlink" title="4.2.7 类对象作为类成员"></a>4.2.7 类对象作为类成员</h4><p>C++类中的成员是另一个类的对象，我们称该成员为 对象成员</p>
-<p>例如：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">A</span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">B</span></span><br><span class="line">&#123;</span><br><span class="line">    A a;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>B类中有对象A作为成员，A为对象成员</p>
-<p>那么当创建B对象时，A与B的构造和析构的顺序是谁先谁后？</p>
-<p>构造顺序：先构造其他类对象，再构造自身。</p>
-<p>析构顺序：与构造顺序相反</p>
-<h4 id="4-2-8-静态成员"><a href="#4-2-8-静态成员" class="headerlink" title="4.2.8 静态成员"></a>4.2.8 静态成员</h4><p>静态成员就是在成员变量和成员函数前加上关键字static，成为静态成员</p>
-<p>静态成员分为：</p>
-<ul>
-<li>静态成员变量<ul>
-<li>所有对象共享一份数据</li>
-<li>在编译阶段分配内存</li>
-<li>类内声明，类外初始化</li>
-</ul>
-</li>
-<li>静态成员函数<ul>
-<li>所有对象共享同一个函数</li>
-<li>静态成员函数只能访问静态成员变量</li>
-</ul>
-</li>
-</ul>
-<p>示例：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="type">static</span> <span class="type">int</span> a;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">static</span> <span class="type">void</span> <span class="title">func</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;静态成员函数&quot;</span> &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="type">static</span> <span class="type">int</span> b;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> Person::a = <span class="number">100</span>;</span><br><span class="line"><span class="type">int</span> Person::b = <span class="number">200</span>;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Person p;</span><br><span class="line">    cout &lt;&lt; p.a &lt;&lt; endl;</span><br><span class="line">    <span class="comment">//通过对象</span></span><br><span class="line">    <span class="comment">//p.func();</span></span><br><span class="line">    <span class="comment">//p.a = 200;</span></span><br><span class="line">    <span class="comment">//cout &lt;&lt; p.a &lt;&lt; endl;</span></span><br><span class="line">    <span class="comment">// 通过类名</span></span><br><span class="line">    Person::<span class="built_in">func</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="4-3-C-对象模型和this指针"><a href="#4-3-C-对象模型和this指针" class="headerlink" title="4.3 C++对象模型和this指针"></a>4.3 C++对象模型和this指针</h3><h4 id="4-3-1-成员变量和成员函数分开存储"><a href="#4-3-1-成员变量和成员函数分开存储" class="headerlink" title="4.3.1 成员变量和成员函数分开存储"></a>4.3.1 成员变量和成员函数分开存储</h4><p>在C++中，类内的成员变量和成员函数分开存储</p>
-<p>只有非静态成员变量才属于类的对象上</p>
-<h4 id="4-3-2-this指针"><a href="#4-3-2-this指针" class="headerlink" title="4.3.2 this指针"></a>4.3.2 this指针</h4><p>每一个非静态成员函数只会诞生一份函数实例，也就是说多个同类型的对象会共用一块代码</p>
-<p>那么问题是：这一块代码是如何区分那个对象调用自己的呢？</p>
-<p>C++ 通过提供特殊的对象指针，this指针，解决上述问题。this指针指向被调用的成员函数所属的对象</p>
-<p>this指针是隐含每一个非静态成员函数内的一种指针</p>
-<p>this指针不需要定义，直接使用即可</p>
-<p>this指针的用途：</p>
-<ul>
-<li>当形参和成员变量同名时，可用this指针来区分</li>
-<li>在类的非静态成员函数中返回对象本身，可是用return *this</li>
-</ul>
-<h4 id="4-3-3-空指针访问成员函数"><a href="#4-3-3-空指针访问成员函数" class="headerlink" title="4.3.3 空指针访问成员函数"></a>4.3.3 空指针访问成员函数</h4><p>C++中空指针也是可以调用成员函数的，但是也要注意有没有用到this指针</p>
-<p>如果用到this指针，需要加以判断保证代码的健壮性</p>
-<h4 id="4-3-4-const修饰成员函数"><a href="#4-3-4-const修饰成员函数" class="headerlink" title="4.3.4 const修饰成员函数"></a>4.3.4 const修饰成员函数</h4><p>常函数：</p>
-<ul>
-<li>成员函数后加const后我们称为这个函数为常函数</li>
-<li>常函数内不可以修改成员属性</li>
-<li>成员属性声明时加关键字mutable后，在常函数中依然可以修改</li>
-</ul>
-<p>常对象</p>
-<ul>
-<li>声明对象前加const称该对象为常对喜爱那个</li>
-<li>常对象只能调用常函数</li>
-</ul>
-<h3 id="4-4-友元"><a href="#4-4-友元" class="headerlink" title="4.4. 友元"></a>4.4. 友元</h3><p>友元的目的就是让一个函数或者类 访问另一个类中私有成员</p>
-<p>友元的关键字为friend</p>
-<p>友元的三种实现</p>
-<ul>
-<li>全局函数做友元</li>
-<li>类做友元</li>
-<li>成员函数做友元</li>
-</ul>
-<h3 id="4-5-运算符冲在"><a href="#4-5-运算符冲在" class="headerlink" title="4.5 运算符冲在"></a>4.5 运算符冲在</h3><p>运算符重载概念：对已有的运算符重新进行定义，赋予其另一种功能，以适应不同的数据类型</p>
-<h4 id="4-5-1-加号运算符重载"><a href="#4-5-1-加号运算符重载" class="headerlink" title="4.5.1 加号运算符重载"></a>4.5.1 加号运算符重载</h4><p>作用：实现两个自定义数据类型相加的运算</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="type">int</span> a;</span><br><span class="line">    <span class="type">int</span> b;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">// 全局函数重载</span></span><br><span class="line">Person <span class="keyword">operator</span>+(Person &amp;p1, Person &amp;p2)</span><br><span class="line">&#123;</span><br><span class="line">    Person tmp;</span><br><span class="line">    tmp.a = p1.a + p2.a;</span><br><span class="line">    tmp.b = p1.b + p2.b;</span><br><span class="line">    <span class="keyword">return</span> tmp;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Person p1;</span><br><span class="line">    p1.a = <span class="number">1</span>;</span><br><span class="line">    p1.b = <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">    Person p2;</span><br><span class="line">    p2.a = <span class="number">1</span>;</span><br><span class="line">    p2.b = <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;p1 + p2  a = &quot;</span> &lt;&lt; (p1 + p2).a &lt;&lt; endl;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;p1 + p2  b = &quot;</span> &lt;&lt; (p1 + p2).b &lt;&lt; endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="左移运算符重载"><a href="#左移运算符重载" class="headerlink" title="左移运算符重载"></a>左移运算符重载</h4><blockquote>
-<p>void operator&lt;&lt;(ostream &amp;cout, Person p)</p>
-</blockquote>
-<h4 id="递增运算符重载"><a href="#递增运算符重载" class="headerlink" title="递增运算符重载"></a>递增运算符重载</h4><p>作用：通过重载递增运算符，实现自己i的整型数据</p>
-<h4 id="4-5-4-赋值运算符重载"><a href="#4-5-4-赋值运算符重载" class="headerlink" title="4.5.4 赋值运算符重载"></a>4.5.4 赋值运算符重载</h4><p>C++编译器至少给一个类添加4个函数</p>
-<ol>
-<li>默认构造函数（无参，函数体为空）</li>
-<li>默认析构函数（无参，函数体为空）</li>
-<li>默认拷贝构造函数、对属性进行值拷贝</li>
-<li>赋值运算符 opertator&#x3D;，对赋值进行值拷贝</li>
-</ol>
-<p>如果类中有属性指向堆区，做赋值操作时也会出现深浅拷贝问题</p>
-<h4 id="4-5-5-关系运算符重载"><a href="#4-5-5-关系运算符重载" class="headerlink" title="4.5.5 关系运算符重载"></a>4.5.5 关系运算符重载</h4><p>作用：重载关系运算符，可以让两个自定义类型对象进行对比操作</p>
-<h4 id="4-5-6-函数调用运算符重载"><a href="#4-5-6-函数调用运算符重载" class="headerlink" title="4.5.6 函数调用运算符重载"></a>4.5.6 函数调用运算符重载</h4><ul>
-<li>函数调用运算符()也可以重载</li>
-<li>由于重载后使用的方式非常像函数的调用，因此称为伪函数</li>
-<li>伪函数没有固定写法，非常灵活</li>
-</ul>
-<h3 id="4-6-继承"><a href="#4-6-继承" class="headerlink" title="4.6 继承"></a>4.6 继承</h3><p>继承是面向对象三大特性之一</p>
-<p>定义某些类时，下级别的成员除了拥有上一级的共性，还有自己的特性。利用继承的技术，减少重复代码。</p>
-<h4 id="4-6-1-继承的基本语法"><a href="#4-6-1-继承的基本语法" class="headerlink" title="4.6.1 继承的基本语法"></a>4.6.1 继承的基本语法</h4><p>语法：<code>class 子类 : 继承方式 父类&#123;&#125;</code></p>
-<h4 id="4-6-2-继承方式"><a href="#4-6-2-继承方式" class="headerlink" title="4.6.2 继承方式"></a>4.6.2 继承方式</h4><ul>
-<li>公共继承</li>
-<li>保护继承</li>
-<li>私有继承</li>
-</ul>
-<p>父类私有方式，子类不管什么继承方式，都是继承不了</p>
-<p>子类通过公共继承方式继承父类，那么父类的公共方式、保护方式都可以继承</p>
-<p>子类通过保护继承方式继承父类，那么父类的保护方式可以继承</p>
-<p>子类通过私有继承方式继承父类，那么父类所有的都继承不了</p>
-<h4 id="4-6-3-继承中的对象模型"><a href="#4-6-3-继承中的对象模型" class="headerlink" title="4.6.3 继承中的对象模型"></a>4.6.3 继承中的对象模型</h4><p>问题：从父类继承过来的成员，那些属于子类对象？</p>
-<p>结论：父类中私有成员也是被子类继承下去了，只是由于编译器给隐藏后访问不到</p>
-<h4 id="4-6-4-继承中的构造和析构顺序"><a href="#4-6-4-继承中的构造和析构顺序" class="headerlink" title="4.6.4 继承中的构造和析构顺序"></a>4.6.4 继承中的构造和析构顺序</h4><p>子类继承父类后，当创建子类对象，也会调用父类的构造函数</p>
-<p>问题：父类和子类的构造和析构顺序是谁先谁后？</p>
-<p>结论：父类的构造比子类的构造先，子类的析构比父类的析构先</p>
-<h4 id="4-6-5-继承同名成员处理方式"><a href="#4-6-5-继承同名成员处理方式" class="headerlink" title="4.6.5 继承同名成员处理方式"></a>4.6.5 继承同名成员处理方式</h4><p>问题：当子类与父类出现同名的成员，如何通过子类对象，访问到子类或父类中同名的数据呢？</p>
-<ul>
-<li>访问子类同名成员，直接访问即可</li>
-<li>访问父类同名成员，需要加作用域</li>
-</ul>
-<h4 id="4-6-6-继承同名静态成员处理方式"><a href="#4-6-6-继承同名静态成员处理方式" class="headerlink" title="4.6.6 继承同名静态成员处理方式"></a>4.6.6 继承同名静态成员处理方式</h4><p>问题：继承中同名的静态成员在子类对象上如何进行访问？</p>
-<p>静态成员和非静态成员出现同名，处理方式一致</p>
-<ul>
-<li>访问子类同名成员 直接访问即可</li>
-<li>访问父类同名成员 需要加作用域</li>
-</ul>
-<h4 id="4-6-7-多集成语法"><a href="#4-6-7-多集成语法" class="headerlink" title="4.6.7 多集成语法"></a>4.6.7 多集成语法</h4><p>C++允许一个类继承多个类</p>
-<p>语法：<code>class 子类 : 继承方式 父类1, 继承方式 父类2...</code></p>
-<p>多继承可能会引发父类中有同名成员出现，需要加作用域区分</p>
-<p>C++实际开发中不建议用多继承</p>
-<h4 id="菱形继承"><a href="#菱形继承" class="headerlink" title="菱形继承"></a>菱形继承</h4><p>菱形继承概念：</p>
-<p> 两个派生类继承同一个基类</p>
-<p> 又有某个类同时继承这两个派生类</p>
-<p> 这种继承被称为菱形继承，或者钻石继承</p>
-<h3 id="4-7-多态"><a href="#4-7-多态" class="headerlink" title="4.7 多态"></a>4.7 多态</h3><h4 id="4-7-1-多态的基本概念"><a href="#4-7-1-多态的基本概念" class="headerlink" title="4.7.1 多态的基本概念"></a>4.7.1 多态的基本概念</h4><p>多态是C++面向对象三大特性之一</p>
-<p>多态分为两类</p>
-<ul>
-<li>静态多态：函数重载 和 运算重载属于静态多态，复用函数名</li>
-<li>动态多态：派生类和虚函数实现运行时多态</li>
-</ul>
-<p>静态多态和动态多态区别：</p>
-<ul>
-<li>静态多态的函数地址早绑定 - 编译阶段确定函数地址</li>
-<li>动态多态的函数地址晚绑定 - 运行阶段确定函数地址</li>
-</ul>
-<p>动态多态使用：父类的指针或引用 执行子类对象</p>
-<p>示例：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Animal</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// 虚函数 </span></span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">speak</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;动物在说话&quot;</span> &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Cat</span> : <span class="keyword">public</span> Animal</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// 重写，函数返回值，参数列表，函数名完全一样</span></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">speak</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;小猫在说话&quot;</span> &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Dog</span> : <span class="keyword">public</span> Animal</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">speak</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;小狗在说话&quot;</span> &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 地址早绑定，在编译阶段就确定了函数的地址</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">doSpeak</span><span class="params">(Animal &amp;animal)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    animal.<span class="built_in">speak</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Cat cat;</span><br><span class="line">    <span class="built_in">doSpeak</span>(cat);</span><br><span class="line"></span><br><span class="line">    Dog dog;</span><br><span class="line">    <span class="built_in">doSpeak</span>(dog);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="4-7-2-纯虚函数和抽象类"><a href="#4-7-2-纯虚函数和抽象类" class="headerlink" title="4.7.2 纯虚函数和抽象类"></a>4.7.2 纯虚函数和抽象类</h4><p> 在多态中，通常父类中虚函数的实现是毫无意义的，主要都是调用子类重写的内容</p>
-<p>因此可以将虚函数改为纯虚函数</p>
-<p>纯虚函数语法：<code>virtual 返回值类型 函数名(参数列表) = 0;</code></p>
-<p>当类中有了纯虚函数，这个类也称为抽象类</p>
-<p>抽象类特点：</p>
-<ul>
-<li>无法实例化对象</li>
-<li>子类必须重写抽象类中的纯虚函数，否则也属于抽象类</li>
-</ul>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 抽象类</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Base</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// 纯虚函数</span></span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">func</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Son</span> : <span class="keyword">public</span> Base</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">func</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">test01</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Son Son;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="4-7-3-虚析构和纯虚析构"><a href="#4-7-3-虚析构和纯虚析构" class="headerlink" title="4.7.3 虚析构和纯虚析构"></a>4.7.3 虚析构和纯虚析构</h4><p>多态使用时，如果子类中有属性开辟到堆区，那么父类指针在释放时无法调用到子类的析构代码</p>
-<p>解决方式：将父类中的析构函数改为虚析构或者纯虚析构</p>
-<p>虚析构和纯虚析构共性：</p>
-<ul>
-<li>可以解决父类指针释放子类对象</li>
-<li>都需要有具体的函数实现</li>
-</ul>
-<p>虚析构和纯虚析构区别：</p>
-<ul>
-<li>如果是纯虚析构，该类属于抽象类，无法实例化对象</li>
-</ul>
-<p>虚析构语法：</p>
-<p><code>virtual ~类名()&#123;&#125;</code></p>
-<p>纯虚析构语法：</p>
-<p><code>virtual ~类名() = 0</code></p>
-<p><code>类名::~类名()&#123;&#125;</code></p>
-<p>总结：</p>
-<ol>
-<li>虚析构或纯虚析构就是用来解决通过父类指针释放子类对象</li>
-<li>如果子类中没有堆区数据，可以不写为虚析构或纯虚析构</li>
-<li>拥有纯虚析构函数的类也不属于抽象类</li>
-</ol>
-<h2 id="5-文件操作"><a href="#5-文件操作" class="headerlink" title="5 文件操作"></a>5 文件操作</h2><p>程序运行时产生的数据都属于临时数据，程序一旦运行结束都会被释放</p>
-<p>通过文件可以将数据持久化</p>
-<p>C++中对文件操作需要包含头文件&lt;fstream&gt;</p>
-<p>文件类型分为两种：</p>
-<ol>
-<li>文本文件 - 文件以文本的ASCII码形式存储在计算机中</li>
-<li>二进制文件 - 文件以文本的二进制形式存储在计算机中，用户一般不能直接读懂它们</li>
-</ol>
-<p>操作文件的三大类：</p>
-<ol>
-<li>ofstream：写操作</li>
-<li>ifstream：读操作</li>
-<li>fstream：读写操作</li>
-</ol>
-<h3 id="5-1-文本文件"><a href="#5-1-文本文件" class="headerlink" title="5.1 文本文件"></a>5.1 文本文件</h3><h4 id="5-1-1-写文件"><a href="#5-1-1-写文件" class="headerlink" title="5.1.1 写文件"></a>5.1.1 写文件</h4><p>写文件步骤如下：</p>
-<ol>
-<li><p>包含头文件</p>
-<p>#include&lt;fstream&gt;</p>
-</li>
-<li><p>创建流对象</p>
-<p>ofstream ofs;</p>
-</li>
-<li><p>打开文件</p>
-<p>ofs.open(“文件路径”, 打开方式);</p>
-</li>
-<li><p>写数据</p>
-<p>ofs &lt;&lt; “写入数据”;</p>
-</li>
-<li><p>关闭文件</p>
-<p>ofs.close();</p>
-</li>
-</ol>
-<p>文件打开方式：</p>
-<table>
-<thead>
-<tr>
-<th>模式标记</th>
-<th>适用对象</th>
-<th>作用</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>ios::in</td>
-<td>ifstream fstream</td>
-<td>打开文件用于读取数据。如果文件不存在，则打开出错。</td>
-</tr>
-<tr>
-<td>ios::out</td>
-<td>ofstream fstream</td>
-<td>打开文件用于写入数据。如果文件不存在，则新建该文件；如果文件原来就存在，则打开时清除原来的内容。</td>
-</tr>
-<tr>
-<td>ios::app</td>
-<td>ofstream fstream</td>
-<td>打开文件，用于在其尾部添加数据。如果文件不存在，则新建该文件。</td>
-</tr>
-<tr>
-<td>ios::ate</td>
-<td>ifstream</td>
-<td>打开一个已有的文件，并将文件读指针指向文件末尾（读写指 的概念后面解释）。如果文件不存在，则打开出错。</td>
-</tr>
-<tr>
-<td>ios:: trunc</td>
-<td>ofstream</td>
-<td>打开文件时会清空内部存储的所有数据，单独使用时与 ios::out 相同。</td>
-</tr>
-<tr>
-<td>ios::binary</td>
-<td>ifstream ofstream fstream</td>
-<td>以二进制方式打开文件。若不指定此模式，则以文本模式打开。</td>
-</tr>
-<tr>
-<td>ios::in | ios::out</td>
-<td>fstream</td>
-<td>打开已存在的文件，既可读取其内容，也可向其写入数据。文件刚打开时，原有内容保持不变。如果文件不存在，则打开出错。</td>
-</tr>
-<tr>
-<td>ios::in | ios::out</td>
-<td>ofstream</td>
-<td>打开已存在的文件，可以向其写入数据。文件刚打开时，原有内容保持不变。如果文件不存在，则打开出错。</td>
-</tr>
-<tr>
-<td>ios::in | ios::out | ios::trunc</td>
-<td>fstream</td>
-<td>打开文件，既可读取其内容，也可向其写入数据。如果文件本来就存在，则打开时清除原来的内容；如果文件不存在，则新建该文件。</td>
-</tr>
-</tbody></table>
-<p>注意：文件打开方式可以配合使用，利用|操作符</p>
-<p>示例：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fstream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">test01</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    ofstream ofs;</span><br><span class="line"></span><br><span class="line">    ofs.<span class="built_in">open</span>(<span class="string">&quot;test.txt&quot;</span>, ios::out);</span><br><span class="line"></span><br><span class="line">    ofs &lt;&lt; <span class="string">&quot;Hello world!&quot;</span>;</span><br><span class="line"></span><br><span class="line">    ofs.<span class="built_in">close</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">test01</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://tugohost.github.io.com/2021/03/08/C++%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86/" data-id="cl8x7xxbe0009e8756tstek52" data-title="C++核心知识" class="article-share-link">Share</a>
+    <p>
+      Find me on
       
       
       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/" rel="tag">C++</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-C++基础知识" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2021/03/03/C++%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" class="article-date">
-  <time class="dt-published" datetime="2021-03-03T02:28:25.000Z" itemprop="datePublished">2021-03-03</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
         
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2021/03/03/C++%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">C++基础知识</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h3 id="Hello-World"><a href="#Hello-World" class="headerlink" title="Hello World"></a>Hello World</h3><p>vim ~&#x2F;code&#x2F;Cpp&#x2F;helloWorld.cc</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;Hello World!&quot;</span> &lt;&lt; endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="单行注释和多行注释"><a href="#单行注释和多行注释" class="headerlink" title="单行注释和多行注释"></a>单行注释和多行注释</h3><ul>
-<li>单行</li>
-</ul>
-<p>  &#x2F;&#x2F;</p>
-<ul>
-<li><p>多行</p>
-<p>&#x2F;*</p>
-<p>*&#x2F;</p>
-</li>
-</ul>
-<h3 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h3><p>作用：给一段指定的内存空间起名，方便操作这段内存</p>
-<p>语法：<code>数据类型 变量名 = 初始值;</code></p>
-<p>示例：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 变量的定义</span></span><br><span class="line">    <span class="type">int</span> a = <span class="number">10</span>;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;a = &quot;</span> &lt;&lt; a &lt;&lt; endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;s</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="常量"><a href="#常量" class="headerlink" title="常量"></a>常量</h3><p>作用：用于记录程序中不可更改的数据</p>
-<p>C++定义常量的两种方式：</p>
-<ol>
-<li>#define 宏常量：<code>#define 常量名 常量值</code></li>
-<li>const修饰的变量：<code>const 数据类型 常量名 = 常量值</code></li>
-</ol>
-<p>示例：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> day 7</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    cout &lt;&lt; day &lt;&lt; endl;</span><br><span class="line">    </span><br><span class="line">    <span class="type">const</span> <span class="type">int</span> pi = <span class="number">3.14</span>;</span><br><span class="line">    cout &lt;&lt; pi &lt;&lt; endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h2><h3 id="整形"><a href="#整形" class="headerlink" title="整形"></a>整形</h3><p>short、int、long、long long</p>
-<h3 id="数据类型-sizeof关键字"><a href="#数据类型-sizeof关键字" class="headerlink" title="数据类型-sizeof关键字"></a>数据类型-sizeof关键字</h3><p>作用：利用sizeof关键字可以统计数据类型所占内存大小</p>
-<p>语法：<code>size(数据类型/变量)</code></p>
-<p>示例：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">short</span> num = <span class="number">1</span>;</span><br><span class="line">    cout &lt;&lt; <span class="built_in">sizeof</span>(num) &lt;&lt; endl;</span><br><span class="line">    cout &lt;&lt; <span class="built_in">sizeof</span>(<span class="type">short</span>) &lt;&lt; endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="数据类型-实型（浮点型）"><a href="#数据类型-实型（浮点型）" class="headerlink" title="数据类型-实型（浮点型）"></a>数据类型-实型（浮点型）</h3><p>作用：用于表示小数</p>
-<p>浮点型变量分为两种：</p>
-<ol>
-<li>单精度 float</li>
-<li>双精度double</li>
-</ol>
-<h3 id="数据类型-字符型"><a href="#数据类型-字符型" class="headerlink" title="数据类型-字符型"></a>数据类型-字符型</h3><p>作用：字符变量用于显示单个字符</p>
-<p>语法：<code>char ch = &#39;a&#39;</code></p>
-<blockquote>
-<p>注意1：在显示字符型变量时，用单引号括起来，不要用双引号</p>
-<p>注意2：单引号只能有一个字符，不可以是字符串</p>
-</blockquote>
-<h3 id="字符串型"><a href="#字符串型" class="headerlink" title="字符串型"></a>字符串型</h3><p>作用：用于表示一串字符</p>
-<p>两种风格：</p>
-<ol>
-<li>C语言风格：<code>char 变量名[] = &quot;字符串&quot;;</code></li>
-<li>C++风格：<code>string 变量名 = &quot;字符串&quot;;</code></li>
-</ol>
-<p>示例：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    string str = <span class="string">&quot;Hello World&quot;</span>;</span><br><span class="line">    cout &lt;&lt; str &lt;&lt; endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="布尔类型-bool"><a href="#布尔类型-bool" class="headerlink" title="布尔类型 bool"></a>布尔类型 bool</h3><p>作用：布尔数据类型代表真或假的值</p>
-<p>bool类型只有两个值：</p>
-<ul>
-<li>true</li>
-<li>false</li>
-</ul>
-<h3 id="数据的输入"><a href="#数据的输入" class="headerlink" title="数据的输入"></a>数据的输入</h3><p>作用：用于从键盘获取数据</p>
-<p>关键字：<code>cin</code></p>
-<h2 id="运算符"><a href="#运算符" class="headerlink" title="运算符"></a>运算符</h2><h3 id="算术运算符"><a href="#算术运算符" class="headerlink" title="算术运算符"></a>算术运算符</h3><h4 id="加减乘除"><a href="#加减乘除" class="headerlink" title="加减乘除"></a>加减乘除</h4><p>作用：用于处理四则运算</p>
-<h4 id="取模运算"><a href="#取模运算" class="headerlink" title="取模运算"></a>取模运算</h4><p>求余数</p>
-<h4 id="递增递减"><a href="#递增递减" class="headerlink" title="递增递减"></a>递增递减</h4><p>递增：++</p>
-<p>递减：–</p>
-<h3 id="赋值运算"><a href="#赋值运算" class="headerlink" title="赋值运算"></a>赋值运算</h3><p>赋值 &#x3D; </p>
-<p>加等于 +&#x3D;</p>
-<p>减等于 -&#x3D;</p>
-<p>….</p>
-<h3 id="比较运算"><a href="#比较运算" class="headerlink" title="比较运算"></a>比较运算</h3><p>相等 &#x3D;&#x3D;</p>
-<p>不等于 !&#x3D; </p>
-<p>小于 &lt; </p>
-<p>大于 &gt;</p>
-<p>小于等于 &lt;&#x3D;</p>
-<p>大于等于 &gt;&#x3D;</p>
-<h3 id="逻辑运算符"><a href="#逻辑运算符" class="headerlink" title="逻辑运算符"></a>逻辑运算符</h3><p>作用：用于根据表达式的值返回真值或假值</p>
-<p>! 非</p>
-<p>&amp;&amp; 与</p>
-<p>|| 或</p>
-<h2 id="程序流程结构"><a href="#程序流程结构" class="headerlink" title="程序流程结构"></a>程序流程结构</h2><h3 id="选择结构"><a href="#选择结构" class="headerlink" title="选择结构"></a>选择结构</h3><p>if (条件)</p>
-<p>​	执行语句</p>
-<p>if (条件)</p>
-<p>​	执行语句</p>
-<p>else if (条件1)</p>
-<p>​	执行语句1</p>
-<p>else </p>
-<p>​	执行语句2</p>
-<h3 id="三目运算符"><a href="#三目运算符" class="headerlink" title="三目运算符"></a>三目运算符</h3><p>作用：通过三目运算符实现简单的判断</p>
-<p>语法：<code>表达式1 ? 表达式2 : 表达式3 </code></p>
-<h3 id="switch"><a href="#switch" class="headerlink" title="switch"></a>switch</h3><p>switch(值)<br>{</p>
-<p>​	case 值1:</p>
-<p>​			语句1</p>
-<p>​	case 值2:</p>
-<p>​			语句2</p>
-<p>​	default:</p>
-<p>​			语句</p>
-<p>}</p>
-<h3 id="循环结构"><a href="#循环结构" class="headerlink" title="循环结构"></a>循环结构</h3><h4 id="while语句"><a href="#while语句" class="headerlink" title="while语句"></a>while语句</h4><p>while(条件)</p>
-<p>{</p>
-<p>​	语句</p>
-<p>}</p>
-<h4 id="do…while语句"><a href="#do…while语句" class="headerlink" title="do…while语句"></a>do…while语句</h4><p>do</p>
-<p>{</p>
-<p>​	语句</p>
-<p>}while(条件)</p>
-<h4 id="for循环"><a href="#for循环" class="headerlink" title="for循环"></a>for循环</h4><p>for (初始状态; 判断条件; 最终范围)</p>
-<p>{</p>
-<p>​	语句	</p>
-<p>}</p>
-<h3 id="跳转语句"><a href="#跳转语句" class="headerlink" title="跳转语句"></a>跳转语句</h3><p>break:直接跳出当前循环</p>
-<p>continue：跳过当前判断条件，执行下一次循环</p>
-<p>goto：无条件跳转语句</p>
-<h2 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h2><p>所谓数组，就是一个集合，里面存放了相同类型的数据元素</p>
-<h3 id="一维数组"><a href="#一维数组" class="headerlink" title="一维数组"></a>一维数组</h3><p>int arr[]</p>
-<h3 id="二维数组"><a href="#二维数组" class="headerlink" title="二维数组"></a>二维数组</h3><p>int arr[][]</p>
-<h2 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h2><p>作用：将一段经常使用的代码封装起来，减少重复代码</p>
-<h3 id="函数的定义"><a href="#函数的定义" class="headerlink" title="函数的定义"></a>函数的定义</h3><p>函数的定义一般5个步骤：</p>
-<ol>
-<li>返回值类型</li>
-<li>函数名</li>
-<li>参数表列</li>
-<li>函数体语句</li>
-<li>return 表达式</li>
-</ol>
-<h2 id="指针"><a href="#指针" class="headerlink" title="指针"></a>指针</h2><h3 id="指针的基本概念"><a href="#指针的基本概念" class="headerlink" title="指针的基本概念"></a>指针的基本概念</h3><p>作用：可以通过指针间接访问内存</p>
-<ul>
-<li>内存编号是从0开始记录的，一般用十六进制数字表示</li>
-<li>可以利用指针变量保存地址</li>
-</ul>
-<h3 id="指针变量的定义和使用"><a href="#指针变量的定义和使用" class="headerlink" title="指针变量的定义和使用"></a>指针变量的定义和使用</h3><p>指针变量定义语法：<code>数据类型 *变量名</code></p>
-<p>示例：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> a = <span class="number">10</span>;</span><br><span class="line">    <span class="type">int</span> * p = &amp;a;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;a&#x27;s mem address = &quot;</span> &lt;&lt; p &lt;&lt; endl;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;a&#x27;s value = &quot;</span> &lt;&lt; *p &lt;&lt; endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="空指针和野指针"><a href="#空指针和野指针" class="headerlink" title="空指针和野指针"></a>空指针和野指针</h3><p>空指针：指针变量指向内存编号为0的空间</p>
-<p>用途：初始化指针变量</p>
-<p>注意：空指针指向的内存是不可以访问的</p>
-<p>野指针：指针变量指向非法的内存空间</p>
-<h2 id="结构体"><a href="#结构体" class="headerlink" title="结构体"></a>结构体</h2><p>结构体属于用户自定义的数据类型，允许用户存储不同的数据类型。</p>
-<h3 id="结构体的定义和使用"><a href="#结构体的定义和使用" class="headerlink" title="结构体的定义和使用"></a>结构体的定义和使用</h3><p>语法：<code>struct 结构体名&#123;结构体成员列表&#125;</code></p>
-<p>通过结构体创建变量的方式有三种：</p>
-<ul>
-<li>struct结构体名 变量名</li>
-<li>struct结构体名 变量名 &#x3D; {成员1值， 成员2值}</li>
-<li>定义结构体时顺便创建变量</li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://tugohost.github.io.com/2021/03/03/C++%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" data-id="cl8x7xxb70001e875dgzd5mea" data-title="C++基础知识" class="article-share-link">Share</a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/" rel="tag">C++</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-编译Xposed并魔改去特征" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2020/12/24/%E7%BC%96%E8%AF%91Xposed%E5%B9%B6%E9%AD%94%E6%94%B9%E5%8E%BB%E7%89%B9%E5%BE%81/" class="article-date">
-  <time class="dt-published" datetime="2020-12-24T02:28:25.000Z" itemprop="datePublished">2020-12-24</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
+          <a class="icon" target="_blank" rel="noopener" href="https://github.com/TUGOhost" aria-label="github">
+            <i class="fab fa-github"></i><!--
+      ---></a><!--
+    ---><!--
+    --->, 
         
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2020/12/24/%E7%BC%96%E8%AF%91Xposed%E5%B9%B6%E9%AD%94%E6%94%B9%E5%8E%BB%E7%89%B9%E5%BE%81/">编译Xposed并魔改去特征</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
       
-        <h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><p>ubuntu 16.04</p>
-<p>aosp7.1.2r8源码</p>
-<h2 id="编译Xposed"><a href="#编译Xposed" class="headerlink" title="编译Xposed"></a>编译Xposed</h2><p>首先需要将xposed相关项目都clone到本地</p>
-<blockquote>
-<p><a target="_blank" rel="noopener" href="https://github.com/rovo89/Xposed.git">https://github.com/rovo89/Xposed.git</a></p>
-<p><a target="_blank" rel="noopener" href="https://github.com/rovo89/XposedBridge.git">https://github.com/rovo89/XposedBridge.git</a></p>
-<p><a target="_blank" rel="noopener" href="https://github.com/rovo89/android_art.git">https://github.com/rovo89/android_art.git</a></p>
-<p><a target="_blank" rel="noopener" href="https://github.com/rovo89/XposedTools.git">https://github.com/rovo89/XposedTools.git</a></p>
-<p><a target="_blank" rel="noopener" href="https://github.com/rovo89/XposedInstaller.git">https://github.com/rovo89/XposedInstaller.git</a></p>
-</blockquote>
-<h3 id="XposedBridge"><a href="#XposedBridge" class="headerlink" title="XposedBridge"></a>XposedBridge</h3><p>使用AS打开XposedBridge项目，直接build，在项目的<code>app/build/outputs/apk</code>下将<code>app-release-unsigned.apk</code>重命名为<code>XposedBridge.jar</code>。</p>
-<p>将这个jar包放在aosp源码目录下的<code>/out/target/product/sailfish/system/framework/</code>目录下。</p>
-<p>&#x2F;out&#x2F;java&#x2F;</p>
-<h3 id="android-art"><a href="#android-art" class="headerlink" title="android_art"></a>android_art</h3><p>将该项目直接替换源码目录的art目录</p>
-<h3 id="Xposed"><a href="#Xposed" class="headerlink" title="Xposed"></a>Xposed</h3><p>将xposed目录复制到<code>aosp712r8/frameworks/base/cmds/</code>目录下</p>
-<h3 id="XposedTools"><a href="#XposedTools" class="headerlink" title="XposedTools"></a>XposedTools</h3><p>复制<code>build.conf.sample</code>并重命名为<code>build.conf</code></p>
-<p>修改其中内容：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">[General]</span><br><span class="line">outdir = /home/tg/Desktop/COMPILE/aosp712r8/out</span><br><span class="line">javadir = /home/tg/Desktop/COMPILE/aosp712r8/out/java</span><br><span class="line"></span><br><span class="line">[Build]</span><br><span class="line"># Please keep the base version number and add your custom suffix</span><br><span class="line">version = 89 (custom build by TG / %s)</span><br><span class="line"># makeflags = -j4</span><br><span class="line"></span><br><span class="line">[GPG]</span><br><span class="line">sign = release</span><br><span class="line">user = 852109AA!</span><br><span class="line"></span><br><span class="line"># Root directories of the AOSP source tree per SDK version</span><br><span class="line">[AospDir]</span><br><span class="line">25 = /home/tg/Desktop/COMPILE/aosp712r8</span><br><span class="line"># SDKs to be used for compiling BusyBox</span><br><span class="line"># Needs https://github.com/rovo89/android_external_busybox</span><br><span class="line">[BusyBox]</span><br><span class="line">arm = 25</span><br><span class="line">x86 = 25</span><br><span class="line">armv5 = 25</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>outdir指向的路径是xposed编译之后生成的文件的存放路径。<br>version的值和后边的参数是自己设置的。编译之后会写入到xposed.prop文件中。<br>makeflags是设置在后边编译过程中使用的线程数。<br>AospDir指向的路径是android源码存放的路径，前边的值是源码对应的SDK的版本号。这里我指向的是android5.1.1的源码，对应的android sdk的版本是22。</p>
-</blockquote>
-<p>修改完之后需要下载一些perl的库。</p>
-<blockquote>
-<p>sudo apt-get install libauthen-ntlm-perl libclass-load-perl libcrypt-ssleay-perl libdata-uniqid-perl libdigest-hmac-perl libdist-checkconflicts-perl libfile-copy-recursive-perl libfile-tail-perl</p>
-<p>perl -MCPAN -e ‘install File::ReadBackwards’</p>
-</blockquote>
-<p>使用build.pl进行编译<code>./build.pl -t arm:25</code></p>
-<p>将生成的xposed.zip发布到web上，以供XposedInstall安装使用。</p>
-<h3 id="XposedInstall"><a href="#XposedInstall" class="headerlink" title="XposedInstall"></a>XposedInstall</h3><p>修改<code>de.robv.android.xppsed.installer.util.DownloadsUtil</code>其中的setUrl函数</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Builder <span class="title function_">setUrl</span><span class="params">(String url)</span> &#123;</span><br><span class="line">            <span class="comment">//mUrl = url;</span></span><br><span class="line">    		<span class="comment">// 改成XposedTools生成的XPosed.zip</span></span><br><span class="line">            mUrl = <span class="string">&quot;&quot;</span>;</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">this</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>然后安装，installXposed即可。</p>
-<p><img src="/2020/12/24/%E7%BC%96%E8%AF%91Xposed%E5%B9%B6%E9%AD%94%E6%94%B9%E5%8E%BB%E7%89%B9%E5%BE%81/1.jpg"></p>
-<h2 id="魔改去特征"><a href="#魔改去特征" class="headerlink" title="魔改去特征"></a>魔改去特征</h2><h3 id="XposedInstall-1"><a href="#XposedInstall-1" class="headerlink" title="XposedInstall"></a>XposedInstall</h3><p><img src="/2020/12/24/%E7%BC%96%E8%AF%91Xposed%E5%B9%B6%E9%AD%94%E6%94%B9%E5%8E%BB%E7%89%B9%E5%BE%81/1.png"></p>
-<p>直接修改包名即可。</p>
-<p>全局替换<code>de.robv.android.xposed.installer</code>，改为<code>de.robv.android.xppsed.installer</code>。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String[] XPOSED_PROP_FILES = <span class="keyword">new</span> <span class="title class_">String</span>[]&#123;</span><br><span class="line">            <span class="string">&quot;/su/xposed/xppsed.prop&quot;</span>, <span class="comment">// official systemless</span></span><br><span class="line">            <span class="string">&quot;/system/xppsed.prop&quot;</span>,    <span class="comment">// classical</span></span><br><span class="line">    &#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>再build-&gt;clean project。</p>
-<h3 id="XposedBridge-art-jar"><a href="#XposedBridge-art-jar" class="headerlink" title="XposedBridge-art.jar"></a>XposedBridge-art.jar</h3><p>替换包名为<code>de.robv.android.xppsed</code>，全局替换<code>de.robv.android.xposed，改为</code>de.robv.android.xppsed&#96;。</p>
-<p>生成出来的jar包也改为<code>XppsedBridge.jar</code>。</p>
-<p>gradle使用<code>jarStubsSorce</code>和<code>jarStubs</code>生产api.jar包，给自己编写Xposed插件使用。</p>
-<h3 id="Xposed-1"><a href="#Xposed-1" class="headerlink" title="Xposed"></a>Xposed</h3><p><code>libxposed_art.cpp</code>改为<code>libxppxosed_art.cpp</code></p>
-<p><code>xposed.h</code></p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> XPOSED_PROP_FILE <span class="string">&quot;/system/xppsed.prop&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> XPOSED_LIB_ART           XPOSED_LIB_DIR <span class="string">&quot;libxppsed_art.so&quot;</span></span></span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"><span class="meta">#<span class="keyword">define</span> XPOSED_CLASS_DOTS_ZYGOTE <span class="string">&quot;de.robv.android.xppsed.XposedBridge&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> XPOSED_CLASS_DOTS_TOOLS  <span class="string">&quot;de.robv.android.xppsed.XposedBridge$ToolEntryPoint&quot;</span></span></span><br></pre></td></tr></table></figure>
-
-<p><code>libxposed_common.h</code></p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> CLASS_XPOSED_BRIDGE  <span class="string">&quot;de/robv/android/xppsed/XposedBridge&quot;</span></span></span><br><span class="line">...</span><br><span class="line"><span class="meta">#<span class="keyword">define</span> CLASS_ZYGOTE_SERVICE <span class="string">&quot;de/robv/android/xppsed/services/ZygoteService&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> CLASS_FILE_RESULT    <span class="string">&quot;de/robv/android/xppsed/services/FileResult&quot;</span></span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p><code>xposed_service.cpp</code></p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">IMPLEMENT_META_INTERFACE</span>(XposedService, <span class="string">&quot;de.robv.android.xppsed.IXposedService&quot;</span>);</span><br></pre></td></tr></table></figure>
-
-<p><code>xposed_shared.h</code></p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> XPOSED_DIR <span class="string">&quot;/data/user_de/0/de.robv.android.xppsed.installer/&quot;</span></span></span><br><span class="line"></span><br><span class="line">...</span><br><span class="line">    </span><br><span class="line"><span class="meta">#<span class="keyword">define</span> XPOSED_DIR <span class="string">&quot;/data/data/de.robv.android.xppsed.installer/&quot;</span></span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p><code>ART.mk</code></p>
-<figure class="highlight mk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">LOCAL_SRC_FILES += \</span><br><span class="line">  libxposed_common.cpp \</span><br><span class="line">  libxppsed_art.cpp</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line">LOCAL_MODULE := libxppsed_art</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>并将<code>libxposed_art.cpp</code>文件名改为<code>libxppsed_art.cpp</code></p>
-<h3 id="XposedTools-1"><a href="#XposedTools-1" class="headerlink" title="XposedTools"></a>XposedTools</h3><p><code>build.pl</code>中的<code>xposed.prop</code>改为<code>xpposed.prop</code>，将<code>libxposed_art</code>改为<code>libxppsed_art</code>，将<code>XposedBridge.jar</code>改为<code>XppsedBridge.jar</code></p>
-<p><code>zipstatic/_all/META-INF/com/google/android/flash-script.sh</code>中将<code>xposed.prop</code>改为<code>xpposed.prop</code>，将<code>libxposed_art</code>改为<code>libxppsed_art</code>，将<code>XposedBridge.jar</code>改为<code>XppsedBridge.jar</code></p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/6471bab49cb1">https://www.jianshu.com/p/6471bab49cb1</a></li>
-<li><a target="_blank" rel="noopener" href="https://bbs.pediy.com/thread-255836.htm">https://bbs.pediy.com/thread-255836.htm</a></li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://tugohost.github.io.com/2020/12/24/%E7%BC%96%E8%AF%91Xposed%E5%B9%B6%E9%AD%94%E6%94%B9%E5%8E%BB%E7%89%B9%E5%BE%81/" data-id="cl8x7xxbs0014e875181i8ch8" data-title="编译Xposed并魔改去特征" class="article-share-link">Share</a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%80%86%E5%90%91/" rel="tag">逆向</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-使用docker编译LinegeOS" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2020/12/12/%E4%BD%BF%E7%94%A8docker%E7%BC%96%E8%AF%91LinegeOS/" class="article-date">
-  <time class="dt-published" datetime="2020-12-12T02:28:25.000Z" itemprop="datePublished">2020-12-12</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
         
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2020/12/12/%E4%BD%BF%E7%94%A8docker%E7%BC%96%E8%AF%91LinegeOS/">使用docker编译LinegeOS</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><p>docker ubuntu18.04</p>
-<blockquote>
-<p>docker pull ubunut:18.04</p>
-<p>docker run -it –privileged&#x3D;true -v ulineageos:&#x2F;root ubuntu:18.04 &#x2F;bin&#x2F;bash</p>
-</blockquote>
-<p>docker容器中需要用到<code>mount</code>命令，所以需要将<code>--privileged=true</code>。</p>
-<p>ulineageos是本地的一个目录名，挂在到docker容器中的&#x2F;root目录</p>
-<p>docker容器内的命令：</p>
-<blockquote>
-<p>apt-get update</p>
-<p>apt-get upgrade -y</p>
-<p>apt install -y wget vim p7zip p7zip-rar p7zip-full bc bison build-essential ccache curl flex g++-multilib gcc-multilib git gnupg gperf imagemagick lib32ncurses5-dev lib32readline-dev lib32z1-dev liblz4-tool libncurses5 libncurses5-dev libsdl1.2-dev libssl-dev libxml2 libxml2-utils lzop pngcrush rsync schedtool squashfs-tools xsltproc zip zlib1g-dev openjdk-8-jdk python file nano screen sudo tig python3-pip python-protobuf</p>
-<p>pip3 install six google protobuf</p>
-<p>cd ~&#x2F;</p>
-<p>wget <a target="_blank" rel="noopener" href="https://dl.google.com/android/repository/platform-tools-latest-linux.zip">https://dl.google.com/android/repository/platform-tools-latest-linux.zip</a></p>
-<p>7z x platform-tools-latest-linux.zip</p>
-<p>vim ~&#x2F;.profile</p>
-</blockquote>
-<p><code>~/.profile</code>中添加</p>
-<p><code>if [ -d &quot;$HOME/platform-tools&quot; ] ; thenPATH=&quot;$HOME/platform-tools:$PATH&quot;fi</code></p>
-<blockquote>
-<p>source ~&#x2F;.profile</p>
-<p>mkdir -p ~&#x2F;bin</p>
-<p>mkdir -p ~&#x2F;android&#x2F;lineage</p>
-<p>curl <a target="_blank" rel="noopener" href="https://storage.googleapis.com/git-repo-downloads/repo">https://storage.googleapis.com/git-repo-downloads/repo</a> &gt; ~&#x2F;bin&#x2F;repo</p>
-<p>chmod a+x ~&#x2F;bin&#x2F;repo</p>
-</blockquote>
-<p>将repo设置为环境变量，编辑~&#x2F;.profile</p>
-<p><code>if [ -d &quot;$HOME/bin&quot; ] ; then    PATH=&quot;$HOME/bin:$PATH&quot;fi</code></p>
-<blockquote>
-<p>source ~&#x2F;.profile</p>
-</blockquote>
-<h2 id="同步Lineage-OS"><a href="#同步Lineage-OS" class="headerlink" title="同步Lineage OS"></a>同步Lineage OS</h2><blockquote>
-<p>cd ~&#x2F;android&#x2F;lineage</p>
-<p>git config –global user.email “<a href="mailto:&#x79;&#111;&#x75;&#x40;&#101;&#120;&#97;&#x6d;&#x70;&#x6c;&#x65;&#x2e;&#99;&#x6f;&#x6d;">&#x79;&#111;&#x75;&#x40;&#101;&#120;&#97;&#x6d;&#x70;&#x6c;&#x65;&#x2e;&#99;&#x6f;&#x6d;</a>“<br>git config –global user.name “Your Name”</p>
-<p>repo init -u <a target="_blank" rel="noopener" href="https://mirrors.tuna.tsinghua.edu.cn/git/lineageOS/LineageOS/android.git">https://mirrors.tuna.tsinghua.edu.cn/git/lineageOS/LineageOS/android.git</a> -b lineage-17.1 –repo-url&#x3D;<a target="_blank" rel="noopener" href="https://gerrit-googlesource.lug.ustc.edu.cn/git-repo">https://gerrit-googlesource.lug.ustc.edu.cn/git-repo</a></p>
-</blockquote>
-<p>修改<code>.repo/manifests/default.xml</code>，将</p>
-<p><code>  &lt;remote  name=&quot;github&quot;           fetch=&quot;..&quot;           review=&quot;review.lineageos.org&quot; /&gt;</code></p>
-<p>改成</p>
-<p><code>  &lt;remote  name=&quot;github&quot;           fetch=&quot;https://github.com/&quot; /&gt;  &lt;remote  name=&quot;lineage&quot;           fetch=&quot;https://mirrors.tuna.tsinghua.edu.cn/git/lineageOS/&quot;           review=&quot;review.lineageos.org&quot; /&gt;</code></p>
-<p>将</p>
-<p><code>  &lt;remote  name=&quot;aosp&quot;           fetch=&quot;https://android.googlesource.com&quot;</code></p>
-<p>改成</p>
-<p><code>  &lt;remote  name=&quot;aosp&quot;           fetch=&quot;https://mirrors.tuna.tsinghua.edu.cn/git/AOSP&quot;</code></p>
-<p>将</p>
-<p><code>  &lt;default revision=&quot;...&quot;           remote=&quot;github&quot;</code></p>
-<p>改成</p>
-<p><code>  &lt;default revision=&quot;...&quot;           remote=&quot;lineage&quot;</code></p>
-<p>同步源码树（以后只需执行这条命令来同步）：</p>
-<blockquote>
-<h1 id="防止文件太大同步过程中导致EOF"><a href="#防止文件太大同步过程中导致EOF" class="headerlink" title="防止文件太大同步过程中导致EOF"></a>防止文件太大同步过程中导致EOF</h1><p>git config –global http.postBuffer 524288000<br>repo sync</p>
-</blockquote>
-<p>这将根据网速来判断需要花费多长时间。</p>
-<p>自己实践了下，虽然网速够快，但是清华源的一些东西都不是很全，所以如果能够进外网还是使用官方的教程来进行。</p>
-<h2 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h2><blockquote>
-<p>source build&#x2F;envsetup.sh</p>
-<p>breakfast sailfish</p>
-</blockquote>
-<p>然后就是提取blobs了，我这里使用基于OTA的方式来提取，其他的也可以参考官网。</p>
-<blockquote>
-<p>wget <a target="_blank" rel="noopener" href="https://mirrorbits.lineageos.org/full/sailfish/20201212/lineage-17.1-20201212-nightly-sailfish-signed.zip">https://mirrorbits.lineageos.org/full/sailfish/20201212/lineage-17.1-20201212-nightly-sailfish-signed.zip</a></p>
-<p>sha256sum 20201212&#x2F;lineage-17.1-20201212-nightly-sailfish-signed.zip</p>
-<p>unzip 20201212&#x2F;lineage-17.1-20201212-nightly-sailfish-signed.zip payload.bin</p>
-<p>git clone <a target="_blank" rel="noopener" href="https://github.com/LineageOS/scripts">https://github.com/LineageOS/scripts</a></p>
-<p>python scripts&#x2F;update-payload-extractor&#x2F;extract.py payload.bin –output_dir .&#x2F;</p>
-<p>mkdir system&#x2F;<br>mount system.img system&#x2F;<br>mount vendor.img system&#x2F;vendor&#x2F;<br>mount product.img system&#x2F;product&#x2F;</p>
-</blockquote>
-<p>回到源代码的根目录中执行<code>extract-files.sh</code></p>
-<blockquote>
-<p>.&#x2F;extract-files.sh ~&#x2F;android&#x2F;system_dump&#x2F;<br>sudo umount -R ~&#x2F;android&#x2F;system_dump&#x2F;system&#x2F;<br>rm -rf ~&#x2F;android&#x2F;system_dump&#x2F;<br>croot<br>brunch sailfish</p>
-</blockquote>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/luoyesiqiu/p/10701419.html">https://www.cnblogs.com/luoyesiqiu/p/10701419.html</a></li>
-<li><a target="_blank" rel="noopener" href="https://wiki.lineageos.org/devices/sailfish/build">https://wiki.lineageos.org/devices/sailfish/build</a></li>
-<li><a target="_blank" rel="noopener" href="https://mirrors.tuna.tsinghua.edu.cn/help/lineageOS/">https://mirrors.tuna.tsinghua.edu.cn/help/lineageOS/</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/stucki/docker-lineageos">https://github.com/stucki/docker-lineageos</a></li>
-<li><a target="_blank" rel="noopener" href="https://wiki.lineageos.org/extracting_blobs_from_zips.html">https://wiki.lineageos.org/extracting_blobs_from_zips.html</a></li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://tugohost.github.io.com/2020/12/12/%E4%BD%BF%E7%94%A8docker%E7%BC%96%E8%AF%91LinegeOS/" data-id="cl8x7xxbn000re875e9ejepx7" data-title="使用docker编译LinegeOS" class="article-share-link">Share</a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/" rel="tag">Android</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-绕过安卓应用检测项" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2020/12/02/%E7%BB%95%E8%BF%87%E5%AE%89%E5%8D%93%E5%BA%94%E7%94%A8%E6%A3%80%E6%B5%8B%E9%A1%B9/" class="article-date">
-  <time class="dt-published" datetime="2020-12-02T02:28:25.000Z" itemprop="datePublished">2020-12-02</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
+          <a class="icon" target="_blank" rel="noopener" href="/" aria-label="twitter">
+            <i class="fab fa-twitter"></i><!--
+      ---></a><!--
+    ---><!--
+    --->, 
         
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2020/12/02/%E7%BB%95%E8%BF%87%E5%AE%89%E5%8D%93%E5%BA%94%E7%94%A8%E6%A3%80%E6%B5%8B%E9%A1%B9/">绕过安卓应用检测项</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
       
-        <h2 id="针对Xposed检测"><a href="#针对Xposed检测" class="headerlink" title="针对Xposed检测"></a>针对Xposed检测</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/Je1kRksxHTTYb4l9x3bTmQ">Android逆向之旅—破解某支付软件防Xposed等框架Hook功能检测机制</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.52pojie.cn/thread-621570-1-1.html">阿里系产品Xposed Hook检测机制原理分析</a></li>
-<li><a target="_blank" rel="noopener" href="https://tech.meituan.com/android_anti_hooking.html">美团出品-Android Hook技术防范漫谈</a></li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/StnqWtZMFCu09snIEGi1RQ">看雪出品-企业壳反调试及hook检测分析</a></li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/ZFJdne95K_cA223ey-LRLA">支付宝小专栏-无需 Root 也能使用 Xposed</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.52pojie.cn/thread-684757-1-1.html">抖音短视频检测 Xposed 分析（一）</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.52pojie.cn/thread-691584-1-1.html">抖音短视频检测 Xposed 分析（二）</a></li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/tamMeh2xsi6L37jjizW_rA">检测Android虚拟机的方法和代码实现</a></li>
-</ul>
-<h2 id="针对Frida检测"><a href="#针对Frida检测" class="headerlink" title="针对Frida检测"></a>针对Frida检测</h2><h2 id="针对ROOT环境检测"><a href="#针对ROOT环境检测" class="headerlink" title="针对ROOT环境检测"></a>针对ROOT环境检测</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> commonPaths = [</span><br><span class="line">    <span class="string">&quot;/data/local/bin/su&quot;</span>,</span><br><span class="line">    <span class="string">&quot;/data/local/su&quot;</span>,</span><br><span class="line">    <span class="string">&quot;/data/local/xbin/su&quot;</span>,</span><br><span class="line">    <span class="string">&quot;/dev/com.koushikdutta.superuser.daemon/&quot;</span>,</span><br><span class="line">    <span class="string">&quot;/sbin/su&quot;</span>,</span><br><span class="line">    <span class="string">&quot;/system/app/Superuser.apk&quot;</span>,</span><br><span class="line">    <span class="string">&quot;/system/bin/failsafe/su&quot;</span>,</span><br><span class="line">    <span class="string">&quot;/system/bin/su&quot;</span>,</span><br><span class="line">    <span class="string">&quot;/system/etc/init.d/99SuperSUDaemon&quot;</span>,</span><br><span class="line">    <span class="string">&quot;/system/sd/xbin/su&quot;</span>,</span><br><span class="line">    <span class="string">&quot;/system/xbin/busybox&quot;</span>,</span><br><span class="line">    <span class="string">&quot;/system/xbin/daemonsu&quot;</span>,</span><br><span class="line">    <span class="string">&quot;/system/xbin/su&quot;</span>,</span><br><span class="line">  ];</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="title class_">RootPackages</span> = [<span class="string">&quot;com.noshufou.android.su&quot;</span>, <span class="string">&quot;com.noshufou.android.su.elite&quot;</span>, <span class="string">&quot;eu.chainfire.supersu&quot;</span>,</span><br><span class="line">        <span class="string">&quot;com.koushikdutta.superuser&quot;</span>, <span class="string">&quot;com.thirdparty.superuser&quot;</span>, <span class="string">&quot;com.yellowes.su&quot;</span>, <span class="string">&quot;com.koushikdutta.rommanager&quot;</span>,</span><br><span class="line">        <span class="string">&quot;com.koushikdutta.rommanager.license&quot;</span>, <span class="string">&quot;com.dimonvideo.luckypatcher&quot;</span>, <span class="string">&quot;com.chelpus.lackypatch&quot;</span>,</span><br><span class="line">        <span class="string">&quot;com.ramdroid.appquarantine&quot;</span>, <span class="string">&quot;com.ramdroid.appquarantinepro&quot;</span>, <span class="string">&quot;com.devadvance.rootcloak&quot;</span>, <span class="string">&quot;com.devadvance.rootcloakplus&quot;</span>,</span><br><span class="line">        <span class="string">&quot;de.robv.android.xposed.installer&quot;</span>, <span class="string">&quot;com.saurik.substrate&quot;</span>, <span class="string">&quot;com.zachspong.temprootremovejb&quot;</span>, <span class="string">&quot;com.amphoras.hidemyroot&quot;</span>,</span><br><span class="line">        <span class="string">&quot;com.amphoras.hidemyrootadfree&quot;</span>, <span class="string">&quot;com.formyhm.hiderootPremium&quot;</span>, <span class="string">&quot;com.formyhm.hideroot&quot;</span>, <span class="string">&quot;me.phh.superuser&quot;</span>,</span><br><span class="line">        <span class="string">&quot;eu.chainfire.supersu.pro&quot;</span>, <span class="string">&quot;com.kingouser.com&quot;</span>, <span class="string">&quot;com.android.vending.billing.InAppBillingService.COIN&quot;</span>,<span class="string">&quot;com.topjohnwu.magisk&quot;</span></span><br><span class="line">    ];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> <span class="title class_">RootBinaries</span> = [<span class="string">&quot;su&quot;</span>, <span class="string">&quot;busybox&quot;</span>, <span class="string">&quot;supersu&quot;</span>, <span class="string">&quot;Superuser.apk&quot;</span>, <span class="string">&quot;KingoUser.apk&quot;</span>, <span class="string">&quot;SuperSu.apk&quot;</span>,<span class="string">&quot;magisk&quot;</span>];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> <span class="title class_">RootProperties</span> = &#123;</span><br><span class="line">        <span class="string">&quot;ro.build.selinux&quot;</span>: <span class="string">&quot;1&quot;</span>,</span><br><span class="line">        <span class="string">&quot;ro.debuggable&quot;</span>: <span class="string">&quot;0&quot;</span>,</span><br><span class="line">        <span class="string">&quot;service.adb.root&quot;</span>: <span class="string">&quot;0&quot;</span>,</span><br><span class="line">        <span class="string">&quot;ro.secure&quot;</span>: <span class="string">&quot;1&quot;</span></span><br><span class="line">    &#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>但是就算是把这些都做了，也不一定会绕过root检测的app。</p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://github.com/sensepost/objection/blob/master/agent/src/android/root.ts">https://github.com/sensepost/objection/blob/master/agent/src/android/root.ts</a></li>
-<li><a target="_blank" rel="noopener" href="https://codeshare.frida.re/@dzonerzy/fridantiroot/">https://codeshare.frida.re/@dzonerzy/fridantiroot/</a></li>
-</ul>
-<blockquote>
-<p>frida -l antiroot.js -U -f com.example.app –no-pause</p>
-</blockquote>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://tugohost.github.io.com/2020/12/02/%E7%BB%95%E8%BF%87%E5%AE%89%E5%8D%93%E5%BA%94%E7%94%A8%E6%A3%80%E6%B5%8B%E9%A1%B9/" data-id="cl8x7xxbr0011e8752l0t9vrf" data-title="绕过安卓应用检测项" class="article-share-link">Share</a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%80%86%E5%90%91/" rel="tag">逆向</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-Frida_安装" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2020/11/10/Frida_%E5%AE%89%E8%A3%85/" class="article-date">
-  <time class="dt-published" datetime="2020-11-10T02:28:25.000Z" itemprop="datePublished">2020-11-10</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
         
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2020/11/10/Frida_%E5%AE%89%E8%A3%85/">Frida 安装</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>针对frida 12.8.0版本的安装，这个版本可能是比较稳定的：</p>
-<blockquote>
-<p>pip install frida&#x3D;&#x3D;12.8.0</p>
-<p>pip install frida-tools&#x3D;&#x3D;5.3.0</p>
-<p>pip install objection&#x3D;&#x3D;1.8.4</p>
-</blockquote>
-<p>按照这个顺序，在装objection的时候，就会直接Requirement already satisfied，不会再去下载新的frida来安装了。</p>
-<p>关于pyenv install version，下载python版本压缩包的时候特别慢的话，就将压缩包下载到本地.pyenv&#x2F;cache目录中，没有cache就创建一个。</p>
-<p>针对frida 14.2.13版本的安装：</p>
-<blockquote>
-<p>pip install objection&#x3D;&#x3D;1.10.1 -i <a target="_blank" rel="noopener" href="https://pypi.tuna.tsinghua.edu.cn/simple/">https://pypi.tuna.tsinghua.edu.cn/simple/</a></p>
-</blockquote>
-<p>frida版本对应关系</p>
-<blockquote>
-<p>frida 14.2.18<br>frida-tools 9.2.5<br>objection 1.11.0</p>
-</blockquote>
-<p>其中，</p>
-<pre><code>Running setup.py install for frida ...
-会卡住，静候一阵子会好的。
-</code></pre>
-<h2 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h2><pre><code>https://www.cnblogs.com/pcat/p/12501850.html
-</code></pre>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://tugohost.github.io.com/2020/11/10/Frida_%E5%AE%89%E8%A3%85/" data-id="cl8x7xxbc0005e8759eqdh7v6" data-title="Frida 安装" class="article-share-link">Share</a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%80%86%E5%90%91/" rel="tag">逆向</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-Frida入门" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2020/09/10/Frida%E5%85%A5%E9%97%A8/" class="article-date">
-  <time class="dt-published" datetime="2020-09-10T02:28:25.000Z" itemprop="datePublished">2020-09-10</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
+          <a class="icon" target="_blank" rel="noopener" href="/" aria-label="facebook">
+            <i class="fab fa-facebook"></i><!--
+      ---></a><!--
+    ---><!--
+    --->, 
         
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2020/09/10/Frida%E5%85%A5%E9%97%A8/">Frida入门</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
       
-        <h2 id="Frida-安装"><a href="#Frida-安装" class="headerlink" title="Frida 安装"></a>Frida 安装</h2><h3 id="pyenv"><a href="#pyenv" class="headerlink" title="pyenv"></a>pyenv</h3><p>参考这个链接即可：<a target="_blank" rel="noopener" href="https://gist.github.com/cedricbonhomme/ababe00d0a675ea5c69d777276e8f375">https://gist.github.com/cedricbonhomme/ababe00d0a675ea5c69d777276e8f375</a></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"># Installation of a decent editor, emacs</span><br><span class="line">$ sudo apt install emacs</span><br><span class="line"></span><br><span class="line"># Prerequisites to build Python</span><br><span class="line">$ sudo apt install make build-essential libssl-dev zlib1g-dev libbz2-dev \</span><br><span class="line">libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \</span><br><span class="line">xz-utils tk-dev libffi-dev liblzma-dev python-openssl</span><br><span class="line"></span><br><span class="line"># Installation of pyenv</span><br><span class="line">$ curl https://pyenv.run | bash</span><br><span class="line"></span><br><span class="line"># Always use the latest stable version of Python</span><br><span class="line">$ pyenv install 3.8.0</span><br><span class="line">$ pyenv global 3.8.0</span><br><span class="line"></span><br><span class="line"># Installation of pipx</span><br><span class="line">$ python -m pip install --user pipx</span><br><span class="line">$ python -m userpath append ~/.local/bin</span><br><span class="line"></span><br><span class="line"># Installation of poetry</span><br><span class="line">$ curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python</span><br></pre></td></tr></table></figure>
-<h3 id="新建一个Android项目"><a href="#新建一个Android项目" class="headerlink" title="新建一个Android项目"></a>新建一个Android项目</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> myapplication.example.com.frida_demo;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> androidx.appcompat.app.AppCompatActivity;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.os.Bundle;</span><br><span class="line"><span class="keyword">import</span> android.util.Log;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MainActivity</span> <span class="keyword">extends</span> <span class="title class_">AppCompatActivity</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="type">String</span> <span class="variable">total</span> <span class="operator">=</span> <span class="string">&quot;@@@###@@@&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">onCreate</span><span class="params">(Bundle savedInstanceState)</span> &#123;</span><br><span class="line">        <span class="built_in">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span>(<span class="literal">true</span>)&#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                Thread.sleep(<span class="number">1000</span>);</span><br><span class="line">            &#125;<span class="keyword">catch</span> (InterruptedException e)&#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">            fun(<span class="number">50</span>, <span class="number">30</span>);</span><br><span class="line">            Log.d(<span class="string">&quot;T.G.string&quot;</span>, fun(<span class="string">&quot;LoWeRcAsE Me!!!!!!!!&quot;</span>));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">fun</span><span class="params">(<span class="type">int</span> x,<span class="type">int</span> y)</span>&#123;</span><br><span class="line">        Log.d(<span class="string">&quot;T.G.Sum&quot;</span>, String.valueOf(x + y));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    String <span class="title function_">fun</span><span class="params">(String x)</span>&#123;</span><br><span class="line">        total += x;</span><br><span class="line">        <span class="keyword">return</span> total.toLowerCase();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    String <span class="title function_">secret</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> total;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>功能主要是打印日志。</p>
-<p>执行命令即可看到</p>
-<blockquote>
-<p>adb logcat | grep T.G.string</p>
-</blockquote>
-<p><img src="/2020/09/10/Frida%E5%85%A5%E9%97%A8/1.png"></p>
-<h2 id="Frida使用"><a href="#Frida使用" class="headerlink" title="Frida使用"></a>Frida使用</h2><p>首先需要在firda的releases界面中找到测试机的abi版本注意需要是server端。</p>
-<p>firda releases：<a target="_blank" rel="noopener" href="https://github.com/frida/frida/releases">https://github.com/frida/frida/releases</a></p>
-<p>将下载好的frida-server push到手机上</p>
-<blockquote>
-<p>adb push frida-server &#x2F;data&#x2F;local&#x2F;tmp&#x2F;</p>
-</blockquote>
-<p>frida的开发环境：<a target="_blank" rel="noopener" href="https://github.com/oleavr/frida-agent-example">https://github.com/oleavr/frida-agent-example</a></p>
-<p>按照官方中的教程：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ git clone git://github.com/oleavr/frida-agent-example.git</span><br><span class="line">$ cd frida-agent-example/</span><br><span class="line">$ npm install</span><br><span class="line">$ frida -U -f com.example.android --no-pause -l _agent.js</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>在<code>agent</code>目录下创建<code>s1.js</code></p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;Script loaded successfully &quot;</span>);</span><br><span class="line"><span class="title class_">Java</span>.<span class="title function_">perform</span>(<span class="keyword">function</span> <span class="title function_">x</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;Inside java perform function&quot;</span>);</span><br><span class="line">    <span class="comment">//定位类</span></span><br><span class="line">    <span class="keyword">var</span> my_class = <span class="title class_">Java</span>.<span class="title function_">use</span>(<span class="string">&quot;myapplication.example.com.frida_demo.MainActivity&quot;</span>);</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;Java.Use.Successfully!&quot;</span>);<span class="comment">//定位类成功！</span></span><br><span class="line">    <span class="keyword">var</span> string_class = <span class="title class_">Java</span>.<span class="title function_">use</span>(<span class="string">&quot;java.lang.String&quot;</span>); <span class="comment">//获取String类型</span></span><br><span class="line"></span><br><span class="line">    my_class.<span class="property">fun</span>.<span class="title function_">overload</span>(<span class="string">&quot;java.lang.String&quot;</span>).<span class="property">implementation</span> = <span class="keyword">function</span> (<span class="params">x</span>) &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;*************************************&quot;</span>);</span><br><span class="line">        <span class="keyword">var</span> my_string = string_class.$new(<span class="string">&quot;My TeSt String#####&quot;</span>); <span class="comment">//new一个新字符串</span></span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;Original arg: &quot;</span> + x);</span><br><span class="line">        <span class="keyword">var</span> ret = <span class="variable language_">this</span>.<span class="title function_">fun</span>(my_string); <span class="comment">// 用新的参数替换旧的参数，然后调用原函数获取结果</span></span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;Return value: &quot;</span> + ret);</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;*************************************&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> ret;</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="comment">//在这里更改类的方法的实现（implementation）</span></span><br><span class="line">    my_class.<span class="property">fun</span>.<span class="property">implementation</span> = <span class="keyword">function</span> (<span class="params">x, y</span>) &#123;</span><br><span class="line">        <span class="comment">//打印替换前的参数</span></span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;original call: fun(&quot;</span> + x + <span class="string">&quot;, &quot;</span> + y + <span class="string">&quot;)&quot;</span>);</span><br><span class="line">        <span class="comment">//把参数替换成2和5，依旧调用原函数</span></span><br><span class="line">        <span class="keyword">var</span> ret_value = <span class="variable language_">this</span>.<span class="title function_">fun</span>(<span class="number">2</span>, <span class="number">5</span>);</span><br><span class="line">        <span class="keyword">return</span> ret_value;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>调用js脚本的<code>loader.py</code>：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> frida</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">my_message_handler</span>(<span class="params">message , payload</span>): <span class="comment">#定义错误处理</span></span><br><span class="line">	<span class="built_in">print</span>(message)</span><br><span class="line">	<span class="built_in">print</span>(payload)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 连接安卓机上的frida-server</span></span><br><span class="line">device = frida.get_usb_device()</span><br><span class="line"><span class="comment"># 启动`demo02`这个app</span></span><br><span class="line">pid = device.spawn([<span class="string">&quot;myapplication.example.com.frida_demo&quot;</span>])</span><br><span class="line">device.resume(pid)</span><br><span class="line">time.sleep(<span class="number">1</span>)</span><br><span class="line">session = device.attach(pid)</span><br><span class="line"><span class="comment"># 加载s1.js脚本</span></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&quot;s1.js&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    script = session.create_script(f.read())</span><br><span class="line">script.on(<span class="string">&quot;message&quot;</span>, my_message_handler)</span><br><span class="line">script.load()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 脚本会持续运行等待输入</span></span><br><span class="line"><span class="built_in">input</span>()</span><br></pre></td></tr></table></figure>
-
-<p>然后adb shell 进入手机，不过frida需要root，需要事先root的手机。</p>
-<p>执行命令：</p>
-<blockquote>
-<p>chmod +x frida-server</p>
-<p>.&#x2F;frida-server</p>
-</blockquote>
-<p>在客户端（也就是自己的电脑）输入<code>frida-ps U </code>检测frida-server是否运行成功。</p>
-<p><img src="/2020/09/10/Frida%E5%85%A5%E9%97%A8/2.png"></p>
-<p>运行<code>python3 loader.py</code></p>
-<p><img src="/2020/09/10/Frida%E5%85%A5%E9%97%A8/3.png"></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://tugohost.github.io.com/2020/09/10/Frida%E5%85%A5%E9%97%A8/" data-id="cl8x7xxbd0008e8756lo57534" data-title="Frida入门" class="article-share-link">Share</a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%80%86%E5%90%91/" rel="tag">逆向</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-Go语言中切片的内部实现和基础功能" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E5%88%87%E7%89%87%E7%9A%84%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0%E5%92%8C%E5%9F%BA%E7%A1%80%E5%8A%9F%E8%83%BD/" class="article-date">
-  <time class="dt-published" datetime="2019-05-20T02:28:25.000Z" itemprop="datePublished">2019-05-20</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
         
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E5%88%87%E7%89%87%E7%9A%84%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0%E5%92%8C%E5%9F%BA%E7%A1%80%E5%8A%9F%E8%83%BD/">Go语言中切片的内部实现和基础功能</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>切片是一种数据结构，这种数据结构便于使用和管理数据集合。切片是围绕动态数组的概念构建的，可以按需自动增长和缩小。切片的动态增长是通过内置函数append来实现的。这个函数可以快速且高效的增长切片。还可以通过对切片再次切片来缩小切片的大小。因为切片的底层内存也是在连续块中分配的，所以切片还能获得索引、迭代以及垃圾回收优化的好处。</p>
-<h3 id="内部实现"><a href="#内部实现" class="headerlink" title="内部实现"></a>内部实现</h3><p>切片是一个很小的对象，对底层数组进行了抽象，并提供相关的操作方法。切片有3个字段的数据结构，这些数据结构包含Go语言需要操作底层数组的元数据。<br><img src="/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E5%88%87%E7%89%87%E7%9A%84%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0%E5%92%8C%E5%9F%BA%E7%A1%80%E5%8A%9F%E8%83%BD/1.png"></p>
-<p>这3个字段分别是指向底层数组的指针、切片访问的元素的个数（即长度）和切片允许增长到的元素个数（即容量）。</p>
-<h3 id="创建和初始化"><a href="#创建和初始化" class="headerlink" title="创建和初始化"></a>创建和初始化</h3><ol>
-<li>make和切片字面量<br>一种创建切片的方法是使用内置的make函数。当使用make时，需要传入一个参数，指定切片的长度：</li>
-</ol>
-<p><code>slice := make([]string, 5)</code></p>
-<p>如果只指定长度，那么切片的容量和长度相等。也可以分别指定长度和容量：</p>
-<p><code>slice := make([]int, 3, 5)</code></p>
-<p>分别指定长度和容量时，创建的切片，底层数组的长度是指定的容量，但是初始化后并不能访问所有的数组元素。</p>
-<p>通过切片字面量来声明切片</p>
-<p><code>slice := []string&#123;&quot;Red&quot;,&quot;Blue&quot;,&quot;Green&quot;,&quot;Yello&quot;,&quot;Pink&quot;&#125;</code></p>
-<p>使用索引声明切片</p>
-<p><code>slice := []string&#123;99:&quot;&quot;&#125;</code></p>
-<p>声明数组和声明切片的不同</p>
-<p><code>array := [3]int&#123;10,20,30&#125;slice := []int&#123;10,20,30&#125;</code></p>
-<ol>
-<li>nil和空切片<br>创建nil切片</li>
-</ol>
-<p><code>var slice []int</code></p>
-<p><img src="/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E5%88%87%E7%89%87%E7%9A%84%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0%E5%92%8C%E5%9F%BA%E7%A1%80%E5%8A%9F%E8%83%BD/2.png"></p>
-<p>声明空切片</p>
-<p><code>slice := make([]int, 0)slice := []int&#123;&#125;</code></p>
-<p><img src="/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E5%88%87%E7%89%87%E7%9A%84%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0%E5%92%8C%E5%9F%BA%E7%A1%80%E5%8A%9F%E8%83%BD/3.png" alt="img"></p>
-<h3 id="使用切片"><a href="#使用切片" class="headerlink" title="使用切片"></a>使用切片</h3><ol>
-<li>赋值和切片<br>对切片里某个索引指向的元素赋值和对数组里某个索引指向的元素赋值的方法完全一样。使用<code>[]</code>操作符就可以改变某个元素的值。</li>
-</ol>
-<p><code>slice := []int&#123;10,20,30,40,50&#125;slice[1] = 25</code></p>
-<p>使用切片创建切片</p>
-<p><code>slice := []int&#123;10,20,30,40,50&#125;newSlice := slice[1:3]</code></p>
-<ol>
-<li>切片增长<br>相对于数组而言，使用切片的一个好处是，可以按需增加切片的容量。Go语言内置的append函数会处理增加长度时的所有操作细节。<br>要使用append，需要一个被操作的切片和一个要追加的值:</li>
-</ol>
-<p><code>slice := []int&#123;10,20,30,40,50&#125;newSlice := slice[1:3]newSlice = append(newSlice, 60)</code></p>
-<p><img src="/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E5%88%87%E7%89%87%E7%9A%84%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0%E5%92%8C%E5%9F%BA%E7%A1%80%E5%8A%9F%E8%83%BD/4.png" alt="img"></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://tugohost.github.io.com/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E5%88%87%E7%89%87%E7%9A%84%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0%E5%92%8C%E5%9F%BA%E7%A1%80%E5%8A%9F%E8%83%BD/" data-id="cl8x7xxbf000de87561iq7myq" data-title="Go语言中切片的内部实现和基础功能" class="article-share-link">Share</a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Golang/" rel="tag">Golang</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-Go语言中数组的内部实现和基础功能" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E6%95%B0%E7%BB%84%E7%9A%84%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0%E5%92%8C%E5%9F%BA%E7%A1%80%E5%8A%9F%E8%83%BD/" class="article-date">
-  <time class="dt-published" datetime="2019-05-20T02:28:25.000Z" itemprop="datePublished">2019-05-20</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
+          <a class="icon" target="_blank" rel="noopener" href="/" aria-label="linkedin">
+            <i class="fab fa-linkedin"></i><!--
+      ---></a><!--
+    ---><!--
+    ---> and 
         
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E6%95%B0%E7%BB%84%E7%9A%84%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0%E5%92%8C%E5%9F%BA%E7%A1%80%E5%8A%9F%E8%83%BD/">Go语言中数组的内部实现和基础功能</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
       
-        <h2 id="数组的内部实现和基础功能"><a href="#数组的内部实现和基础功能" class="headerlink" title="数组的内部实现和基础功能"></a>数组的内部实现和基础功能</h2><p>因为数组是切片和映射的基础数据结构。理解了数组的工作原理，有助于理解切片和映射提供的优雅和强大的功能。</p>
-<h3 id="内部实现"><a href="#内部实现" class="headerlink" title="内部实现"></a>内部实现</h3><p>在Go语言里，数组是一个长度固定的数据类型，用于存储一段具有相同的类型的元素的连续块。<br>下图中可以到数组的表示。<br><img src="/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E6%95%B0%E7%BB%84%E7%9A%84%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0%E5%92%8C%E5%9F%BA%E7%A1%80%E5%8A%9F%E8%83%BD/1.png"></p>
-<p>数组是一种非常有用的数据结构，因为其占用的内存是连续分配的。由于内存连续，CPU能把正在使用的数据缓存更久的时间。而且内存连续很容易计算索引，可以快速迭代数组里的所有元素。数组的类型信息可以提供每次访问一个元素时需要在内存中移动的距离。</p>
-<h3 id="声明和初始化"><a href="#声明和初始化" class="headerlink" title="声明和初始化"></a>声明和初始化</h3><p>声明数组时需要指定内部存储的数据的类型，以及需要存储的元素的数量，这个数量也称为数组的长度，如下：</p>
-<p><code>// 声明一个包含5个元素的整型数组var array [5]int</code></p>
-<p><img src="/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E6%95%B0%E7%BB%84%E7%9A%84%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0%E5%92%8C%E5%9F%BA%E7%A1%80%E5%8A%9F%E8%83%BD/2.png"></p>
-<p>一种快速创建数组并初始化的方式是使用数组字面量。</p>
-<p><code>array := [5]int&#123;10,20,30,40,50&#125;</code></p>
-<p><img src="/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E6%95%B0%E7%BB%84%E7%9A%84%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0%E5%92%8C%E5%9F%BA%E7%A1%80%E5%8A%9F%E8%83%BD/3.png"></p>
-<h3 id="使用数组"><a href="#使用数组" class="headerlink" title="使用数组"></a>使用数组</h3><p>要访问数组里某个单独元素，使用[]运算符，如：</p>
-<p><code>// 声明一个包含5个元素的整型数组// 用具体值初始化为每个元素array := [5]int&#123;10,20,30,40,50&#125;// 修改索引为2的元素的值array[2] = 35</code></p>
-<p>使用*运算符就可以访问元素指针所指向的值，如：</p>
-<p><code>// 声明包含5个元素的指向整数的数组// 用整型指针初始化索引为0和1的数组元素array := [5]*int&#123;0: new(int), 1: new(int)&#125;// 为索引为0和1的元素赋值*array[0] = 10*array[1] = 20</code></p>
-<p><img src="/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E6%95%B0%E7%BB%84%E7%9A%84%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0%E5%92%8C%E5%9F%BA%E7%A1%80%E5%8A%9F%E8%83%BD/4.png" alt="img"></p>
-<p>在Go语言里，数组是一个值。这意味着数组可以用在赋值操作中。变量名代表整个数组，因此，同样类型的数组可以赋值给另一个数组：</p>
-<p><code>// 声明一个包含5个元素的字符串数组var array1 [5]string// 声明第二个包含5个元素的字符串数组// 用颜色初始化数组array2 := [5]string&#123;&quot;Red&quot;,&quot;Blue&quot;,&quot;Green&quot;,&quot;Yellow&quot;,&quot;Pink&quot;&#125;// 把array2的值复制到array1array1 = array2</code></p>
-<p><img src="/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E6%95%B0%E7%BB%84%E7%9A%84%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0%E5%92%8C%E5%9F%BA%E7%A1%80%E5%8A%9F%E8%83%BD/5.png" alt="img"></p>
-<p>数组变量的类型包括数组长度和每个元素的类型。只有这两部分都相同的数组，才是类型相同的数组，才能互相赋值。</p>
-<p>复制指针数组，只会复制指针的值，而不会复制指针所指向的值。</p>
-<p><code>var array [3]*stringarray2 := [3]*string&#123;new(string), new(string), new(string)&#125;*array2[0] = &quot;Red&quot;*array2[1] = &quot;Blue&quot;*array2[2] = &quot;Green&quot;array1 = array2</code></p>
-<p><img src="/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E6%95%B0%E7%BB%84%E7%9A%84%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0%E5%92%8C%E5%9F%BA%E7%A1%80%E5%8A%9F%E8%83%BD/6.png" alt="img"></p>
-<h3 id="多维数组"><a href="#多维数组" class="headerlink" title="多维数组"></a>多维数组</h3><p>数组本身只有一个维度，不过可以组合多个数组创建多维数组。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">var array [4][2]int</span><br><span class="line"></span><br><span class="line">array := [4][2]int&#123;&#123;10,11&#125;,&#123;20,21&#125;,&#123;30,31&#125;,&#123;40,41&#125;&#125;</span><br><span class="line"></span><br><span class="line">array := [4][2]int&#123;1: &#123;20,21&#125;,3: &#123;40,41&#125;&#125;</span><br><span class="line"></span><br><span class="line">array := [4][2]int&#123;1: &#123;0: 20&#125;,3: &#123;1: 41&#125;&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://tugohost.github.io.com/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E6%95%B0%E7%BB%84%E7%9A%84%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0%E5%92%8C%E5%9F%BA%E7%A1%80%E5%8A%9F%E8%83%BD/" data-id="cl8x7xxbi000ge87521kw8qhb" data-title="Go语言中数组的内部实现和基础功能" class="article-share-link">Share</a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Golang/" rel="tag">Golang</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-Go语言中的打包和工具链" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E7%9A%84%E6%89%93%E5%8C%85%E5%92%8C%E5%B7%A5%E5%85%B7%E9%93%BE/" class="article-date">
-  <time class="dt-published" datetime="2019-05-20T02:28:25.000Z" itemprop="datePublished">2019-05-20</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
         
+          <a class="icon" target="_blank" rel="noopener" href="mailto:huo4nbtf@duck.com" aria-label="mail">
+            <i class="fas fa-envelope"></i><!--
+      ---></a>
+        <!--
+    --->.
+        
+      
+    </p>
   
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E7%9A%84%E6%89%93%E5%8C%85%E5%92%8C%E5%B7%A5%E5%85%B7%E9%93%BE/">Go语言中的打包和工具链</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h2 id="包"><a href="#包" class="headerlink" title="包"></a>包</h2><p>所有Go语言的程序都会组织成若干组文件，每组文件被称为一个包。这样每个包的代码都可以作为很小的复用单元，被其他项目引用。</p>
-<h3 id="包名惯例"><a href="#包名惯例" class="headerlink" title="包名惯例"></a>包名惯例</h3><p>给包命名的惯例是使用包所在目录的名字。并不需要所有包的名字都与别的包不同，因为导入包时是使用全路径的，所以可以区分同名的不同包。</p>
-<h3 id="main包"><a href="#main包" class="headerlink" title="main包"></a>main包</h3><p>Go语言的编译程序会试图把这种名字的包编译为二进制可执行文件。所有用Go语言编译的可执行程序都必须有一个名为main的包。</p>
-<hr>
-<p><code>命令和包</code> Go文档里经常使用命令（command）这个词来指代可执行程序，如命令行应用程序。这会让新手在阅读文档时产生困惑。记住，在Go语言里，命令是指任何可执行程序。作为对比，包更常用来指语义上可导入的功能单元。</p>
-<hr>
-<h2 id="导入"><a href="#导入" class="headerlink" title="导入"></a>导入</h2><p><code>import</code>语句告诉编译器到磁盘的哪里去找想要导入的包。导入包需要使用关键字import，它会告诉编译器你想引用该位置的包内的代码。如果需要导入多个包，习惯上是将import语句包装在一个导入块中：</p>
-<p><code>import (	&quot;fmt&quot;	&quot;net/http&quot;	&quot;github.com/PuerkitoBio/goquery&quot;	&quot;strconv&quot;)</code></p>
-<p>标准库中的包会在安装Go的位置找到。Go开发者创建的包会在GOPATH环境变量指定的目录里查找。</p>
-<h3 id="远程导入"><a href="#远程导入" class="headerlink" title="远程导入"></a>远程导入</h3><p>目前的大趋势是，使用分布式版本控制系统（DVCS）来分析代码，如GitHub。Go语言的工具链本身就支持从这些网站及类似网站获取源代码。Go工具链会使用导入路径确定需要获取的代码在网络的什么地方。<br>例如：</p>
-<p><code>import &quot;github.com/PuerkitoBio/goquery&quot;</code></p>
-<p>如果路径包含URL，可以使用Go工具链从DVCS获取包，并把包的源代码保存在GOPATH指向的路径里与URL匹配的目录里。这个获取过程使用<code>go get</code>命令完成。go get将获取任意指定的URL的包，或者一个已经导入的包所依赖的其他包。</p>
-<h3 id="命名导入"><a href="#命名导入" class="headerlink" title="命名导入"></a>命名导入</h3><p>崇明的包可以通过命名导入来导入。命名导入时指，在import语句给出的包路径的左侧定义一个名字，将导入的包命名为新名字。<br>例如：</p>
-<p><code>package mainimport &#123;    &quot;fmt&quot;    myfmt &quot;mylib/fmt&quot;&#125;func main()&#123;    fmt.Println(&quot;Standard Library&quot;)    myfmt.Println(&quot;mylib/fmt&quot;)&#125;</code></p>
-<p>当你导入了一个不在代码里使用的包时，Go编译器会编译失败，并输出一个错误。<br>有时，用户可能需要导入一个包，但是不需要引用这个包的标识符。在这种情况下，可以使用空白标识符<code>_</code>来重命名这个导入。</p>
-<hr>
-<p><code>空白标识符</code> 下划线字符（_）在Go语言里称为空白标识符，有很多用法。这个标识符用来抛弃不想继续使用的值，如给导入的包赋予一个空名字，或者忽略函数返回的你不感兴趣的值。</p>
-<hr>
-<h2 id="函数init"><a href="#函数init" class="headerlink" title="函数init"></a>函数init</h2><p>每个包可以包含任意多个init函数，这些函数都会在程序执行开始的时候被调用。所有被编译器发现的init函数都会安排在main函数之前执行。init函数用在设置包、初始化变量或者其他要在程序运行前优先完成的引导工作。</p>
-<h2 id="使用Go的工具"><a href="#使用Go的工具" class="headerlink" title="使用Go的工具"></a>使用Go的工具</h2><p><code>go</code><br><img src="/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E7%9A%84%E6%89%93%E5%8C%85%E5%92%8C%E5%B7%A5%E5%85%B7%E9%93%BE/1.png"></p>
-<p><code>go build</code>编译程序。<br><code>go clean</code>删除编译生成的可执行文件。<br><code>go run</code>会先构建.go文件里包含的程序，然后执行构建后的程序。</p>
-<h2 id="进一步介绍Go开发工具"><a href="#进一步介绍Go开发工具" class="headerlink" title="进一步介绍Go开发工具"></a>进一步介绍Go开发工具</h2><h3 id="go-vet"><a href="#go-vet" class="headerlink" title="go vet"></a>go vet</h3><p>vet命令会帮开发人员检测代码的常见错误。</p>
-<h3 id="Go代码格式化"><a href="#Go代码格式化" class="headerlink" title="Go代码格式化"></a>Go代码格式化</h3><p>fmt命令自动格式化开发人员指定的源代码文件并保存。</p>
-<h3 id="Go语言的文档"><a href="#Go语言的文档" class="headerlink" title="Go语言的文档"></a>Go语言的文档</h3><p>go doc</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://tugohost.github.io.com/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E7%9A%84%E6%89%93%E5%8C%85%E5%92%8C%E5%B7%A5%E5%85%B7%E9%93%BE/" data-id="cl8x7xxbl000ne8750gylcub4" data-title="Go语言中的打包和工具链" class="article-share-link">Share</a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Golang/" rel="tag">Golang</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-
-
-  <nav id="page-nav">
-    
-    <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
-  </nav>
-
 </section>
-        
-          <aside id="sidebar">
+
+<section id="writing">
+  <span class="h1"><a href="/archives/">Writing</a></span>
   
+  <ul class="post-list">
     
-
-  
     
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tags</h3>
-    <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CTF/" rel="tag">CTF</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Golang/" rel="tag">Golang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LLVM/" rel="tag">LLVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8/" rel="tag">安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%BC%8F%E6%B4%9E/" rel="tag">漏洞</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%9E%8E%E6%8A%98%E8%85%BE/" rel="tag">瞎折腾</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%80%86%E5%90%91/" rel="tag">逆向</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tag Cloud</h3>
-    <div class="widget tagcloud">
-      <a href="/tags/Android/" style="font-size: 15px;">Android</a> <a href="/tags/C/" style="font-size: 12.5px;">C++</a> <a href="/tags/CTF/" style="font-size: 10px;">CTF</a> <a href="/tags/Golang/" style="font-size: 17.5px;">Golang</a> <a href="/tags/LLVM/" style="font-size: 15px;">LLVM</a> <a href="/tags/%E5%AE%89%E5%85%A8/" style="font-size: 10px;">安全</a> <a href="/tags/%E6%BC%8F%E6%B4%9E/" style="font-size: 10px;">漏洞</a> <a href="/tags/%E7%9E%8E%E6%8A%98%E8%85%BE/" style="font-size: 10px;">瞎折腾</a> <a href="/tags/%E9%80%86%E5%90%91/" style="font-size: 20px;">逆向</a>
-    </div>
-  </div>
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">October 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/06/">June 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">April 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">January 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">December 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">October 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/09/">September 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">February 2018</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2022/10/06/KUbuntu%2020%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/">KUbuntu20 环境配置</a>
-          </li>
-        
-          <li>
-            <a href="/2022/06/09/LLVM_IR%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/">LLVM从小白到放弃（三）- LLVM IR概述与常用指令</a>
-          </li>
-        
-          <li>
-            <a href="/2022/06/08/LLVM_Pass/">LLVM从小白到放弃（二）- LLVM Pass</a>
-          </li>
-        
-          <li>
-            <a href="/2022/04/22/Android%E5%8A%A0%E8%BD%BDSO%E6%95%B4%E4%B8%AA%E6%B5%81%E7%A8%8B/">Android加载SO整个流程</a>
-          </li>
-        
-          <li>
-            <a href="/2022/04/14/LLVM%E6%A6%82%E8%BF%B0%E4%B8%8ELLVM%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/">LLVM从小白到放弃（一）- LLVM概述与LLVM环境搭建</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
-
-  
-</aside>
-        
-      </div>
-      <footer id="footer">
-  
-  <div class="outer">
-    <div id="footer-info" class="inner">
       
-      &copy; 2022 TUGOhost<br>
-      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    
+    
+      <li class="post-item">
+        
+    <div class="meta">
+      
+        
+          <time datetime="2021-03-08T02:28:25.000Z" itemprop="datePublished">2021-03-08</time>
+        
+      
     </div>
+
+
+        <span>
+    
+        <a class="" href="/2021/03/08/C++%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86/">C++核心知识</a>
+    
+
+
+</span>
+      </li>
+    
+      <li class="post-item">
+        
+    <div class="meta">
+      
+        
+          <time datetime="2021-03-03T02:28:25.000Z" itemprop="datePublished">2021-03-03</time>
+        
+      
+    </div>
+
+
+        <span>
+    
+        <a class="" href="/2021/03/03/C++%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">C++基础知识</a>
+    
+
+
+</span>
+      </li>
+    
+      <li class="post-item">
+        
+    <div class="meta">
+      
+        
+          <time datetime="2020-12-24T02:28:25.000Z" itemprop="datePublished">2020-12-24</time>
+        
+      
+    </div>
+
+
+        <span>
+    
+        <a class="" href="/2020/12/24/%E7%BC%96%E8%AF%91Xposed%E5%B9%B6%E9%AD%94%E6%94%B9%E5%8E%BB%E7%89%B9%E5%BE%81/">编译Xposed并魔改去特征</a>
+    
+
+
+</span>
+      </li>
+    
+      <li class="post-item">
+        
+    <div class="meta">
+      
+        
+          <time datetime="2020-12-12T02:28:25.000Z" itemprop="datePublished">2020-12-12</time>
+        
+      
+    </div>
+
+
+        <span>
+    
+        <a class="" href="/2020/12/12/%E4%BD%BF%E7%94%A8docker%E7%BC%96%E8%AF%91LinegeOS/">使用docker编译LinegeOS</a>
+    
+
+
+</span>
+      </li>
+    
+      <li class="post-item">
+        
+    <div class="meta">
+      
+        
+          <time datetime="2020-12-02T02:28:25.000Z" itemprop="datePublished">2020-12-02</time>
+        
+      
+    </div>
+
+
+        <span>
+    
+        <a class="" href="/2020/12/02/%E7%BB%95%E8%BF%87%E5%AE%89%E5%8D%93%E5%BA%94%E7%94%A8%E6%A3%80%E6%B5%8B%E9%A1%B9/">绕过安卓应用检测项</a>
+    
+
+
+</span>
+      </li>
+    
+      <li class="post-item">
+        
+    <div class="meta">
+      
+        
+          <time datetime="2020-11-10T02:28:25.000Z" itemprop="datePublished">2020-11-10</time>
+        
+      
+    </div>
+
+
+        <span>
+    
+        <a class="" href="/2020/11/10/Frida_%E5%AE%89%E8%A3%85/">Frida 安装</a>
+    
+
+
+</span>
+      </li>
+    
+      <li class="post-item">
+        
+    <div class="meta">
+      
+        
+          <time datetime="2020-09-10T02:28:25.000Z" itemprop="datePublished">2020-09-10</time>
+        
+      
+    </div>
+
+
+        <span>
+    
+        <a class="" href="/2020/09/10/Frida%E5%85%A5%E9%97%A8/">Frida入门</a>
+    
+
+
+</span>
+      </li>
+    
+      <li class="post-item">
+        
+    <div class="meta">
+      
+        
+          <time datetime="2019-05-20T02:28:25.000Z" itemprop="datePublished">2019-05-20</time>
+        
+      
+    </div>
+
+
+        <span>
+    
+        <a class="" href="/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E5%88%87%E7%89%87%E7%9A%84%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0%E5%92%8C%E5%9F%BA%E7%A1%80%E5%8A%9F%E8%83%BD/">Go语言中切片的内部实现和基础功能</a>
+    
+
+
+</span>
+      </li>
+    
+      <li class="post-item">
+        
+    <div class="meta">
+      
+        
+          <time datetime="2019-05-20T02:28:25.000Z" itemprop="datePublished">2019-05-20</time>
+        
+      
+    </div>
+
+
+        <span>
+    
+        <a class="" href="/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E6%95%B0%E7%BB%84%E7%9A%84%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0%E5%92%8C%E5%9F%BA%E7%A1%80%E5%8A%9F%E8%83%BD/">Go语言中数组的内部实现和基础功能</a>
+    
+
+
+</span>
+      </li>
+    
+      <li class="post-item">
+        
+    <div class="meta">
+      
+        
+          <time datetime="2019-05-20T02:28:25.000Z" itemprop="datePublished">2019-05-20</time>
+        
+      
+    </div>
+
+
+        <span>
+    
+        <a class="" href="/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E7%9A%84%E6%89%93%E5%8C%85%E5%92%8C%E5%B7%A5%E5%85%B7%E9%93%BE/">Go语言中的打包和工具链</a>
+    
+
+
+</span>
+      </li>
+    
+  </ul>
+  
+    
+    <div class="pagination">
+        
+            <a href="/"><i class="fas fa-angle-left"></i></a>
+        
+        <span class="page-number">Page 2 of 3</span>
+        
+            <a href="/page/3/"><i class="fas fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+
+  
+</section>
+
+
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2018-2022
+    TUGOhost
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/TUGOhost">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
   </div>
 </footer>
 
     </div>
-    <nav id="mobile-nav">
-  
-    <a href="/" class="mobile-nav-link">Home</a>
-  
-    <a href="/archives" class="mobile-nav-link">Archives</a>
-  
-</nav>
-    
-
-
-<script src="/js/jquery-3.4.1.min.js"></script>
+    <!-- styles -->
 
 
 
-  
-<script src="/fancybox/jquery.fancybox.min.js"></script>
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
 
 
 
 
-<script src="/js/script.js"></script>
+<!-- clipboard -->
 
 
+<script src="/js/main.js"></script>
 
+<!-- search -->
 
+<!-- Google Analytics -->
 
-  </div>
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
 </body>
 </html>
