@@ -6,14 +6,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-    <meta name="description" content="https:&#x2F;&#x2F;back.engineering&#x2F;17&#x2F;05&#x2F;2021&#x2F;#deadstore-obfuscation-example If there is any infringement, please send an email to tu9oh0st@duck.com and I will promptly remove the article. 如果有任何侵权行为，请发送邮件到&amp;#11">
+    <meta name="description" content="https:&#x2F;&#x2F;back.engineering&#x2F;17&#x2F;05&#x2F;2021&#x2F;#deadstore-obfuscation-example If there is any infringement, please send an email to tu9oh0st@duck.com and I will promptly remove the article. 如果有任何侵权行为，请发送邮件到&amp;#x7">
 <meta property="og:type" content="article">
 <meta property="og:title" content="[译文]VMProtect2-虚拟机架构的详细分析">
 <meta property="og:url" content="http://tugohost.github.io.com/2022/12/06/VMProtect2_detailed_analysis_of_the_virtual_machine_architecture/index.html">
 <meta property="og:site_name" content="TUGOhost">
-<meta property="og:description" content="https:&#x2F;&#x2F;back.engineering&#x2F;17&#x2F;05&#x2F;2021&#x2F;#deadstore-obfuscation-example If there is any infringement, please send an email to tu9oh0st@duck.com and I will promptly remove the article. 如果有任何侵权行为，请发送邮件到&amp;#11">
+<meta property="og:description" content="https:&#x2F;&#x2F;back.engineering&#x2F;17&#x2F;05&#x2F;2021&#x2F;#deadstore-obfuscation-example If there is any infringement, please send an email to tu9oh0st@duck.com and I will promptly remove the article. 如果有任何侵权行为，请发送邮件到&amp;#x7">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://tugohost.github.io.com/2022/12/06/VMProtect2_detailed_analysis_of_the_virtual_machine_architecture/1.png">
+<meta property="og:image" content="http://tugohost.github.io.com/2022/12/06/VMProtect2_detailed_analysis_of_the_virtual_machine_architecture/22.png">
 <meta property="og:image" content="http://tugohost.github.io.com/2022/12/06/VMProtect2_detailed_analysis_of_the_virtual_machine_architecture/2.png">
 <meta property="og:image" content="http://tugohost.github.io.com/2022/12/06/VMProtect2_detailed_analysis_of_the_virtual_machine_architecture/3.png">
 <meta property="og:image" content="http://tugohost.github.io.com/2022/12/06/VMProtect2_detailed_analysis_of_the_virtual_machine_architecture/4.png">
@@ -35,7 +36,7 @@
 <meta property="og:image" content="http://tugohost.github.io.com/2022/12/06/VMProtect2_detailed_analysis_of_the_virtual_machine_architecture/20.png">
 <meta property="og:image" content="http://tugohost.github.io.com/2022/12/06/VMProtect2_detailed_analysis_of_the_virtual_machine_architecture/21.png">
 <meta property="article:published_time" content="2022-12-06T02:28:25.000Z">
-<meta property="article:modified_time" content="2022-12-06T13:31:20.709Z">
+<meta property="article:modified_time" content="2022-12-06T15:54:11.253Z">
 <meta property="article:author" content="TUGOhost">
 <meta property="article:tag" content="逆向">
 <meta name="twitter:card" content="summary">
@@ -173,7 +174,7 @@
     <blockquote>
 <p><a target="_blank" rel="noopener" href="https://back.engineering/17/05/2021/#deadstore-obfuscation-example">https://back.engineering/17/05/2021/#deadstore-obfuscation-example</a></p>
 <p><strong>If there is any infringement, please send an email to <code>tu9oh0st@duck.com</code> and I will promptly remove the article.</strong></p>
-<p><strong>如果有任何侵权行为，请发送邮件到<a href="mailto:&#116;&#117;&#x39;&#x6f;&#104;&#x30;&#x73;&#x74;&#x40;&#100;&#x75;&#x63;&#x6b;&#x2e;&#99;&#111;&#109;">&#116;&#117;&#x39;&#x6f;&#104;&#x30;&#x73;&#x74;&#x40;&#100;&#x75;&#x63;&#x6b;&#x2e;&#99;&#111;&#109;</a>，我会及时删除该文章。</strong></p>
+<p><strong>如果有任何侵权行为，请发送邮件到<a href="mailto:&#x74;&#117;&#57;&#111;&#x68;&#x30;&#x73;&#116;&#x40;&#x64;&#117;&#x63;&#x6b;&#46;&#x63;&#111;&#109;">&#x74;&#117;&#57;&#111;&#x68;&#x30;&#x73;&#116;&#x40;&#x64;&#117;&#x63;&#x6b;&#46;&#x63;&#111;&#109;</a>，我会及时删除该文章。</strong></p>
 </blockquote>
 <p>Download link: <a target="_blank" rel="noopener" href="https://githacks.org/vmp2">VMProtect 2 Reverse Engineering</a></p>
 <h1 id="Credit-Links-to-Exiiting-Work"><a href="#Credit-Links-to-Exiiting-Work" class="headerlink" title="Credit - Links to Exiiting Work"></a>Credit - Links to Exiiting Work</h1><ul>
@@ -250,6 +251,7 @@
 
 <p>这种方法对于消除Deadstore混淆并不完美，因为有第二个POP RCX在上面这个结果中缺失。POP和PUSH指令是特殊情况，不应该从指令流中发出，因为这些指令也会改变RSP。这种去除死库的方法也只适用于vm_entry和vm handler。这不能应用于一般的混淆程序。同样，这个方法不会对任何被混淆的例程起作用，它是专门为vm_entry和vm handlers定制的，因为这些例程中没有合法的JCC。</p>
 <h1 id="概述-VMProtect-2-虚拟机"><a href="#概述-VMProtect-2-虚拟机" class="headerlink" title="概述 - VMProtect 2 虚拟机"></a>概述 - VMProtect 2 虚拟机</h1><p>虚拟指令由被称为 “vm handlers”的虚拟指令处理程序进行解密和解释。虚拟机是一个基于RISC的堆栈机，带有scratch寄存器。在vm-entries之前，虚拟指令的加密RVA（相对虚拟地址，relative virtual address）被推入堆栈，所有的通用寄存器以及标志被推入堆栈。VIP被解密，计算，并加载到RSI。然后在RBX中启动一个滚动解密密钥，用来解密每一条虚拟指令的每一个操作数。滚动解密密钥通过与解密的操作数值进行转换来更新。</p>
+<p><img src="/2022/12/06/VMProtect2_detailed_analysis_of_the_virtual_machine_architecture/22.png"></p>
 <h2 id="滚动式解密"><a href="#滚动式解密" class="headerlink" title="滚动式解密"></a>滚动式解密</h2><p>VMProtect 2使用一个滚动解密密钥。该密钥用于解密虚拟指令操作数，随后防止任何形式的hook，因为如果任何虚拟指令被不按顺序执行，滚动解密密钥将变得无效，导致虚拟操作数的进一步解密也无效。</p>
 <h2 id="本地寄存器的使用"><a href="#本地寄存器的使用" class="headerlink" title="本地寄存器的使用"></a>本地寄存器的使用</h2><p>在虚拟机内部的执行过程中，一些本地寄存器是专门用于虚拟机机制的，比如虚拟指令指针和虚拟栈。在本节中，我将讨论这些本地寄存器和它们在虚拟机中的用途。</p>
 <h3 id="非易失性寄存器–有特定用途的寄存器"><a href="#非易失性寄存器–有特定用途的寄存器" class="headerlink" title="非易失性寄存器–有特定用途的寄存器"></a>非易失性寄存器–有特定用途的寄存器</h3><p>首先，RSI总是被用来作为虚拟指令指针。操作数从存储在RSI中的地址获取。装入RSI的初始值由vm_entry完成。</p>
