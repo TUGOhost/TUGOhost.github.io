@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="Dex壳普通Dex壳App启动流程熟悉App启动流程才能知道加壳App怎么制作。   通过Zygote进程到最终进入到app进程世界，我们可以看到ActivityThread.main()是进入App世界的大门，下面对该函数体进行简要的分析，具体分析请看文末的参考链接。 1234567891011121314151617181920212223242526272829303132333435363">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android加固-壳内容相关">
+<meta property="og:url" content="http://tugohost.github.io.com/2023/01/17/android_protect_shell/index.html">
+<meta property="og:site_name" content="TUGOhost">
+<meta property="og:description" content="Dex壳普通Dex壳App启动流程熟悉App启动流程才能知道加壳App怎么制作。   通过Zygote进程到最终进入到app进程世界，我们可以看到ActivityThread.main()是进入App世界的大门，下面对该函数体进行简要的分析，具体分析请看文末的参考链接。 1234567891011121314151617181920212223242526272829303132333435363">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://tugohost.github.io.com/2023/01/17/android_protect_shell/1.png">
+<meta property="og:image" content="http://tugohost.github.io.com/2023/01/17/android_protect_shell/2.jpg">
+<meta property="og:image" content="http://tugohost.github.io.com/2023/01/17/android_protect_shell/3.png">
+<meta property="og:image" content="http://tugohost.github.io.com/2023/01/17/android_protect_shell/4.png">
+<meta property="og:image" content="http://tugohost.github.io.com/2023/01/17/android_protect_shell/5.png">
+<meta property="article:published_time" content="2023-01-16T18:00:25.000Z">
+<meta property="article:modified_time" content="2023-01-17T14:30:28.025Z">
+<meta property="article:author" content="TUGOhost">
+<meta property="article:tag" content="安全">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://tugohost.github.io.com/2023/01/17/android_protect_shell/1.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Android加固-壳内容相关</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2023/01/12/SMT_Solvers_for_Software_Security/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://tugohost.github.io.com/2023/01/17/android_protect_shell/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://tugohost.github.io.com/2023/01/17/android_protect_shell/&text=Android加固-壳内容相关"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://tugohost.github.io.com/2023/01/17/android_protect_shell/&title=Android加固-壳内容相关"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://tugohost.github.io.com/2023/01/17/android_protect_shell/&is_video=false&description=Android加固-壳内容相关"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Android加固-壳内容相关&body=Check out this article: http://tugohost.github.io.com/2023/01/17/android_protect_shell/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://tugohost.github.io.com/2023/01/17/android_protect_shell/&title=Android加固-壳内容相关"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://tugohost.github.io.com/2023/01/17/android_protect_shell/&title=Android加固-壳内容相关"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://tugohost.github.io.com/2023/01/17/android_protect_shell/&title=Android加固-壳内容相关"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://tugohost.github.io.com/2023/01/17/android_protect_shell/&title=Android加固-壳内容相关"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://tugohost.github.io.com/2023/01/17/android_protect_shell/&name=Android加固-壳内容相关&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://tugohost.github.io.com/2023/01/17/android_protect_shell/&t=Android加固-壳内容相关"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Dex%E5%A3%B3"><span class="toc-number">1.</span> <span class="toc-text">Dex壳</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%99%AE%E9%80%9ADex%E5%A3%B3"><span class="toc-number">1.1.</span> <span class="toc-text">普通Dex壳</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#App%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B"><span class="toc-number">1.1.1.</span> <span class="toc-text">App启动流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A0%E5%A3%B3%E5%8E%9F%E7%90%86"><span class="toc-number">1.1.2.</span> <span class="toc-text">加壳原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ClassLoader%E5%9C%A8%E5%AE%89%E5%8D%93%E5%8A%A0%E5%9B%BA%E4%B8%AD%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="toc-number">1.1.3.</span> <span class="toc-text">ClassLoader在安卓加固中的作用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">1.1.4.</span> <span class="toc-text">参考</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8A%BD%E5%8F%96%E5%A3%B3"><span class="toc-number">1.2.</span> <span class="toc-text">抽取壳</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#codeitem%E6%8A%BD%E5%8F%96"><span class="toc-number">1.2.1.</span> <span class="toc-text">codeitem抽取</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#codeitem%E5%9B%9E%E5%A1%AB"><span class="toc-number">1.2.2.</span> <span class="toc-text">codeitem回填</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%82%E8%80%83-1"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">参考</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Java2C"><span class="toc-number">1.3.</span> <span class="toc-text">Java2C</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#dcc%E7%9A%84%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F"><span class="toc-number">1.3.1.</span> <span class="toc-text">dcc的使用方式</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E9%BB%91%E7%99%BD%E5%90%8D%E5%8D%95"><span class="toc-number">1.3.1.1.</span> <span class="toc-text">使用黑白名单</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E6%B3%A8%E8%A7%A3"><span class="toc-number">1.3.1.2.</span> <span class="toc-text">使用注解</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8A%A0%E5%9B%BAAPP"><span class="toc-number">1.3.1.3.</span> <span class="toc-text">加固APP</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E6%9E%90"><span class="toc-number">1.3.2.</span> <span class="toc-text">分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BB%BA%E8%AE%AE%E6%88%96%E8%80%85%E4%BC%98%E5%8C%96%E7%9A%84%E7%82%B9"><span class="toc-number">1.3.3.</span> <span class="toc-text">建议或者优化的点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E8%80%83-2"><span class="toc-number">1.3.4.</span> <span class="toc-text">参考</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DexVMP"><span class="toc-number">1.4.</span> <span class="toc-text">DexVMP</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E8%80%83-3"><span class="toc-number">1.4.1.</span> <span class="toc-text">参考</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#SO%E5%A3%B3"><span class="toc-number">2.</span> <span class="toc-text">SO壳</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%96%E9%83%A8%E5%8A%A0%E5%9B%BA-UPX%E5%A3%B3"><span class="toc-number">2.1.</span> <span class="toc-text">外部加固-UPX壳</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%8B%E7%BC%A9%E9%83%A8%E5%88%86"><span class="toc-number">2.1.1.</span> <span class="toc-text">压缩部分</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%A3%E5%8E%8B%E9%83%A8%E5%88%86"><span class="toc-number">2.1.2.</span> <span class="toc-text">解压部分</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E8%80%83-4"><span class="toc-number">2.1.3.</span> <span class="toc-text">参考</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E9%83%A8%E5%8A%A0%E5%9B%BA-VMP%E5%A3%B3"><span class="toc-number">2.2.</span> <span class="toc-text">内部加固-VMP壳</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E8%80%83-5"><span class="toc-number">2.2.1.</span> <span class="toc-text">参考</span></a></li></ol></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Android加固-壳内容相关
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">TUGOhost</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2023-01-16T18:00:25.000Z" itemprop="datePublished">2023-01-17</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/%E5%AE%89%E5%85%A8/" rel="tag">安全</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h1 id="Dex壳"><a href="#Dex壳" class="headerlink" title="Dex壳"></a>Dex壳</h1><h2 id="普通Dex壳"><a href="#普通Dex壳" class="headerlink" title="普通Dex壳"></a>普通Dex壳</h2><h3 id="App启动流程"><a href="#App启动流程" class="headerlink" title="App启动流程"></a>App启动流程</h3><p>熟悉App启动流程才能知道加壳App怎么制作。</p>
+<p> <img src="/2023/01/17/android_protect_shell/1.png"></p>
+<p>通过Zygote进程到最终进入到app进程世界，我们可以看到ActivityThread.main()是进入App世界的大门，下面对该函数体进行简要的分析，具体分析请看文末的参考链接。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    Trace.traceBegin(Trace.TRACE_TAG_ACTIVITY_MANAGER, <span class="string">&quot;ActivityThreadMain&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Install selective syscall interception</span></span><br><span class="line">    AndroidOs.install();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// CloseGuard defaults to true and can be quite spammy.  We</span></span><br><span class="line">    <span class="comment">// disable it here, but selectively enable it later (via</span></span><br><span class="line">    <span class="comment">// StrictMode) on debug builds, but using DropBox, not logs.</span></span><br><span class="line">    CloseGuard.setEnabled(<span class="literal">false</span>);</span><br><span class="line"></span><br><span class="line">    Environment.initForCurrentUser();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Make sure TrustedCertificateStore looks in the right place for CA certificates</span></span><br><span class="line">    <span class="keyword">final</span> <span class="type">File</span> <span class="variable">configDir</span> <span class="operator">=</span> Environment.getUserConfigDirectory(UserHandle.myUserId());</span><br><span class="line">    TrustedCertificateStore.setDefaultUserDirectory(configDir);</span><br><span class="line"></span><br><span class="line">    Process.setArgV0(<span class="string">&quot;&lt;pre-initialized&gt;&quot;</span>);</span><br><span class="line"></span><br><span class="line">    Looper.prepareMainLooper();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Find the value for &#123;@link #PROC_START_SEQ_IDENT&#125; if provided on the command line.</span></span><br><span class="line">    <span class="comment">// It will be in the format &quot;seq=114&quot;</span></span><br><span class="line">    <span class="type">long</span> <span class="variable">startSeq</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span> (args != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> args.length - <span class="number">1</span>; i &gt;= <span class="number">0</span>; --i) &#123;</span><br><span class="line">            <span class="keyword">if</span> (args[i] != <span class="literal">null</span> &amp;&amp; args[i].startsWith(PROC_START_SEQ_IDENT)) &#123;</span><br><span class="line">                startSeq = Long.parseLong(</span><br><span class="line">                        args[i].substring(PROC_START_SEQ_IDENT.length()));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">ActivityThread</span> <span class="variable">thread</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ActivityThread</span>();</span><br><span class="line">    thread.attach(<span class="literal">false</span>, startSeq);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (sMainThreadHandler == <span class="literal">null</span>) &#123;</span><br><span class="line">        sMainThreadHandler = thread.getHandler();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="literal">false</span>) &#123;</span><br><span class="line">        Looper.myLooper().setMessageLogging(<span class="keyword">new</span></span><br><span class="line">                <span class="title class_">LogPrinter</span>(Log.DEBUG, <span class="string">&quot;ActivityThread&quot;</span>));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// End of event ActivityThreadMain.</span></span><br><span class="line">    Trace.traceEnd(Trace.TRACE_TAG_ACTIVITY_MANAGER);</span><br><span class="line">    Looper.loop();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(<span class="string">&quot;Main thread loop unexpectedly exited&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>对于ActivityThread这个类，其中的sCurrentActivityThread静态变量用于全局保存创建的ActivityThread实例，同时还提供了public  static ActivityThread  currentActivityThread()静态函数用于获取当前虚拟机创建的ActivityThread实例。ActivityThread.main()函数是java中的入口main函数,这里会启动主消息循环，并创建ActivityThread实例，之后调用thread.attach(false)完成一系列初始化准备工作，并完成全局静态变量sCurrentActivityThread的初始化。之后主线程进入消息循环，等待接收来自系统的消息。当收到系统发送来的bindapplication的进程间调用时，调用函数handlebindapplication来处理该请求。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@UnsupportedAppUsage</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">handleBindApplication</span><span class="params">(AppBindData data)</span> &#123;</span><br><span class="line">    <span class="comment">//step 1: 创建LoadedApk对象</span></span><br><span class="line">    data.info = getPackageInfoNoCheck(data.appInfo, data.compatInfo);</span><br><span class="line">    ...</span><br><span class="line">    <span class="comment">//step 2: 创建ContextImpl对象;</span></span><br><span class="line">    <span class="keyword">final</span> <span class="type">ContextImpl</span> <span class="variable">appContext</span> <span class="operator">=</span> ContextImpl.createAppContext(<span class="built_in">this</span>, data.info);</span><br><span class="line"> </span><br><span class="line">    <span class="comment">//step 3: 创建Instrumentation</span></span><br><span class="line">    mInstrumentation = <span class="keyword">new</span> <span class="title class_">Instrumentation</span>();</span><br><span class="line"> </span><br><span class="line">    <span class="comment">//step 4: 创建Application对象;在makeApplication函数中调用了newApplication，在该函数中又调用了app.attach(context)，在attach函数中调用了Application.attachBaseContext函数</span></span><br><span class="line">    <span class="type">Application</span> <span class="variable">app</span> <span class="operator">=</span> data.info.makeApplication(data.restrictedBackupMode, <span class="literal">null</span>);</span><br><span class="line">    mInitialApplication = app;</span><br><span class="line"> </span><br><span class="line">    <span class="comment">//step 5: 安装providers</span></span><br><span class="line">    List&lt;ProviderInfo&gt; providers = data.providers;</span><br><span class="line">    installContentProviders(app, providers);</span><br><span class="line"> </span><br><span class="line">    <span class="comment">//step 6: 执行Application.Create回调</span></span><br><span class="line">    mInstrumentation.callApplicationOnCreate(app);</span><br></pre></td></tr></table></figure>
+
+<p>在 handleBindApplication函数中第一次进入了app的代码世界，该函数功能是启动一个application，并把系统收集的apk组件等相关信息绑定到application里，在创建完application对象后，接着调用了application的attachBaseContext方法，之后调用了application的onCreate函数。由此可以发现，app的Application类中的attachBaseContext和onCreate这两个函数是最先获取执行权进行代码执行的。这也是为什么各家的加固工具的主要逻辑都是通过替换app入口Application，并自实现这两个函数，在这两个函数中进行代码的脱壳以及执行权交付的原因。</p>
+<h3 id="加壳原理"><a href="#加壳原理" class="headerlink" title="加壳原理"></a>加壳原理</h3><p>在App启动流程中我们最终可以得出结论，app最先获得执行权限的是app中声明的Application类中的attachBaseContext和onCreate函数。因此，壳要想完成应用中加固代码的解密以及应用执行权的交付就都是在这两个函数上做文章。下面这张图大致讲了加壳应用的运行流程。</p>
+<p> <img src="/2023/01/17/android_protect_shell/2.jpg"></p>
+<p>打开加固的app，整个流程如下：如果有签名校验和二次打包校验的话会直接校验签名和二次打包中一些文件是否被更改，如果被更改则崩溃，如果没有就进行加载处理。会在壳程序的application类中的attachbasecontext方法中对原dex进行解密斗牌传说处理，反射修改loadapk中的加载器为自定义加载器，反射设置dexelements将解密出来的dex文件路径加进去，获取源程序的application名称，反射生成application对象，反射设置activitythread中的application信息，activity加载流程源程序正常运行。</p>
+<h3 id="ClassLoader在安卓加固中的作用"><a href="#ClassLoader在安卓加固中的作用" class="headerlink" title="ClassLoader在安卓加固中的作用"></a>ClassLoader在安卓加固中的作用</h3><p>DexClassLoader加载的类是没有组件生命周期的，也就是说即使DexClassLoader通过对APK的动态加载完成了对组件类的加载，当系统启动该组件时，依然会出现加载类失败的异常。为什么组件类被动态加载入虚拟机，但系统却出现加载类失败呢？</p>
+<p>从ClassLoader来看，两种解决方案：</p>
+<ol>
+<li>替换系统组建类加载器为我们的DexClassLoader，同时设置DexClassLoader的parent为系统组件类加载器;</li>
+<li>打破原有的双亲关系，在系统组件类加载器和BootClassLoader的中间插入我们自己的DexClassLoader即可;</li>
+<li>当然也可以对BaseClassLoader子类中的Elements进行合并。</li>
+</ol>
+<blockquote>
+<p><strong>oadedApk:</strong></p>
+<p><strong>private</strong> <a target="_blank" rel="noopener" href="http://androidxref.com/8.0.0_r4/s?defs=ClassLoader&project=frameworks">ClassLoader</a> <a target="_blank" rel="noopener" href="http://androidxref.com/8.0.0_r4/s?refs=mClassLoader&project=frameworks">mClassLoader</a>;</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ActivityThread.java</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> ActivityThread <span class="title function_">currentActivityThread</span><span class="params">()</span> &#123;</span><br><span class="line">   <span class="keyword">return</span> sCurrentActivityThread;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>DexPathList.java 中的</strong></p>
+<blockquote>
+<p><strong>private</strong> <a target="_blank" rel="noopener" href="http://androidxref.com/8.0.0_r4/s?defs=Element&project=libcore">Element</a>[] <a target="_blank" rel="noopener" href="http://androidxref.com/8.0.0_r4/s?refs=dexElements&project=libcore">dexElements</a>; </p>
+<p>这个field是热修复插件经常使用的。通过对Element数组的对象进行合并达到效果。</p>
+</blockquote>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://bbs.kanxue.com/thread-252630.htm">https://bbs.kanxue.com/thread-252630.htm</a></li>
+<li><a target="_blank" rel="noopener" href="http://gityuan.com/2016/03/26/app-process-create/">http://gityuan.com/2016/03/26/app-process-create/</a></li>
+</ul>
+<h2 id="抽取壳"><a href="#抽取壳" class="headerlink" title="抽取壳"></a>抽取壳</h2><p>上班的时候研究过这个，但是碍于当时水平有限，能够脱取抽取壳都无能为力，更别谈研发出来了。抽取壳最重要的就是抽取codeitem并在app运行的时候回填codeitem。相当于是Dex壳加上codeitem抽取并回填。</p>
+<p>主要讲解codeitem抽取回填</p>
+<h3 id="codeitem抽取"><a href="#codeitem抽取" class="headerlink" title="codeitem抽取"></a>codeitem抽取</h3><p>CodeItem是dex文件中存放函数字节码相关数据的结构。下图显示的就是CodeItem大概的样子。<br> <img src="/2023/01/17/android_protect_shell/3.png"></p>
+<p>说是提取CodeItem，其实我们提取的是CodeItem中的insns，它里面存放的是函数真正的字节码。提取insns，我们使用的是Android源码中的<a target="_blank" rel="noopener" href="https://android.googlesource.com/platform/dalvik/+/refs/heads/master/dx/">dx</a>工具，使用dx工具可以很方便的读取dex文件的各个部分。</p>
+<p>下面的代码遍历所有ClassDef，并遍历其中的所有函数，再调用extractMethod对单个函数进行处理。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> List&lt;Instruction&gt; <span class="title function_">extractAllMethods</span><span class="params">(File dexFile, File outDexFile)</span> &#123;</span><br><span class="line">    List&lt;Instruction&gt; instructionList = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">    <span class="type">Dex</span> <span class="variable">dex</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">    <span class="type">RandomAccessFile</span> <span class="variable">randomAccessFile</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">    <span class="type">byte</span>[] dexData = IoUtils.readFile(dexFile.getAbsolutePath());</span><br><span class="line">    IoUtils.writeFile(outDexFile.getAbsolutePath(),dexData);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        dex = <span class="keyword">new</span> <span class="title class_">Dex</span>(dexFile);</span><br><span class="line">        randomAccessFile = <span class="keyword">new</span> <span class="title class_">RandomAccessFile</span>(outDexFile, <span class="string">&quot;rw&quot;</span>);</span><br><span class="line">        Iterable&lt;ClassDef&gt; classDefs = dex.classDefs();</span><br><span class="line">        <span class="keyword">for</span> (ClassDef classDef : classDefs) &#123;</span><br><span class="line">            </span><br><span class="line">            ......</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">if</span>(classDef.getClassDataOffset() == <span class="number">0</span>)&#123;</span><br><span class="line">                <span class="type">String</span> <span class="variable">log</span> <span class="operator">=</span> String.format(<span class="string">&quot;class &#x27;%s&#x27; data offset is zero&quot;</span>,classDef.toString());</span><br><span class="line">                logger.warn(log);</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="type">ClassData</span> <span class="variable">classData</span> <span class="operator">=</span> dex.readClassData(classDef);</span><br><span class="line">            ClassData.Method[] directMethods = classData.getDirectMethods();</span><br><span class="line">            ClassData.Method[] virtualMethods = classData.getVirtualMethods();</span><br><span class="line">            <span class="keyword">for</span> (ClassData.Method method : directMethods) &#123;</span><br><span class="line">                <span class="type">Instruction</span> <span class="variable">instruction</span> <span class="operator">=</span> extractMethod(dex,randomAccessFile,classDef,method);</span><br><span class="line">                <span class="keyword">if</span>(instruction != <span class="literal">null</span>) &#123;</span><br><span class="line">                    instructionList.add(instruction);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span> (ClassData.Method method : virtualMethods) &#123;</span><br><span class="line">                <span class="type">Instruction</span> <span class="variable">instruction</span> <span class="operator">=</span> extractMethod(dex, randomAccessFile,classDef, method);</span><br><span class="line">                <span class="keyword">if</span>(instruction != <span class="literal">null</span>) &#123;</span><br><span class="line">                    instructionList.add(instruction);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">finally</span> &#123;</span><br><span class="line">        IoUtils.close(randomAccessFile);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> instructionList;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>处理函数的过程中发现没有代码（通常为native函数）或者insns的容量不足以填充return语句则跳过处理。这里就是对应函数抽取壳的抽取操作</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> Instruction <span class="title function_">extractMethod</span><span class="params">(Dex dex ,RandomAccessFile outRandomAccessFile,ClassDef classDef,ClassData.Method method)</span></span><br><span class="line">        <span class="keyword">throws</span> Exception&#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">returnTypeName</span> <span class="operator">=</span> dex.typeNames().get(dex.protoIds().get(dex.methodIds().get(method.getMethodIndex()).getProtoIndex()).getReturnTypeIndex());</span><br><span class="line">    <span class="type">String</span> <span class="variable">methodName</span> <span class="operator">=</span> dex.strings().get(dex.methodIds().get(method.getMethodIndex()).getNameIndex());</span><br><span class="line">    <span class="type">String</span> <span class="variable">className</span> <span class="operator">=</span> dex.typeNames().get(classDef.getTypeIndex());</span><br><span class="line">    <span class="comment">//native函数</span></span><br><span class="line">    <span class="keyword">if</span>(method.getCodeOffset() == <span class="number">0</span>)&#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">log</span> <span class="operator">=</span> String.format(<span class="string">&quot;method code offset is zero,name =  %s.%s , returnType = %s&quot;</span>,</span><br><span class="line">                TypeUtils.getHumanizeTypeName(className),</span><br><span class="line">                methodName,</span><br><span class="line">                TypeUtils.getHumanizeTypeName(returnTypeName));</span><br><span class="line">        logger.warn(log);</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">Instruction</span> <span class="variable">instruction</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Instruction</span>();</span><br><span class="line">    <span class="comment">//16 = registers_size + ins_size + outs_size + tries_size + debug_info_off + insns_size</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">insnsOffset</span> <span class="operator">=</span> method.getCodeOffset() + <span class="number">16</span>;</span><br><span class="line">    <span class="type">Code</span> <span class="variable">code</span> <span class="operator">=</span> dex.readCode(method);</span><br><span class="line">    <span class="comment">//容错处理</span></span><br><span class="line">    <span class="keyword">if</span>(code.getInstructions().length == <span class="number">0</span>)&#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">log</span> <span class="operator">=</span> String.format(<span class="string">&quot;method has no code,name =  %s.%s , returnType = %s&quot;</span>,</span><br><span class="line">                TypeUtils.getHumanizeTypeName(className),</span><br><span class="line">                methodName,</span><br><span class="line">                TypeUtils.getHumanizeTypeName(returnTypeName));</span><br><span class="line">        logger.warn(log);</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">int</span> <span class="variable">insnsCapacity</span> <span class="operator">=</span> code.getInstructions().length;</span><br><span class="line">    <span class="comment">//insns容量不足以存放return语句，跳过</span></span><br><span class="line">    <span class="type">byte</span>[] returnByteCodes = getReturnByteCodes(returnTypeName);</span><br><span class="line">    <span class="keyword">if</span>(insnsCapacity * <span class="number">2</span> &lt; returnByteCodes.length)&#123;</span><br><span class="line">        logger.warn(<span class="string">&quot;The capacity of insns is not enough to store the return statement. &#123;&#125;.&#123;&#125;() -&gt; &#123;&#125; insnsCapacity = &#123;&#125;byte(s),returnByteCodes = &#123;&#125;byte(s)&quot;</span>,</span><br><span class="line">                TypeUtils.getHumanizeTypeName(className),</span><br><span class="line">                methodName,</span><br><span class="line">                TypeUtils.getHumanizeTypeName(returnTypeName),</span><br><span class="line">                insnsCapacity * <span class="number">2</span>,</span><br><span class="line">                returnByteCodes.length);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    instruction.setOffsetOfDex(insnsOffset);</span><br><span class="line">    <span class="comment">//这里的MethodIndex对应method_ids区的索引</span></span><br><span class="line">    instruction.setMethodIndex(method.getMethodIndex());</span><br><span class="line">    <span class="comment">//注意：这里是数组的大小</span></span><br><span class="line">    instruction.setInstructionDataSize(insnsCapacity * <span class="number">2</span>);</span><br><span class="line">    <span class="type">byte</span>[] byteCode = <span class="keyword">new</span> <span class="title class_">byte</span>[insnsCapacity * <span class="number">2</span>];</span><br><span class="line">    <span class="comment">//写入nop指令</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; insnsCapacity; i++) &#123;</span><br><span class="line">        outRandomAccessFile.seek(insnsOffset + (i * <span class="number">2</span>));</span><br><span class="line">        byteCode[i * <span class="number">2</span>] = outRandomAccessFile.readByte();</span><br><span class="line">        byteCode[i * <span class="number">2</span> + <span class="number">1</span>] = outRandomAccessFile.readByte();</span><br><span class="line">        outRandomAccessFile.seek(insnsOffset + (i * <span class="number">2</span>));</span><br><span class="line">        outRandomAccessFile.writeShort(<span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    instruction.setInstructionsData(byteCode);</span><br><span class="line">    outRandomAccessFile.seek(insnsOffset);</span><br><span class="line">    <span class="comment">//写出return语句</span></span><br><span class="line">    outRandomAccessFile.write(returnByteCodes);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> instruction;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="codeitem回填"><a href="#codeitem回填" class="headerlink" title="codeitem回填"></a>codeitem回填</h3><p>当一个类被加载的时候，它的调用链是这样的(部分流程已省略)：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ClassLoader.java::loadClass <span class="punctuation">-&gt;</span> DexPathList.java::findClass <span class="punctuation">-&gt;</span> DexFile.java::defineClass <span class="punctuation">-&gt;</span> </span><br><span class="line">class_linker.cc::LoadClass <span class="punctuation">-&gt;</span> class_linker.cc::LoadClassMembers <span class="punctuation">-&gt;</span> class_linker.cc::LoadMethod</span><br></pre></td></tr></table></figure>
+
+<p>也就是说，当一个类被加载，它是会去调用LoadMethod函数的，我们看一下它的函数原型：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">ClassLinker::LoadMethod</span><span class="params">(<span class="type">const</span> DexFile&amp; dex_file,</span></span></span><br><span class="line"><span class="params"><span class="function">                             <span class="type">const</span> ClassDataItemIterator&amp; it,</span></span></span><br><span class="line"><span class="params"><span class="function">                             Handle&lt;mirror::Class&gt; klass,</span></span></span><br><span class="line"><span class="params"><span class="function">                             ArtMethod* dst)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>这个函数太爆炸了，它有两个爆炸性的参数，DexFile和ClassDataItemIterator，我们可以从这个函数得到当前加载函数所在的DexFile结构和当前函数的一些信息，可以看一下ClassDataItemIterator结构：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">  <span class="keyword">class</span> <span class="title class_">ClassDataItemIterator</span>&#123;</span><br><span class="line">  </span><br><span class="line">  ......</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// A decoded version of the method of a class_data_item</span></span><br><span class="line">  <span class="keyword">struct</span> <span class="title class_">ClassDataMethod</span> &#123;</span><br><span class="line">    <span class="type">uint32_t</span> method_idx_delta_;  <span class="comment">// delta of index into the method_ids array for MethodId</span></span><br><span class="line">    <span class="type">uint32_t</span> access_flags_;</span><br><span class="line">    <span class="type">uint32_t</span> code_off_;</span><br><span class="line">    <span class="built_in">ClassDataMethod</span>() : <span class="built_in">method_idx_delta_</span>(<span class="number">0</span>), <span class="built_in">access_flags_</span>(<span class="number">0</span>), <span class="built_in">code_off_</span>(<span class="number">0</span>) &#123;&#125;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">private</span>:</span><br><span class="line">    <span class="built_in">DISALLOW_COPY_AND_ASSIGN</span>(ClassDataMethod);</span><br><span class="line">  &#125;;</span><br><span class="line">  ClassDataMethod method_;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Read and decode a method from a class_data_item stream into method</span></span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">ReadClassDataMethod</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">  <span class="type">const</span> DexFile&amp; dex_file_;</span><br><span class="line">  <span class="type">size_t</span> pos_;  <span class="comment">// integral number of items passed</span></span><br><span class="line">  <span class="type">const</span> <span class="type">uint8_t</span>* ptr_pos_;  <span class="comment">// pointer into stream of class_data_item</span></span><br><span class="line">  <span class="type">uint32_t</span> last_idx_;  <span class="comment">// last read field or method index to apply delta to</span></span><br><span class="line">  <span class="built_in">DISALLOW_IMPLICIT_CONSTRUCTORS</span>(ClassDataItemIterator);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>其中最重要的字段就是<code>code_off_</code>它的值是当前加载的函数的CodeItem相对于DexFile的偏移，当相应的函数被加载，我们就可以直接访问到它的CodeItem。其他函数是否也可以？在上面的流程中没有比LoadMethod更适合我们Hook的函数，所以它是最佳的Hook点。</p>
+<p>Hook  LoadMethod稍微复杂一些，倒不是Hook代码复杂，而是Hook触发后处理的代码比较复杂，我们要适配多个Android版本，每个版本LoadMethod函数的参数都可能有改变，幸运的是，LoadMethod改动也不是很大。那么，我们如何读取ClassDataItemIterator类中的<code>code_off_</code>呢？比较直接的做法是计算偏移，然后在代码中维护一份偏移。不过这样的做法不易阅读很容易出错。dpt的做法是把ClassDataItemIterator类拷过来，然后将ClassDataItemIterator引用直接转换为我们自定义的ClassDataItemIterator引用，这样就可以方便的读取字段的值。</p>
+<p>下面是LoadMethod被调用后做的操作，逻辑是读取存在map中的insns，然后将它们填回指定位置。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">LoadMethod</span><span class="params">(<span class="type">void</span> *thiz, <span class="type">void</span> *self, <span class="type">const</span> <span class="type">void</span> *dex_file, <span class="type">const</span> <span class="type">void</span> *it, <span class="type">const</span> <span class="type">void</span> *method,</span></span></span><br><span class="line"><span class="params"><span class="function">                <span class="type">void</span> *klass, <span class="type">void</span> *dst)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (g_originLoadMethod25 != <span class="literal">nullptr</span></span><br><span class="line">        || g_originLoadMethod28 != <span class="literal">nullptr</span></span><br><span class="line">        || g_originLoadMethod29 != <span class="literal">nullptr</span>) &#123;</span><br><span class="line">        <span class="type">uint32_t</span> location_offset = <span class="built_in">getDexFileLocationOffset</span>();</span><br><span class="line">        <span class="type">uint32_t</span> begin_offset = <span class="built_in">getDataItemCodeItemOffset</span>();</span><br><span class="line">        <span class="built_in">callOriginLoadMethod</span>(thiz, self, dex_file, it, method, klass, dst);</span><br><span class="line"></span><br><span class="line">        ClassDataItemReader *classDataItemReader = <span class="built_in">getClassDataItemReader</span>(it,method);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="type">uint8_t</span> **begin_ptr = (<span class="type">uint8_t</span> **) ((<span class="type">uint8_t</span> *) dex_file + begin_offset);</span><br><span class="line">        <span class="type">uint8_t</span> *begin = *begin_ptr;</span><br><span class="line">        <span class="comment">// vtable(4|8) + prev_fields_size</span></span><br><span class="line">        std::string *location = (<span class="built_in">reinterpret_cast</span>&lt;std::string *&gt;((<span class="type">uint8_t</span> *) dex_file +</span><br><span class="line">                                                                 location_offset));</span><br><span class="line">        <span class="keyword">if</span> (location-&gt;<span class="built_in">find</span>(<span class="string">&quot;base.apk&quot;</span>) != std::string::npos) &#123;</span><br><span class="line"></span><br><span class="line">            <span class="comment">//code_item_offset == 0说明是native方法或者没有代码</span></span><br><span class="line">            <span class="keyword">if</span> (classDataItemReader-&gt;<span class="built_in">GetMethodCodeItemOffset</span>() == <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="built_in">DLOGW</span>(<span class="string">&quot;native method? = %s code_item_offset = 0x%x&quot;</span>,</span><br><span class="line">                      classDataItemReader-&gt;<span class="built_in">MemberIsNative</span>() ? <span class="string">&quot;true&quot;</span> : <span class="string">&quot;false&quot;</span>,</span><br><span class="line">                      classDataItemReader-&gt;<span class="built_in">GetMethodCodeItemOffset</span>());</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="type">uint16_t</span> firstDvmCode = *((<span class="type">uint16_t</span>*)(begin + classDataItemReader-&gt;<span class="built_in">GetMethodCodeItemOffset</span>() + <span class="number">16</span>));</span><br><span class="line">            <span class="keyword">if</span>(firstDvmCode != <span class="number">0x0012</span> &amp;&amp; firstDvmCode != <span class="number">0x0016</span> &amp;&amp; firstDvmCode != <span class="number">0x000e</span>)&#123;</span><br><span class="line">                <span class="built_in">NLOG</span>(<span class="string">&quot;this method has code no need to patch&quot;</span>);</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="type">uint32_t</span> dexSize = *((<span class="type">uint32_t</span>*)(begin + <span class="number">0x20</span>));</span><br><span class="line"></span><br><span class="line">            <span class="type">int</span> dexIndex = <span class="built_in">dexNumber</span>(location);</span><br><span class="line">            <span class="keyword">auto</span> dexIt = dexMap.<span class="built_in">find</span>(dexIndex - <span class="number">1</span>);</span><br><span class="line">            <span class="keyword">if</span> (dexIt != dexMap.<span class="built_in">end</span>()) &#123;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">auto</span> dexMemIt = dexMemMap.<span class="built_in">find</span>(dexIndex);</span><br><span class="line">                <span class="keyword">if</span>(dexMemIt == dexMemMap.<span class="built_in">end</span>())&#123;</span><br><span class="line">                    <span class="built_in">changeDexProtect</span>(begin,location-&gt;<span class="built_in">c_str</span>(),dexSize,dexIndex);</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">                <span class="keyword">auto</span> codeItemMap = dexIt-&gt;second;</span><br><span class="line">                <span class="type">int</span> methodIdx = classDataItemReader-&gt;<span class="built_in">GetMemberIndex</span>();</span><br><span class="line">                <span class="keyword">auto</span> codeItemIt = codeItemMap-&gt;<span class="built_in">find</span>(methodIdx);</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> (codeItemIt != codeItemMap-&gt;<span class="built_in">end</span>()) &#123;</span><br><span class="line">                    CodeItem* codeItem = codeItemIt-&gt;second;</span><br><span class="line">                    <span class="type">uint8_t</span>  *realCodeItemPtr = (<span class="type">uint8_t</span>*)(begin +</span><br><span class="line">                                                classDataItemReader-&gt;<span class="built_in">GetMethodCodeItemOffset</span>() +</span><br><span class="line">                                                <span class="number">16</span>);</span><br><span class="line"></span><br><span class="line">                    <span class="built_in">memcpy</span>(realCodeItemPtr,codeItem-&gt;<span class="built_in">getInsns</span>(),codeItem-&gt;<span class="built_in">getInsnsSize</span>());</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="参考-1"><a href="#参考-1" class="headerlink" title="参考"></a>参考</h4><ul>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/luoyesiqiu/p/dpt.html">https://www.cnblogs.com/luoyesiqiu/p/dpt.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/luoyesiqiu/dpt-shell">https://github.com/luoyesiqiu/dpt-shell</a></li>
+</ul>
+<h2 id="Java2C"><a href="#Java2C" class="headerlink" title="Java2C"></a>Java2C</h2><p>关键Java函数native化。</p>
+<h3 id="dcc的使用方式"><a href="#dcc的使用方式" class="headerlink" title="dcc的使用方式"></a>dcc的使用方式</h3><ol>
+<li>首先在app代码合适的位置,如Application的静态代码块或onCreate等,添加加载so库代码,并重新生成apk</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    System.loadLibrary(<span class="string">&quot;nc&quot;</span>);</span><br><span class="line">&#125; <span class="keyword">catch</span> (UnsatisfiedLinkError e) &#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>制定编译方式</li>
+</ol>
+<h4 id="使用黑白名单"><a href="#使用黑白名单" class="headerlink" title="使用黑白名单"></a>使用黑白名单</h4><p>dcc支持使用黑白名单来过滤需要编译或禁止编译的函数. 修改filter.txt,使用正则表达式配置需要处理的函数.默认编译Activity.onCreate,和测试demo中的所有函数.</p>
+<blockquote>
+<p>vi filter.txt</p>
+</blockquote>
+<h4 id="使用注解"><a href="#使用注解" class="headerlink" title="使用注解"></a>使用注解</h4><p>在任意包中新增Dex2C注解类</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">import java.lang.annotation.Retention;</span><br><span class="line">import java.lang.annotation.RetentionPolicy;</span><br><span class="line"></span><br><span class="line">@Retention(RetentionPolicy.RUNTIME)</span><br><span class="line">public @interface Dex2C &#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后使用Dex2C标记需要编译的类或者方法</p>
+<h4 id="加固APP"><a href="#加固APP" class="headerlink" title="加固APP"></a>加固APP</h4><blockquote>
+<p>python3 dcc.py your_app.apk -o out.apk</p>
+</blockquote>
+<h3 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h3><p>捡重点的说</p>
+<p>核心代码，Java 2 C在<code>dcc.py</code>中的<code>compile_dex</code>函数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">compile_dex</span>(<span class="params">apkfile, filtercfg</span>):</span><br><span class="line">    show_logging(level=logging.INFO)</span><br><span class="line"></span><br><span class="line">    d = auto_vm(apkfile)</span><br><span class="line">    dx = analysis.Analysis(d)</span><br><span class="line"></span><br><span class="line">    method_filter = MethodFilter(filtercfg, d)</span><br><span class="line"></span><br><span class="line">    compiler = Dex2C(d, dx)</span><br><span class="line"></span><br><span class="line">    compiled_method_code = &#123;&#125;</span><br><span class="line">    errors = []</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> m <span class="keyword">in</span> d.get_methods():</span><br><span class="line">        method_triple = get_method_triple(m)</span><br><span class="line"></span><br><span class="line">        jni_longname = JniLongName(*method_triple)</span><br><span class="line">        full_name = <span class="string">&#x27;&#x27;</span>.join(method_triple)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">len</span>(jni_longname) &gt; <span class="number">220</span>:</span><br><span class="line">            logger.debug(<span class="string">&quot;name to long %s(&gt; 220) %s&quot;</span> % (jni_longname, full_name))</span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> method_filter.should_compile(m):</span><br><span class="line">            logger.debug(<span class="string">&quot;compiling %s&quot;</span> % (full_name))</span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                code = compiler.get_source_method(m)</span><br><span class="line">            <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">                logger.warning(<span class="string">&quot;compile method failed:%s (%s)&quot;</span> % (full_name, <span class="built_in">str</span>(e)), exc_info=<span class="literal">True</span>)</span><br><span class="line">                errors.append(<span class="string">&#x27;%s:%s&#x27;</span> % (full_name, <span class="built_in">str</span>(e)))</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> code:</span><br><span class="line">                compiled_method_code[method_triple] = code</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> compiled_method_code, errors</span><br></pre></td></tr></table></figure>
+
+<p>其中的compiled_method_code产生过程最重要，因为这是Java代码转C代码的实际部分，最后dcc会讲转成的C代码写入以目标类名为名字的.cpp文件中。</p>
+<p>首先会对dex文件中的classes、methods、strings、fields做分析；过滤出要转化的函数，再将函数抽离出来转化成C的代码，保留成C代码的字符串，交给code。</p>
+<p>然后再将保存好的cpp文件，与前面提到的预设的加载so nc的源码一起编译成so，再重打包出apk。</p>
+<h3 id="建议或者优化的点"><a href="#建议或者优化的点" class="headerlink" title="建议或者优化的点"></a>建议或者优化的点</h3><p>整个转化的代码大部分都是python写的，在回顾上问的抽取壳，完全可以整合在一块，抽取出来后，在对其内容进行转化，dcc的作者专门做了个ir来做转化，可以说很棒了，但是完全可以整合在一起，这样就是一个加固产品了，就是无法保证稳定性之类的问题。</p>
+<h3 id="参考-2"><a href="#参考-2" class="headerlink" title="参考"></a>参考</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/amimo/dcc">https://github.com/amimo/dcc</a></li>
+</ul>
+<h2 id="DexVMP"><a href="#DexVMP" class="headerlink" title="DexVMP"></a>DexVMP</h2><p>抽取smali指令变成VM 的opcode，在vm中运行。</p>
+<p>可以参考Java2C的过程，无非就是转变的对象不一样，Java2C是转变成C代码，DexVMP就是转变成vmp的opcode，再配合相应位置的调用即可实现opcode的vm解释器进行解释执行。</p>
+<p>参考的nmmp项目就是一个DexVMP加固项目，实现上跟上面说的一致，具体实现细节可以阅读源码了解，vm太大，不做过多展开。</p>
+<h3 id="参考-3"><a href="#参考-3" class="headerlink" title="参考"></a>参考</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/maoabc/nmmp.git">https://github.com/maoabc/nmmp.git</a></li>
+</ul>
+<h1 id="SO壳"><a href="#SO壳" class="headerlink" title="SO壳"></a>SO壳</h1><h2 id="外部加固-UPX壳"><a href="#外部加固-UPX壳" class="headerlink" title="外部加固-UPX壳"></a>外部加固-UPX壳</h2><p>upx壳是一种以压缩为手段的壳，对二进制文件压缩后，执行的时候释放，让静态反编译工具反编译他无从下手，从而实现保护效果。</p>
+<h3 id="压缩部分"><a href="#压缩部分" class="headerlink" title="压缩部分"></a>压缩部分</h3><p><code>elf header</code>：这部分保持跟原so文件相同，不过里面部分数据需要修改，比如section headers的偏移等。</p>
+<p><code>program headers</code>：该部分会对第一个LOAD段的size大小做修改（因为使用了upx壳后体积变小了），其他数据保持不变。</p>
+<p><code>sections</code>：这里存放着原so中的节，这些节包括：”DT_GNU_HASH”,”DT_HASH”,   “DT_STRTAB”,”DT_SYMTAB”,”DT_REL”,”DT_RELA”,”DT_JMPREL”,”DT_VERDEF”,”DT_VERSYM”,”DT_VERNEEDED”，因为在so中跟重定位相关的节不能够被加壳，并且在文件中的偏移位置需要保持不变，所以一般情况下是在.text节之后开始做压缩处理。</p>
+<p><code>section  headers</code>：upx压缩壳会将section  headers表上移，放到上一部分的sections后面，并且不做任何压缩处理，原因是在高版本的android系统中会对section  headers做校验，需要读取section headers中的数据，因此需要以明文的形式存放在so中。</p>
+<p><code>.shstrtab</code>：这个节用于存放各个section的名字。</p>
+<p><code>l_info</code>：为一个结构体，其格式如下，其中magic为’7fUPX’，各个产商会对此做修改。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">LE32 l_checksum;</span><br><span class="line">LE32 l_magic;</span><br><span class="line">LE16 l_size;</span><br><span class="line"><span class="type">unsigned</span> <span class="type">char</span> l_version;</span><br><span class="line"><span class="type">unsigned</span> <span class="type">char</span> l_format;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>p_info</code>：为一个结构体，其格式如下，</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line"><span class="type">unsigned</span> p_progid;</span><br><span class="line"><span class="type">unsigned</span> p_filesize;</span><br><span class="line"><span class="type">unsigned</span> p_blocksize;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>compressed data</code>：被压缩的数据，即实现对代码段做加密。</p>
+<p><code>b_info</code>：为一个结构体，其格式如下，其中sz_unc为压缩后数据的大小，sz_cpr为压缩前数据的大小，b_method为使用的压缩方法。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line"><span class="type">unsigned</span> sz_unc;</span><br><span class="line"><span class="type">unsigned</span> sz_cpr;</span><br><span class="line"><span class="type">unsigned</span> <span class="type">char</span> b_method;</span><br><span class="line"><span class="type">unsigned</span> <span class="type">char</span> b_ftid;</span><br><span class="line"><span class="type">unsigned</span> <span class="type">char</span> b_cto8;</span><br><span class="line"><span class="type">unsigned</span> <span class="type">char</span> b_unused;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>other info</code>：保存着可以传递给stub的参数，其中包括：dt_init地址，xct_off（sections中最后的地址）等</p>
+<p><code>stub</code>：为整个upx的核心部分，该部分用于运行时解压并还原compressed data。</p>
+<p><code>2th LOAD</code>：为so的第二个LOAD段，因为第二个LOAD段中的dynamic节涉及重定位环节，所以upx无法对其做压缩处理。</p>
+<p><code>PackHeader</code>：为upx的尾部，保存一些upx相关信息。<br> <img src="/2023/01/17/android_protect_shell/4.png"></p>
+<h3 id="解压部分"><a href="#解压部分" class="headerlink" title="解压部分"></a>解压部分</h3><p>在upx的stub中主要有三个部分，分别为：main、supervise、hatch。 </p>
+<ol>
+<li>在main中使用mmap开辟新空间A，将compressed data、supervise、hatch拷贝到该空间A中。并将pc指针指向A中的supervise开始执行指令。</li>
+<li>supervise中包含这解压过程中所需要的代码包括： 解压算法decompress、过滤器unfilter、其他。在该部分中使用mmap并使用MAP_FIXED参数来开辟内存，该内存地址为原so加载时的空间地址，MAP_FIXED这个参数能够覆盖原来mmap的内存空间，确保解压后数据与原so保持一致。对compressed  data做解压处理，并将hatch拷贝到第一个LOAD末尾（多余空间）。在拷贝以及解压完成后，将pc指针跳转到hatch，执行hatch。 </li>
+<li>hatch用于unmap释放在1中开辟的空间A，并跳转到原so的dt_init中，如果原so没有dt_init则跳转到linker中。</li>
+</ol>
+<p>该过程流程图如下：</p>
+<p> <img src="/2023/01/17/android_protect_shell/5.png"></p>
+<h3 id="参考-4"><a href="#参考-4" class="headerlink" title="参考"></a>参考</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://bbs.kanxue.com/thread-248779.htm">https://bbs.kanxue.com/thread-248779.htm</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/upx/upx">https://github.com/upx/upx</a></li>
+</ul>
+<h2 id="内部加固-VMP壳"><a href="#内部加固-VMP壳" class="headerlink" title="内部加固-VMP壳"></a>内部加固-VMP壳</h2><p>借助LLVM编译工具，对native代码关键部分做到VMP保护，代码抽取成vm opcode，在原来调用的地方替换成vm接口，实际代码转化成opcode在vm中运行。</p>
+<p>没有开源项目先不说了。</p>
+<h3 id="参考-5"><a href="#参考-5" class="headerlink" title="参考"></a>参考</h3><ul>
+<li>[<a target="_blank" rel="noopener" href="https://tugohost.github.io/2022/12/06/VMProtect2_detailed_analysis_of_the_virtual_machine_architecture/">译文]VMProtect2-虚拟机架构的详细分析</a></li>
+</ul>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Dex%E5%A3%B3"><span class="toc-number">1.</span> <span class="toc-text">Dex壳</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%99%AE%E9%80%9ADex%E5%A3%B3"><span class="toc-number">1.1.</span> <span class="toc-text">普通Dex壳</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#App%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B"><span class="toc-number">1.1.1.</span> <span class="toc-text">App启动流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A0%E5%A3%B3%E5%8E%9F%E7%90%86"><span class="toc-number">1.1.2.</span> <span class="toc-text">加壳原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ClassLoader%E5%9C%A8%E5%AE%89%E5%8D%93%E5%8A%A0%E5%9B%BA%E4%B8%AD%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="toc-number">1.1.3.</span> <span class="toc-text">ClassLoader在安卓加固中的作用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">1.1.4.</span> <span class="toc-text">参考</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8A%BD%E5%8F%96%E5%A3%B3"><span class="toc-number">1.2.</span> <span class="toc-text">抽取壳</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#codeitem%E6%8A%BD%E5%8F%96"><span class="toc-number">1.2.1.</span> <span class="toc-text">codeitem抽取</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#codeitem%E5%9B%9E%E5%A1%AB"><span class="toc-number">1.2.2.</span> <span class="toc-text">codeitem回填</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%82%E8%80%83-1"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">参考</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Java2C"><span class="toc-number">1.3.</span> <span class="toc-text">Java2C</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#dcc%E7%9A%84%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F"><span class="toc-number">1.3.1.</span> <span class="toc-text">dcc的使用方式</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E9%BB%91%E7%99%BD%E5%90%8D%E5%8D%95"><span class="toc-number">1.3.1.1.</span> <span class="toc-text">使用黑白名单</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E6%B3%A8%E8%A7%A3"><span class="toc-number">1.3.1.2.</span> <span class="toc-text">使用注解</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8A%A0%E5%9B%BAAPP"><span class="toc-number">1.3.1.3.</span> <span class="toc-text">加固APP</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E6%9E%90"><span class="toc-number">1.3.2.</span> <span class="toc-text">分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BB%BA%E8%AE%AE%E6%88%96%E8%80%85%E4%BC%98%E5%8C%96%E7%9A%84%E7%82%B9"><span class="toc-number">1.3.3.</span> <span class="toc-text">建议或者优化的点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E8%80%83-2"><span class="toc-number">1.3.4.</span> <span class="toc-text">参考</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DexVMP"><span class="toc-number">1.4.</span> <span class="toc-text">DexVMP</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E8%80%83-3"><span class="toc-number">1.4.1.</span> <span class="toc-text">参考</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#SO%E5%A3%B3"><span class="toc-number">2.</span> <span class="toc-text">SO壳</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%96%E9%83%A8%E5%8A%A0%E5%9B%BA-UPX%E5%A3%B3"><span class="toc-number">2.1.</span> <span class="toc-text">外部加固-UPX壳</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%8B%E7%BC%A9%E9%83%A8%E5%88%86"><span class="toc-number">2.1.1.</span> <span class="toc-text">压缩部分</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%A3%E5%8E%8B%E9%83%A8%E5%88%86"><span class="toc-number">2.1.2.</span> <span class="toc-text">解压部分</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E8%80%83-4"><span class="toc-number">2.1.3.</span> <span class="toc-text">参考</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E9%83%A8%E5%8A%A0%E5%9B%BA-VMP%E5%A3%B3"><span class="toc-number">2.2.</span> <span class="toc-text">内部加固-VMP壳</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E8%80%83-5"><span class="toc-number">2.2.1.</span> <span class="toc-text">参考</span></a></li></ol></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://tugohost.github.io.com/2023/01/17/android_protect_shell/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://tugohost.github.io.com/2023/01/17/android_protect_shell/&text=Android加固-壳内容相关"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://tugohost.github.io.com/2023/01/17/android_protect_shell/&title=Android加固-壳内容相关"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://tugohost.github.io.com/2023/01/17/android_protect_shell/&is_video=false&description=Android加固-壳内容相关"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Android加固-壳内容相关&body=Check out this article: http://tugohost.github.io.com/2023/01/17/android_protect_shell/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://tugohost.github.io.com/2023/01/17/android_protect_shell/&title=Android加固-壳内容相关"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://tugohost.github.io.com/2023/01/17/android_protect_shell/&title=Android加固-壳内容相关"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://tugohost.github.io.com/2023/01/17/android_protect_shell/&title=Android加固-壳内容相关"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://tugohost.github.io.com/2023/01/17/android_protect_shell/&title=Android加固-壳内容相关"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://tugohost.github.io.com/2023/01/17/android_protect_shell/&name=Android加固-壳内容相关&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://tugohost.github.io.com/2023/01/17/android_protect_shell/&t=Android加固-壳内容相关"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2018-2023
+    TUGOhost
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
