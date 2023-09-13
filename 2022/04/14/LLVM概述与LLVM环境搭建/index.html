@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="LLVM的历史 LLVM计划启动于2000年，开始由美国UIUC大学的Chris Lattner博士主持开展，后来Apple也加入其中。最初的目的是开发一套提供中间代码和编译基础设施的虚拟系统。 LLVM命名最早源自于底层虚拟机（Low Level Virtual Machine）的缩写，随着LLVM项目的不断发展，原先的全称已不再适用，目前LLVM就是该项目的全称。  什么是LLVM 广义：LL">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LLVM从小白到放弃（一）- LLVM概述与LLVM环境搭建">
+<meta property="og:url" content="http://tugohost.github.io.com/2022/04/14/LLVM%E6%A6%82%E8%BF%B0%E4%B8%8ELLVM%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/index.html">
+<meta property="og:site_name" content="TUGOhost">
+<meta property="og:description" content="LLVM的历史 LLVM计划启动于2000年，开始由美国UIUC大学的Chris Lattner博士主持开展，后来Apple也加入其中。最初的目的是开发一套提供中间代码和编译基础设施的虚拟系统。 LLVM命名最早源自于底层虚拟机（Low Level Virtual Machine）的缩写，随着LLVM项目的不断发展，原先的全称已不再适用，目前LLVM就是该项目的全称。  什么是LLVM 广义：LL">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://tugohost.github.io.com/2022/04/14/LLVM%E6%A6%82%E8%BF%B0%E4%B8%8ELLVM%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/1.png">
+<meta property="og:image" content="http://tugohost.github.io.com/2022/04/14/LLVM%E6%A6%82%E8%BF%B0%E4%B8%8ELLVM%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/2.png">
+<meta property="og:image" content="http://tugohost.github.io.com/2022/04/14/LLVM%E6%A6%82%E8%BF%B0%E4%B8%8ELLVM%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/3.png">
+<meta property="article:published_time" content="2022-04-14T02:28:25.000Z">
+<meta property="article:modified_time" content="2023-09-13T18:59:37.035Z">
+<meta property="article:author" content="TUGOhost">
+<meta property="article:tag" content="LLVM">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://tugohost.github.io.com/2022/04/14/LLVM%E6%A6%82%E8%BF%B0%E4%B8%8ELLVM%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/1.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>LLVM从小白到放弃（一）- LLVM概述与LLVM环境搭建</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2022/04/22/Android%E5%8A%A0%E8%BD%BDSO%E6%95%B4%E4%B8%AA%E6%B5%81%E7%A8%8B/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2022/01/14/%E5%90%84%E5%AE%89%E5%8D%93%E7%89%88%E6%9C%AC%E5%85%B3%E4%BA%8EloadLibrary%E5%87%BD%E6%95%B0%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8C%BA%E5%88%AB/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://tugohost.github.io.com/2022/04/14/LLVM%E6%A6%82%E8%BF%B0%E4%B8%8ELLVM%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://tugohost.github.io.com/2022/04/14/LLVM%E6%A6%82%E8%BF%B0%E4%B8%8ELLVM%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/&text=LLVM从小白到放弃（一）- LLVM概述与LLVM环境搭建"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://tugohost.github.io.com/2022/04/14/LLVM%E6%A6%82%E8%BF%B0%E4%B8%8ELLVM%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/&title=LLVM从小白到放弃（一）- LLVM概述与LLVM环境搭建"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://tugohost.github.io.com/2022/04/14/LLVM%E6%A6%82%E8%BF%B0%E4%B8%8ELLVM%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/&is_video=false&description=LLVM从小白到放弃（一）- LLVM概述与LLVM环境搭建"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=LLVM从小白到放弃（一）- LLVM概述与LLVM环境搭建&body=Check out this article: http://tugohost.github.io.com/2022/04/14/LLVM%E6%A6%82%E8%BF%B0%E4%B8%8ELLVM%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://tugohost.github.io.com/2022/04/14/LLVM%E6%A6%82%E8%BF%B0%E4%B8%8ELLVM%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/&title=LLVM从小白到放弃（一）- LLVM概述与LLVM环境搭建"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://tugohost.github.io.com/2022/04/14/LLVM%E6%A6%82%E8%BF%B0%E4%B8%8ELLVM%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/&title=LLVM从小白到放弃（一）- LLVM概述与LLVM环境搭建"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://tugohost.github.io.com/2022/04/14/LLVM%E6%A6%82%E8%BF%B0%E4%B8%8ELLVM%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/&title=LLVM从小白到放弃（一）- LLVM概述与LLVM环境搭建"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://tugohost.github.io.com/2022/04/14/LLVM%E6%A6%82%E8%BF%B0%E4%B8%8ELLVM%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/&title=LLVM从小白到放弃（一）- LLVM概述与LLVM环境搭建"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://tugohost.github.io.com/2022/04/14/LLVM%E6%A6%82%E8%BF%B0%E4%B8%8ELLVM%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/&name=LLVM从小白到放弃（一）- LLVM概述与LLVM环境搭建&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://tugohost.github.io.com/2022/04/14/LLVM%E6%A6%82%E8%BF%B0%E4%B8%8ELLVM%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/&t=LLVM从小白到放弃（一）- LLVM概述与LLVM环境搭建"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#LLVM%E7%9A%84%E5%8E%86%E5%8F%B2"><span class="toc-number">1.</span> <span class="toc-text">LLVM的历史</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFLLVM"><span class="toc-number">2.</span> <span class="toc-text">什么是LLVM</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#GCC%E7%9A%84%E7%BC%96%E8%AF%91%E6%B5%81%E7%A8%8B"><span class="toc-number">3.</span> <span class="toc-text">GCC的编译流程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#LLVM%E7%9A%84%E7%BC%96%E8%AF%91%E6%B5%81%E7%A8%8B"><span class="toc-number">4.</span> <span class="toc-text">LLVM的编译流程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#LLVM%E7%9B%B8%E5%AF%B9%E4%BA%8EGCC%E7%9A%84%E4%BC%98%E5%8A%BF"><span class="toc-number">5.</span> <span class="toc-text">LLVM相对于GCC的优势</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BC%98%E5%8A%BF1%EF%BC%9A%E6%A8%A1%E5%9D%97%E5%8C%96"><span class="toc-number">5.1.</span> <span class="toc-text">优势1：模块化</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BC%98%E5%8A%BF2%EF%BC%9A%E5%8F%AF%E6%89%A9%E5%B1%95"><span class="toc-number">5.2.</span> <span class="toc-text">优势2：可扩展</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#LLVM%E7%BC%96%E8%AF%91%E8%BF%87%E7%A8%8B%E6%80%BB%E7%BB%93"><span class="toc-number">6.</span> <span class="toc-text">LLVM编译过程总结</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#LLVM%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="toc-number">7.</span> <span class="toc-text">LLVM环境搭建</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Ubuntu-x2F-LLVM-x2F-CMake%E7%89%88%E6%9C%AC"><span class="toc-number">7.1.</span> <span class="toc-text">Ubuntu&#x2F;LLVM&#x2F;CMake版本</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E6%AD%A5%EF%BC%9A%E4%B8%8B%E8%BD%BDLLVM-Core%E5%92%8CClang%E6%BA%90%E4%BB%A3%E7%A0%81"><span class="toc-number">7.2.</span> <span class="toc-text">第一步：下载LLVM-Core和Clang源代码</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E6%AD%A5%EF%BC%9A%E7%BC%96%E8%AF%91LLVM%E9%A1%B9%E7%9B%AE"><span class="toc-number">7.3.</span> <span class="toc-text">第二步：编译LLVM项目</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#LLVM%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95"><span class="toc-number">8.</span> <span class="toc-text">LLVM基本用法</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E6%AD%A5%EF%BC%9A%E5%B0%86%E6%BA%90%E4%BB%A3%E7%A0%81%E8%BD%AC%E5%8C%96%E6%88%90LLVM-IR"><span class="toc-number">8.1.</span> <span class="toc-text">第一步：将源代码转化成LLVM IR</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E6%AD%A5%EF%BC%9A%E4%BC%98%E5%8C%96LLVM-IR"><span class="toc-number">8.2.</span> <span class="toc-text">第二步：优化LLVM IR</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E6%AD%A5%EF%BC%9A%E7%BC%96%E8%AF%91LLVM-IR%E4%B8%BA%E5%8F%AF%E6%89%A7%E8%A1%8C%E6%96%87%E4%BB%B6"><span class="toc-number">8.3.</span> <span class="toc-text">第三步：编译LLVM IR为可执行文件</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number"></span> <span class="toc-text">参考</span></a>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        LLVM从小白到放弃（一）- LLVM概述与LLVM环境搭建
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">TUGOhost</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2022-04-14T02:28:25.000Z" class="dt-published" itemprop="datePublished">2022-04-14</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/LLVM/" rel="tag">LLVM</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h4 id="LLVM的历史"><a href="#LLVM的历史" class="headerlink" title="LLVM的历史"></a>LLVM的历史</h4><ul>
+<li>LLVM计划启动于2000年，开始由美国UIUC大学的Chris Lattner博士主持开展，后来Apple也加入其中。最初的目的是开发一套提供中间代码和编译基础设施的虚拟系统。</li>
+<li>LLVM命名最早源自于底层虚拟机（Low Level Virtual Machine）的缩写，随着LLVM项目的不断发展，原先的全称已不再适用，目前LLVM就是该项目的全称。</li>
+</ul>
+<h4 id="什么是LLVM"><a href="#什么是LLVM" class="headerlink" title="什么是LLVM"></a>什么是LLVM</h4><ul>
+<li>广义：LLVM是一个包括了很多模块的编译器框架。</li>
+<li>狭义：LLVM特指LLVM项目中的LLVM Core和Clang子模块。</li>
+<li>简单来收，可以将LLVM理解成为一个现代化、可扩展的编译器。</li>
+</ul>
+<h4 id="GCC的编译流程"><a href="#GCC的编译流程" class="headerlink" title="GCC的编译流程"></a>GCC的编译流程</h4><ul>
+<li>GCC分为三个模块：前端、优化器和后端</li>
+</ul>
+<p>暂时无法在文档外展示此内容</p>
+<ul>
+<li>LLVM本质上也是三段式：</li>
+</ul>
+<p>暂时无法在文档外展示此内容</p>
+<h4 id="LLVM的编译流程"><a href="#LLVM的编译流程" class="headerlink" title="LLVM的编译流程"></a>LLVM的编译流程</h4><ul>
+<li>一个具体的例子：</li>
+</ul>
+<p>暂时无法在文档外展示此内容</p>
+<h4 id="LLVM相对于GCC的优势"><a href="#LLVM相对于GCC的优势" class="headerlink" title="LLVM相对于GCC的优势"></a>LLVM相对于GCC的优势</h4><h5 id="优势1：模块化"><a href="#优势1：模块化" class="headerlink" title="优势1：模块化"></a>优势1：模块化</h5><ul>
+<li>LLVM：LLVM是高度模块化设计的，每一个模块都可以从LLVM项目中抽离出来单独使用。</li>
+<li>GCC：而GCC虽然也是三段式编译，但各个模块之间是难以抽离出来单独使用的。</li>
+</ul>
+<h5 id="优势2：可扩展"><a href="#优势2：可扩展" class="headerlink" title="优势2：可扩展"></a>优势2：可扩展</h5><ul>
+<li>LLVM：LLVM为开发者提供了丰富的API，例如开发者可以通过LLVM Pass框架干预中间代码优化过程，并且配备了完善的文档</li>
+<li>GCC：虽然GCC是开源的，但要在GCC的基础上进行扩展门槛很高、难度很大</li>
+</ul>
+<h4 id="LLVM编译过程总结"><a href="#LLVM编译过程总结" class="headerlink" title="LLVM编译过程总结"></a>LLVM编译过程总结</h4><ul>
+<li>对于C&#x2F;C++程序来说，LLVM的编译过程如图所示：<br><img src="/2022/04/14/LLVM%E6%A6%82%E8%BF%B0%E4%B8%8ELLVM%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/1.png"></li>
+</ul>
+<h4 id="LLVM环境搭建"><a href="#LLVM环境搭建" class="headerlink" title="LLVM环境搭建"></a>LLVM环境搭建</h4><h5 id="Ubuntu-x2F-LLVM-x2F-CMake版本"><a href="#Ubuntu-x2F-LLVM-x2F-CMake版本" class="headerlink" title="Ubuntu&#x2F;LLVM&#x2F;CMake版本"></a>Ubuntu&#x2F;LLVM&#x2F;CMake版本</h5><ul>
+<li>Ubuntu 20.04</li>
+<li>LLVM 12.0.1 &#x2F; 9.0.9svn(ndkr21e)</li>
+<li>Cmake 3.21.1</li>
+</ul>
+<h5 id="第一步：下载LLVM-Core和Clang源代码"><a href="#第一步：下载LLVM-Core和Clang源代码" class="headerlink" title="第一步：下载LLVM-Core和Clang源代码"></a>第一步：下载LLVM-Core和Clang源代码</h5><p><a target="_blank" rel="noopener" href="https://github.com/llvm/llvm-project/releases/tag/llvmorg-12.0.1">https://github.com/llvm/llvm-project/releases/tag/llvmorg-12.0.1</a></p>
+<p>clang-12.0.1.src.tar.xz</p>
+<p>llvm-12.0.1.src.tar.xz</p>
+<p>下载、解压、并重命名，并在同一目录下新建build文件夹，如下：</p>
+<p><img src="/2022/04/14/LLVM%E6%A6%82%E8%BF%B0%E4%B8%8ELLVM%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/2.png"></p>
+<h5 id="第二步：编译LLVM项目"><a href="#第二步：编译LLVM项目" class="headerlink" title="第二步：编译LLVM项目"></a>第二步：编译LLVM项目</h5><p>在同一文件夹内创建build.sh文件，内容如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> build </span><br><span class="line"></span><br><span class="line">cmake -G <span class="string">&quot;Unix Makefiles&quot;</span> -DLLVM_ENABLE_PROJECTS=<span class="string">&quot;clang&quot;</span> -DCMAKE_BUILD_TYPE=Release -DLLVM_TARGETS_TO_BUILD=<span class="string">&quot;X86&quot;</span> -DBUILD_SHARED_LIBS=On ../llvm </span><br><span class="line"></span><br><span class="line">make </span><br><span class="line"></span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
+
+<p>cmake 参数解释： </p>
+<ul>
+<li>-G “Unix Makefiles”：生成Unix下的Makefile </li>
+<li>-DLLVM_ENABLE_PROJECTS&#x3D;“clang”：除了 LLVM Core 外，还需要编译的子项目。 </li>
+<li>-DLLVM_BUILD_TYPE&#x3D;Release：在cmake里，有四种编译模式：Debug, Release, RelWithDebInfo, 和MinSizeRel。使用 Release 模式编译会节省很多空间。 </li>
+<li>-DLLVM_TARGETS_TO_BUILD&#x3D;“X86”：默认是ALL，选择X86可节约很多编译时间。 </li>
+<li>-DBUILD_SHARED_LIBS&#x3D;On：指定动态链接 LLVM 的库，可以节省空间。</li>
+</ul>
+<p><img src="/2022/04/14/LLVM%E6%A6%82%E8%BF%B0%E4%B8%8ELLVM%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/3.png"></p>
+<p>- </p>
+<h4 id="LLVM基本用法"><a href="#LLVM基本用法" class="headerlink" title="LLVM基本用法"></a>LLVM基本用法</h4><h5 id="第一步：将源代码转化成LLVM-IR"><a href="#第一步：将源代码转化成LLVM-IR" class="headerlink" title="第一步：将源代码转化成LLVM IR"></a>第一步：将源代码转化成LLVM IR</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;iostream&quot;</span></span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;Hello World!&quot;</span> &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>LLVM IR 有两种表现形式，一种是人类可阅读的文本形式，对应文件后缀为 .ll ；另一种是方便机器处 理的二进制格式，对应文件后缀为 .bc 。使用以下命令将源代码转化为 LLVM IR： </p>
+<blockquote>
+<p>clang -S -emit-llvm hello.cpp -o hello.ll</p>
+</blockquote>
+<p>或</p>
+<blockquote>
+<p>clang -c -emit-llvm hello.cpp -o hello.bc</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br></pre></td><td class="code"><pre><span class="line">; ModuleID = &#x27;hello.cpp&#x27;</span><br><span class="line"></span><br><span class="line">source_filename = &quot;hello.cpp&quot;</span><br><span class="line"></span><br><span class="line">target datalayout = &quot;e-m:e-p270:32:32-p271:32:32-p272:64:64-i64:64-f80:128-n8:16:32:64-S128&quot;</span><br><span class="line"></span><br><span class="line">target triple = &quot;x86_64-unknown-linux-gnu&quot;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">%&quot;class.std::ios_base::Init&quot; = type &#123; i8 &#125;</span><br><span class="line"></span><br><span class="line">%&quot;class.std::basic_ostream&quot; = type &#123; i32 (...)**, %&quot;class.std::basic_ios&quot; &#125;</span><br><span class="line"></span><br><span class="line">%&quot;class.std::basic_ios&quot; = type &#123; %&quot;class.std::ios_base&quot;, %&quot;class.std::basic_ostream&quot;*, i8, i8, %&quot;class.std::basic_streambuf&quot;*, %&quot;class.std::ctype&quot;*, %&quot;class.std::num_put&quot;*, %&quot;class.std::num_get&quot;* &#125;</span><br><span class="line"></span><br><span class="line">%&quot;class.std::ios_base&quot; = type &#123; i32 (...)**, i64, i64, i32, i32, i32, %&quot;struct.std::ios_base::_Callback_list&quot;*, %&quot;struct.std::ios_base::_Words&quot;, [8 x %&quot;struct.std::ios_base::_Words&quot;], i32, %&quot;struct.std::ios_base::_Words&quot;*, %&quot;class.std::locale&quot; &#125;</span><br><span class="line"></span><br><span class="line">%&quot;struct.std::ios_base::_Callback_list&quot; = type &#123; %&quot;struct.std::ios_base::_Callback_list&quot;*, void (i32, %&quot;class.std::ios_base&quot;*, i32)*, i32, i32 &#125;</span><br><span class="line"></span><br><span class="line">%&quot;struct.std::ios_base::_Words&quot; = type &#123; i8*, i64 &#125;</span><br><span class="line"></span><br><span class="line">%&quot;class.std::locale&quot; = type &#123; %&quot;class.std::locale::_Impl&quot;* &#125;</span><br><span class="line"></span><br><span class="line">%&quot;class.std::locale::_Impl&quot; = type &#123; i32, %&quot;class.std::locale::facet&quot;**, i64, %&quot;class.std::locale::facet&quot;**, i8** &#125;</span><br><span class="line"></span><br><span class="line">%&quot;class.std::locale::facet&quot; = type &lt;&#123; i32 (...)**, i32, [4 x i8] &#125;&gt;</span><br><span class="line"></span><br><span class="line">%&quot;class.std::basic_streambuf&quot; = type &#123; i32 (...)**, i8*, i8*, i8*, i8*, i8*, i8*, %&quot;class.std::locale&quot; &#125;</span><br><span class="line"></span><br><span class="line">%&quot;class.std::ctype&quot; = type &lt;&#123; %&quot;class.std::locale::facet.base&quot;, [4 x i8], %struct.__locale_struct*, i8, [7 x i8], i32*, i32*, i16*, i8, [256 x i8], [256 x i8], i8, [6 x i8] &#125;&gt;</span><br><span class="line"></span><br><span class="line">%&quot;class.std::locale::facet.base&quot; = type &lt;&#123; i32 (...)**, i32 &#125;&gt;</span><br><span class="line"></span><br><span class="line">%struct.__locale_struct = type &#123; [13 x %struct.__locale_data*], i16*, i32*, i32*, [13 x i8*] &#125;</span><br><span class="line"></span><br><span class="line">%struct.__locale_data = type opaque</span><br><span class="line"></span><br><span class="line">%&quot;class.std::num_put&quot; = type &#123; %&quot;class.std::locale::facet.base&quot;, [4 x i8] &#125;</span><br><span class="line"></span><br><span class="line">%&quot;class.std::num_get&quot; = type &#123; %&quot;class.std::locale::facet.base&quot;, [4 x i8] &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">@_ZStL8__ioinit = internal global %&quot;class.std::ios_base::Init&quot; zeroinitializer, align 1</span><br><span class="line"></span><br><span class="line">@__dso_handle = external hidden global i8</span><br><span class="line"></span><br><span class="line">@_ZSt4cout = external dso_local global %&quot;class.std::basic_ostream&quot;, align 8</span><br><span class="line"></span><br><span class="line">@.str = private unnamed_addr constant [13 x i8] c&quot;Hello World!\00&quot;, align 1</span><br><span class="line"></span><br><span class="line">@llvm.global_ctors = appending global [1 x &#123; i32, void ()*, i8* &#125;] [&#123; i32, void ()*, i8* &#125; &#123; i32 65535, void ()* @_GLOBAL__sub_I_hello.cpp, i8* null &#125;]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">; Function Attrs: noinline uwtable</span><br><span class="line"></span><br><span class="line">define internal void @__cxx_global_var_init() #0 section &quot;.text.startup&quot; &#123;</span><br><span class="line"></span><br><span class="line">  call void @_ZNSt8ios_base4InitC1Ev(%&quot;class.std::ios_base::Init&quot;* nonnull dereferenceable(1) @_ZStL8__ioinit)</span><br><span class="line"></span><br><span class="line">  %1 = call i32 @__cxa_atexit(void (i8*)* bitcast (void (%&quot;class.std::ios_base::Init&quot;*)* @_ZNSt8ios_base4InitD1Ev to void (i8*)*), i8* getelementptr inbounds (%&quot;class.std::ios_base::Init&quot;, %&quot;class.std::ios_base::Init&quot;* @_ZStL8__ioinit, i32 0, i32 0), i8* @__dso_handle) #3</span><br><span class="line"></span><br><span class="line">  ret void</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">declare dso_local void @_ZNSt8ios_base4InitC1Ev(%&quot;class.std::ios_base::Init&quot;* nonnull dereferenceable(1)) unnamed_addr #1</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">; Function Attrs: nounwind</span><br><span class="line"></span><br><span class="line">declare dso_local void @_ZNSt8ios_base4InitD1Ev(%&quot;class.std::ios_base::Init&quot;* nonnull dereferenceable(1)) unnamed_addr #2</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">; Function Attrs: nounwind</span><br><span class="line"></span><br><span class="line">declare dso_local i32 @__cxa_atexit(void (i8*)*, i8*, i8*) #3</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">; Function Attrs: noinline norecurse optnone uwtable mustprogress</span><br><span class="line"></span><br><span class="line">define dso_local i32 @main() #4 &#123;</span><br><span class="line"></span><br><span class="line">  %1 = alloca i32, align 4</span><br><span class="line"></span><br><span class="line">  store i32 0, i32* %1, align 4</span><br><span class="line"></span><br><span class="line">  %2 = call nonnull align 8 dereferenceable(8) %&quot;class.std::basic_ostream&quot;* @_ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc(%&quot;class.std::basic_ostream&quot;* nonnull align 8 dereferenceable(8) @_ZSt4cout, i8* getelementptr inbounds ([13 x i8], [13 x i8]* @.str, i64 0, i64 0))</span><br><span class="line"></span><br><span class="line">  %3 = call nonnull align 8 dereferenceable(8) %&quot;class.std::basic_ostream&quot;* @_ZNSolsEPFRSoS_E(%&quot;class.std::basic_ostream&quot;* nonnull dereferenceable(8) %2, %&quot;class.std::basic_ostream&quot;* (%&quot;class.std::basic_ostream&quot;*)* @_ZSt4endlIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_)</span><br><span class="line"></span><br><span class="line">  ret i32 0</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">declare dso_local nonnull align 8 dereferenceable(8) %&quot;class.std::basic_ostream&quot;* @_ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc(%&quot;class.std::basic_ostream&quot;* nonnull align 8 dereferenceable(8), i8*) #1</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">declare dso_local nonnull align 8 dereferenceable(8) %&quot;class.std::basic_ostream&quot;* @_ZNSolsEPFRSoS_E(%&quot;class.std::basic_ostream&quot;* nonnull dereferenceable(8), %&quot;class.std::basic_ostream&quot;* (%&quot;class.std::basic_ostream&quot;*)*) #1</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">declare dso_local nonnull align 8 dereferenceable(8) %&quot;class.std::basic_ostream&quot;* @_ZSt4endlIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_(%&quot;class.std::basic_ostream&quot;* nonnull align 8 dereferenceable(8)) #1</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">; Function Attrs: noinline uwtable</span><br><span class="line"></span><br><span class="line">define internal void @_GLOBAL__sub_I_hello.cpp() #0 section &quot;.text.startup&quot; &#123;</span><br><span class="line"></span><br><span class="line">  call void @__cxx_global_var_init()</span><br><span class="line"></span><br><span class="line">  ret void</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">attributes #0 = &#123; noinline uwtable &quot;disable-tail-calls&quot;=&quot;false&quot; &quot;frame-pointer&quot;=&quot;all&quot; &quot;less-precise-fpmad&quot;=&quot;false&quot; &quot;min-legal-vector-width&quot;=&quot;0&quot; &quot;no-infs-fp-math&quot;=&quot;false&quot; &quot;no-jump-tables&quot;=&quot;false&quot; &quot;no-nans-fp-math&quot;=&quot;false&quot; &quot;no-signed-zeros-fp-math&quot;=&quot;false&quot; &quot;no-trapping-math&quot;=&quot;true&quot; &quot;stack-protector-buffer-size&quot;=&quot;8&quot; &quot;target-cpu&quot;=&quot;x86-64&quot; &quot;target-features&quot;=&quot;+cx8,+fxsr,+mmx,+sse,+sse2,+x87&quot; &quot;tune-cpu&quot;=&quot;generic&quot; &quot;unsafe-fp-math&quot;=&quot;false&quot; &quot;use-soft-float&quot;=&quot;false&quot; &#125;</span><br><span class="line"></span><br><span class="line">attributes #1 = &#123; &quot;disable-tail-calls&quot;=&quot;false&quot; &quot;frame-pointer&quot;=&quot;all&quot; &quot;less-precise-fpmad&quot;=&quot;false&quot; &quot;no-infs-fp-math&quot;=&quot;false&quot; &quot;no-nans-fp-math&quot;=&quot;false&quot; &quot;no-signed-zeros-fp-math&quot;=&quot;false&quot; &quot;no-trapping-math&quot;=&quot;true&quot; &quot;stack-protector-buffer-size&quot;=&quot;8&quot; &quot;target-cpu&quot;=&quot;x86-64&quot; &quot;target-features&quot;=&quot;+cx8,+fxsr,+mmx,+sse,+sse2,+x87&quot; &quot;tune-cpu&quot;=&quot;generic&quot; &quot;unsafe-fp-math&quot;=&quot;false&quot; &quot;use-soft-float&quot;=&quot;false&quot; &#125;</span><br><span class="line"></span><br><span class="line">attributes #2 = &#123; nounwind &quot;disable-tail-calls&quot;=&quot;false&quot; &quot;frame-pointer&quot;=&quot;all&quot; &quot;less-precise-fpmad&quot;=&quot;false&quot; &quot;no-infs-fp-math&quot;=&quot;false&quot; &quot;no-nans-fp-math&quot;=&quot;false&quot; &quot;no-signed-zeros-fp-math&quot;=&quot;false&quot; &quot;no-trapping-math&quot;=&quot;true&quot; &quot;stack-protector-buffer-size&quot;=&quot;8&quot; &quot;target-cpu&quot;=&quot;x86-64&quot; &quot;target-features&quot;=&quot;+cx8,+fxsr,+mmx,+sse,+sse2,+x87&quot; &quot;tune-cpu&quot;=&quot;generic&quot; &quot;unsafe-fp-math&quot;=&quot;false&quot; &quot;use-soft-float&quot;=&quot;false&quot; &#125;</span><br><span class="line"></span><br><span class="line">attributes #3 = &#123; nounwind &#125;</span><br><span class="line"></span><br><span class="line">attributes #4 = &#123; noinline norecurse optnone uwtable mustprogress &quot;disable-tail-calls&quot;=&quot;false&quot; &quot;frame-pointer&quot;=&quot;all&quot; &quot;less-precise-fpmad&quot;=&quot;false&quot; &quot;min-legal-vector-width&quot;=&quot;0&quot; &quot;no-infs-fp-math&quot;=&quot;false&quot; &quot;no-jump-tables&quot;=&quot;false&quot; &quot;no-nans-fp-math&quot;=&quot;false&quot; &quot;no-signed-zeros-fp-math&quot;=&quot;false&quot; &quot;no-trapping-math&quot;=&quot;true&quot; &quot;stack-protector-buffer-size&quot;=&quot;8&quot; &quot;target-cpu&quot;=&quot;x86-64&quot; &quot;target-features&quot;=&quot;+cx8,+fxsr,+mmx,+sse,+sse2,+x87&quot; &quot;tune-cpu&quot;=&quot;generic&quot; &quot;unsafe-fp-math&quot;=&quot;false&quot; &quot;use-soft-float&quot;=&quot;false&quot; &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">!llvm.module.flags = !&#123;!0&#125;</span><br><span class="line"></span><br><span class="line">!llvm.ident = !&#123;!1&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">!0 = !&#123;i32 1, !&quot;wchar_size&quot;, i32 4&#125;</span><br><span class="line"></span><br><span class="line">!1 = !&#123;!&quot;clang version 12.0.1&quot;&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="第二步：优化LLVM-IR"><a href="#第二步：优化LLVM-IR" class="headerlink" title="第二步：优化LLVM IR"></a>第二步：优化LLVM IR</h5><p>使用opt指令对LLVM IR进行优化</p>
+<blockquote>
+<p>opt -load LLVMObfuscator.so -hlw -S hello.ll -o hello_opt.ll</p>
+</blockquote>
+<ul>
+<li>-load 加载特定的LLVM Pass（集合）进行优化（通常为.so文件）</li>
+<li>-hlw是LLVM Pass中自定义的参数，用来指定使用哪个Pass进行优化</li>
+</ul>
+<h5 id="第三步：编译LLVM-IR为可执行文件"><a href="#第三步：编译LLVM-IR为可执行文件" class="headerlink" title="第三步：编译LLVM IR为可执行文件"></a>第三步：编译LLVM IR为可执行文件</h5><p>这一步我们通过Clang完成，从LLVM IR到可执行文件中间还有一系列复杂的流程，Clang帮助我们整合了这个过程</p>
+<blockquote>
+<p>clang hello_opt.ll -o hello</p>
+</blockquote>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://www.kanxue.com/book-section_list-88.htm">https://www.kanxue.com/book-section_list-88.htm</a></li>
+</ul>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/probberechts">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#LLVM%E7%9A%84%E5%8E%86%E5%8F%B2"><span class="toc-number">1.</span> <span class="toc-text">LLVM的历史</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFLLVM"><span class="toc-number">2.</span> <span class="toc-text">什么是LLVM</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#GCC%E7%9A%84%E7%BC%96%E8%AF%91%E6%B5%81%E7%A8%8B"><span class="toc-number">3.</span> <span class="toc-text">GCC的编译流程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#LLVM%E7%9A%84%E7%BC%96%E8%AF%91%E6%B5%81%E7%A8%8B"><span class="toc-number">4.</span> <span class="toc-text">LLVM的编译流程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#LLVM%E7%9B%B8%E5%AF%B9%E4%BA%8EGCC%E7%9A%84%E4%BC%98%E5%8A%BF"><span class="toc-number">5.</span> <span class="toc-text">LLVM相对于GCC的优势</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BC%98%E5%8A%BF1%EF%BC%9A%E6%A8%A1%E5%9D%97%E5%8C%96"><span class="toc-number">5.1.</span> <span class="toc-text">优势1：模块化</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BC%98%E5%8A%BF2%EF%BC%9A%E5%8F%AF%E6%89%A9%E5%B1%95"><span class="toc-number">5.2.</span> <span class="toc-text">优势2：可扩展</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#LLVM%E7%BC%96%E8%AF%91%E8%BF%87%E7%A8%8B%E6%80%BB%E7%BB%93"><span class="toc-number">6.</span> <span class="toc-text">LLVM编译过程总结</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#LLVM%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="toc-number">7.</span> <span class="toc-text">LLVM环境搭建</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Ubuntu-x2F-LLVM-x2F-CMake%E7%89%88%E6%9C%AC"><span class="toc-number">7.1.</span> <span class="toc-text">Ubuntu&#x2F;LLVM&#x2F;CMake版本</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E6%AD%A5%EF%BC%9A%E4%B8%8B%E8%BD%BDLLVM-Core%E5%92%8CClang%E6%BA%90%E4%BB%A3%E7%A0%81"><span class="toc-number">7.2.</span> <span class="toc-text">第一步：下载LLVM-Core和Clang源代码</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E6%AD%A5%EF%BC%9A%E7%BC%96%E8%AF%91LLVM%E9%A1%B9%E7%9B%AE"><span class="toc-number">7.3.</span> <span class="toc-text">第二步：编译LLVM项目</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#LLVM%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95"><span class="toc-number">8.</span> <span class="toc-text">LLVM基本用法</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E6%AD%A5%EF%BC%9A%E5%B0%86%E6%BA%90%E4%BB%A3%E7%A0%81%E8%BD%AC%E5%8C%96%E6%88%90LLVM-IR"><span class="toc-number">8.1.</span> <span class="toc-text">第一步：将源代码转化成LLVM IR</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E6%AD%A5%EF%BC%9A%E4%BC%98%E5%8C%96LLVM-IR"><span class="toc-number">8.2.</span> <span class="toc-text">第二步：优化LLVM IR</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E6%AD%A5%EF%BC%9A%E7%BC%96%E8%AF%91LLVM-IR%E4%B8%BA%E5%8F%AF%E6%89%A7%E8%A1%8C%E6%96%87%E4%BB%B6"><span class="toc-number">8.3.</span> <span class="toc-text">第三步：编译LLVM IR为可执行文件</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number"></span> <span class="toc-text">参考</span></a>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://tugohost.github.io.com/2022/04/14/LLVM%E6%A6%82%E8%BF%B0%E4%B8%8ELLVM%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://tugohost.github.io.com/2022/04/14/LLVM%E6%A6%82%E8%BF%B0%E4%B8%8ELLVM%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/&text=LLVM从小白到放弃（一）- LLVM概述与LLVM环境搭建"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://tugohost.github.io.com/2022/04/14/LLVM%E6%A6%82%E8%BF%B0%E4%B8%8ELLVM%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/&title=LLVM从小白到放弃（一）- LLVM概述与LLVM环境搭建"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://tugohost.github.io.com/2022/04/14/LLVM%E6%A6%82%E8%BF%B0%E4%B8%8ELLVM%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/&is_video=false&description=LLVM从小白到放弃（一）- LLVM概述与LLVM环境搭建"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=LLVM从小白到放弃（一）- LLVM概述与LLVM环境搭建&body=Check out this article: http://tugohost.github.io.com/2022/04/14/LLVM%E6%A6%82%E8%BF%B0%E4%B8%8ELLVM%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://tugohost.github.io.com/2022/04/14/LLVM%E6%A6%82%E8%BF%B0%E4%B8%8ELLVM%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/&title=LLVM从小白到放弃（一）- LLVM概述与LLVM环境搭建"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://tugohost.github.io.com/2022/04/14/LLVM%E6%A6%82%E8%BF%B0%E4%B8%8ELLVM%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/&title=LLVM从小白到放弃（一）- LLVM概述与LLVM环境搭建"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://tugohost.github.io.com/2022/04/14/LLVM%E6%A6%82%E8%BF%B0%E4%B8%8ELLVM%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/&title=LLVM从小白到放弃（一）- LLVM概述与LLVM环境搭建"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://tugohost.github.io.com/2022/04/14/LLVM%E6%A6%82%E8%BF%B0%E4%B8%8ELLVM%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/&title=LLVM从小白到放弃（一）- LLVM概述与LLVM环境搭建"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://tugohost.github.io.com/2022/04/14/LLVM%E6%A6%82%E8%BF%B0%E4%B8%8ELLVM%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/&name=LLVM从小白到放弃（一）- LLVM概述与LLVM环境搭建&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://tugohost.github.io.com/2022/04/14/LLVM%E6%A6%82%E8%BF%B0%E4%B8%8ELLVM%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/&t=LLVM从小白到放弃（一）- LLVM概述与LLVM环境搭建"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2023
+    TUGOhost
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="KUbuntu20 环境配置安装 proxychainssudo apt-get install proxychains-ng 修改&#x2F;etc&#x2F;proxychains4.conf 12345678910[ProxyList]# add proxy here ...# meanwile# defaults set to &quot;tor&quot;socks5  192.168.65.1 1080">
+<meta property="og:type" content="article">
+<meta property="og:title" content="KUbuntu20 环境配置">
+<meta property="og:url" content="http://tugohost.github.io.com/2022/10/06/KUbuntu%2020%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/index.html">
+<meta property="og:site_name" content="TUGOhost">
+<meta property="og:description" content="KUbuntu20 环境配置安装 proxychainssudo apt-get install proxychains-ng 修改&#x2F;etc&#x2F;proxychains4.conf 12345678910[ProxyList]# add proxy here ...# meanwile# defaults set to &quot;tor&quot;socks5  192.168.65.1 1080">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-10-06T13:46:25.000Z">
+<meta property="article:modified_time" content="2023-09-13T18:59:37.031Z">
+<meta property="article:author" content="TUGOhost">
+<meta property="article:tag" content="瞎折腾">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>KUbuntu20 环境配置</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2022/10/07/Web_3%E5%AD%A6%E4%B9%A0%E6%95%B4%E5%90%88/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2022/09/23/libkwsgmain_so%E8%8A%B1%E6%8C%87%E4%BB%A4%E5%88%86%E6%9E%90/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://tugohost.github.io.com/2022/10/06/KUbuntu%2020%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://tugohost.github.io.com/2022/10/06/KUbuntu%2020%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/&text=KUbuntu20 环境配置"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://tugohost.github.io.com/2022/10/06/KUbuntu%2020%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/&title=KUbuntu20 环境配置"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://tugohost.github.io.com/2022/10/06/KUbuntu%2020%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/&is_video=false&description=KUbuntu20 环境配置"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=KUbuntu20 环境配置&body=Check out this article: http://tugohost.github.io.com/2022/10/06/KUbuntu%2020%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://tugohost.github.io.com/2022/10/06/KUbuntu%2020%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/&title=KUbuntu20 环境配置"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://tugohost.github.io.com/2022/10/06/KUbuntu%2020%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/&title=KUbuntu20 环境配置"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://tugohost.github.io.com/2022/10/06/KUbuntu%2020%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/&title=KUbuntu20 环境配置"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://tugohost.github.io.com/2022/10/06/KUbuntu%2020%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/&title=KUbuntu20 环境配置"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://tugohost.github.io.com/2022/10/06/KUbuntu%2020%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/&name=KUbuntu20 环境配置&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://tugohost.github.io.com/2022/10/06/KUbuntu%2020%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/&t=KUbuntu20 环境配置"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#KUbuntu20-%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE"><span class="toc-number">1.</span> <span class="toc-text">KUbuntu20 环境配置</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-proxychains"><span class="toc-number">1.1.</span> <span class="toc-text">安装 proxychains</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85Qv2ray"><span class="toc-number">1.2.</span> <span class="toc-text">安装Qv2ray</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85vcore%E7%89%88%E6%9C%AC"><span class="toc-number">1.2.1.</span> <span class="toc-text">安装vcore版本</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-IDE"><span class="toc-number">1.3.</span> <span class="toc-text">安装 IDE</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#vscode"><span class="toc-number">1.3.1.</span> <span class="toc-text">vscode</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#android-studio"><span class="toc-number">1.3.2.</span> <span class="toc-text">android studio</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#clion"><span class="toc-number">1.3.3.</span> <span class="toc-text">clion</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#pycharm-community"><span class="toc-number">1.3.4.</span> <span class="toc-text">pycharm-community</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#intellij-idea-community"><span class="toc-number">1.3.5.</span> <span class="toc-text">intellij-idea-community</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#IDA-Pro-with-Wine"><span class="toc-number">1.4.</span> <span class="toc-text">IDA Pro with Wine</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">1.4.1.</span> <span class="toc-text">遇到的问题</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#sip"><span class="toc-number">1.4.1.1.</span> <span class="toc-text">sip</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Typora"><span class="toc-number">1.5.</span> <span class="toc-text">Typora</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E5%B8%B8%E7%94%A8-build-%E5%B7%A5%E5%85%B7"><span class="toc-number">1.6.</span> <span class="toc-text">安装常用 build 工具</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E5%92%8C%E9%85%8D%E7%BD%AE-zsh"><span class="toc-number">1.7.</span> <span class="toc-text">安装和配置 zsh</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8-tmux"><span class="toc-number">1.8.</span> <span class="toc-text">安装和使用 tmux</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E7%9B%91%E6%8E%A7%E5%92%8C-CPU-x2F-%E5%86%85%E5%AD%98%E7%9B%91%E6%8E%A7"><span class="toc-number">1.9.</span> <span class="toc-text">网络监控和 CPU&#x2F;内存监控</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-pyenv"><span class="toc-number">1.10.</span> <span class="toc-text">安装 pyenv</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E8%AF%91-aosp"><span class="toc-number">1.11.</span> <span class="toc-text">编译 aosp</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B8%85%E7%90%86%E6%8B%96%E6%8B%BD%E6%96%87%E4%BB%B6%E7%BC%93%E5%AD%98"><span class="toc-number">1.12.</span> <span class="toc-text">清理拖拽文件缓存</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E8%AF%91-aosp-%E5%86%85%E6%A0%B8"><span class="toc-number">1.13.</span> <span class="toc-text">编译 aosp 内核</span></a></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        KUbuntu20 环境配置
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">TUGOhost</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2022-10-06T13:46:25.000Z" class="dt-published" itemprop="datePublished">2022-10-06</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/%E7%9E%8E%E6%8A%98%E8%85%BE/" rel="tag">瞎折腾</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h1 id="KUbuntu20-环境配置"><a href="#KUbuntu20-环境配置" class="headerlink" title="KUbuntu20 环境配置"></a>KUbuntu20 环境配置</h1><h2 id="安装-proxychains"><a href="#安装-proxychains" class="headerlink" title="安装 proxychains"></a>安装 proxychains</h2><p><code>sudo apt-get install proxychains-ng</code></p>
+<p>修改<code>/etc/proxychains4.conf</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[ProxyList]</span><br><span class="line"></span><br><span class="line"># add proxy here ...</span><br><span class="line"></span><br><span class="line"># meanwile</span><br><span class="line"></span><br><span class="line"># defaults set to &quot;tor&quot;</span><br><span class="line"></span><br><span class="line">socks5  192.168.65.1 1080</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="安装Qv2ray"><a href="#安装Qv2ray" class="headerlink" title="安装Qv2ray"></a>安装Qv2ray</h2><blockquote>
+<p>snap install 安装Qv2ray</p>
+</blockquote>
+<h3 id="安装vcore版本"><a href="#安装vcore版本" class="headerlink" title="安装vcore版本"></a>安装vcore版本</h3><blockquote>
+<p><a target="_blank" rel="noopener" href="https://github.com/v2fly/v2ray-core/releases/download/v4.44.0/v2ray-linux-64.zip">https://github.com/v2fly/v2ray-core/releases/download/v4.44.0/v2ray-linux-64.zip</a></p>
+</blockquote>
+<h2 id="安装-IDE"><a href="#安装-IDE" class="headerlink" title="安装 IDE"></a>安装 IDE</h2><h3 id="vscode"><a href="#vscode" class="headerlink" title="vscode"></a>vscode</h3><blockquote>
+<p>snap install code</p>
+</blockquote>
+<h3 id="android-studio"><a href="#android-studio" class="headerlink" title="android studio"></a>android studio</h3><blockquote>
+<p>snap install android-studio –classic</p>
+</blockquote>
+<h3 id="clion"><a href="#clion" class="headerlink" title="clion"></a>clion</h3><blockquote>
+<p>snap install clion –classic</p>
+</blockquote>
+<h3 id="pycharm-community"><a href="#pycharm-community" class="headerlink" title="pycharm-community"></a>pycharm-community</h3><blockquote>
+<p>snap install pycharm-community –classic</p>
+</blockquote>
+<h3 id="intellij-idea-community"><a href="#intellij-idea-community" class="headerlink" title="intellij-idea-community"></a>intellij-idea-community</h3><blockquote>
+<p>snap install intellij-idea-community –classic</p>
+</blockquote>
+<h2 id="IDA-Pro-with-Wine"><a href="#IDA-Pro-with-Wine" class="headerlink" title="IDA Pro with Wine"></a>IDA Pro with Wine</h2><p><a target="_blank" rel="noopener" href="https://wiki.winehq.org/Ubuntu_zhcn">https://wiki.winehq.org/Ubuntu_zhcn</a></p>
+<p><a target="_blank" rel="noopener" href="https://debugwar.com/article/activate-IDAPython-with-wine-IDA-under-linux">https://debugwar.com/article/activate-IDAPython-with-wine-IDA-under-linux</a></p>
+<p>for Kubuntu 20 install winehq</p>
+<blockquote>
+<p>sudo dpkg –add-architecture i386</p>
+</blockquote>
+<blockquote>
+<p>sudo proxychains wget -nc -O &#x2F;usr&#x2F;share&#x2F;keyrings&#x2F;winehq-archive.key <a target="_blank" rel="noopener" href="https://dl.winehq.org/wine-builds/winehq.key">https://dl.winehq.org/wine-builds/winehq.key</a></p>
+</blockquote>
+<blockquote>
+<p>sudo proxychains wget -NP &#x2F;etc&#x2F;apt&#x2F;sources.list.d&#x2F; <a target="_blank" rel="noopener" href="https://dl.winehq.org/wine-builds/ubuntu/dists/focal/winehq-focal.sources">https://dl.winehq.org/wine-builds/ubuntu/dists/focal/winehq-focal.sources</a></p>
+</blockquote>
+<blockquote>
+<p>sudo proxychains apt update</p>
+</blockquote>
+<blockquote>
+<p>sudo proxychains apt install –install-recommends winehq-stable</p>
+</blockquote>
+<p>ida python env</p>
+<p><a target="_blank" rel="noopener" href="https://www.python.org/ftp/python/3.10.2/python-3.10.2-embed-amd64.zip">https://www.python.org/ftp/python/3.10.2/python-3.10.2-embed-amd64.zip</a></p>
+<blockquote>
+<p>wine regedit</p>
+</blockquote>
+<p>ida python env pip</p>
+<p><a target="_blank" rel="noopener" href="https://bootstrap.pypa.io/get-pip.py">https://bootstrap.pypa.io/get-pip.py</a></p>
+<blockquote>
+<p>wine python.exe get_pip.py</p>
+</blockquote>
+<blockquote>
+</blockquote>
+<blockquote>
+<p>wine python.exe -m pip install keystone-engine</p>
+</blockquote>
+<blockquote>
+<p>wine python.exe -m pip install six</p>
+</blockquote>
+<h3 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题"></a>遇到的问题</h3><h4 id="sip"><a href="#sip" class="headerlink" title="sip"></a>sip</h4><blockquote>
+<p>ImportError: DLL load failed while importing sip: Module not found.</p>
+</blockquote>
+<p>pip 安装 PyQt5，但是还是会有这个问题，搜索发现</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/igogo-x86/HexRaysPyTools/issues/48">https://github.com/igogo-x86/HexRaysPyTools/issues/48</a></p>
+<p><a target="_blank" rel="noopener" href="https://hex-rays.com/blog/ida-7-4-and-python-3-8/">https://hex-rays.com/blog/ida-7-4-and-python-3-8/</a></p>
+<p><a target="_blank" rel="noopener" href="https://iosre.com/t/topic/21033/21">https://iosre.com/t/topic/21033/21</a></p>
+<p>以上解决方法均不能解决问题，尝试使用 7.6 来替换 7.5。</p>
+<h2 id="Typora"><a href="#Typora" class="headerlink" title="Typora"></a>Typora</h2><blockquote>
+<p>snap install typora-alanzanattadev</p>
+</blockquote>
+<p>使用直接输入命令 <code>typora-alanzanattadev</code></p>
+<h2 id="安装常用-build-工具"><a href="#安装常用-build-工具" class="headerlink" title="安装常用 build 工具"></a>安装常用 build 工具</h2><p><code>sudo apt install build-essential gcc-multilib g++-multilib</code></p>
+<h2 id="安装和配置-zsh"><a href="#安装和配置-zsh" class="headerlink" title="安装和配置 zsh"></a>安装和配置 zsh</h2><ul>
+<li>安装</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install git zsh -y</span><br><span class="line"></span><br><span class="line">sh -c &quot;$(wget -O- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)&quot;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>更改默认 shell 为 zsh</li>
+</ul>
+<p><code>[sudo] chsh -s $(which zsh)</code></p>
+<ul>
+<li>安装常用插件</li>
+<li>autojump</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install python</span><br><span class="line"></span><br><span class="line"># ------ linux -----</span><br><span class="line"></span><br><span class="line">proxychains git clone git://github.com/joelthelion/autojump.git</span><br><span class="line"></span><br><span class="line">cd autojump</span><br><span class="line"></span><br><span class="line">./install.py</span><br><span class="line"></span><br><span class="line">vim ~/.zshrc</span><br><span class="line"></span><br><span class="line"># 在文件里找到plugins，添加</span><br><span class="line"></span><br><span class="line">plugins=(autojump)</span><br><span class="line"></span><br><span class="line"># 在文件末尾添加</span><br><span class="line"></span><br><span class="line">[[ -s /home/tg/.autojump/etc/profile.d/autojump.sh ]] &amp;&amp; source /home/tg/.autojump/etc/profile.d/autojump.sh</span><br><span class="line"></span><br><span class="line">source ~/.zshrc</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>zsh-autosuggestions</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">proxychains git clone git://github.com/zsh-users/zsh-autosuggestions $ZSH_CUSTOM/plugins/zsh-autosuggestions</span><br><span class="line"></span><br><span class="line">vim ~/.zshrc</span><br><span class="line"></span><br><span class="line"># 在文件里找到plugins，添加</span><br><span class="line"></span><br><span class="line">plugins=(</span><br><span class="line"></span><br><span class="line">  autojump</span><br><span class="line"></span><br><span class="line">  zsh-autosuggestions</span><br><span class="line"></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">source ~/.zshrc</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>zsh-syntax-highlighting</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"># 安装</span><br><span class="line"></span><br><span class="line">proxychains git clone git://github.com/zsh-users/zsh-syntax-highlighting $ZSH_CUSTOM/plugins/zsh-syntax-highlighting</span><br><span class="line"></span><br><span class="line">vim ~/.zshrc</span><br><span class="line"></span><br><span class="line"># 在文件里找到plugins，添加</span><br><span class="line"></span><br><span class="line">plugins=(</span><br><span class="line"></span><br><span class="line">  autojump</span><br><span class="line"></span><br><span class="line">  zsh-autosuggestions</span><br><span class="line"></span><br><span class="line">  zsh-syntax-highlighting</span><br><span class="line"></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">source ~/.zshrc</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="安装和使用-tmux"><a href="#安装和使用-tmux" class="headerlink" title="安装和使用 tmux"></a>安装和使用 tmux</h2><p><a target="_blank" rel="noopener" href="https://gist.github.com/ryerh/14b7c24dfd623ef8edc7">https://gist.github.com/ryerh/14b7c24dfd623ef8edc7</a></p>
+<h2 id="网络监控和-CPU-x2F-内存监控"><a href="#网络监控和-CPU-x2F-内存监控" class="headerlink" title="网络监控和 CPU&#x2F;内存监控"></a>网络监控和 CPU&#x2F;内存监控</h2><p>jnettop&#x2F;htop</p>
+<h2 id="安装-pyenv"><a href="#安装-pyenv" class="headerlink" title="安装 pyenv"></a>安装 pyenv</h2><p><a target="_blank" rel="noopener" href="https://gist.github.com/cedricbonhomme/ababe00d0a675ea5c69d777276e8f375">https://gist.github.com/cedricbonhomme/ababe00d0a675ea5c69d777276e8f375</a></p>
+<h2 id="编译-aosp"><a href="#编译-aosp" class="headerlink" title="编译 aosp"></a>编译 aosp</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install bison tree</span><br><span class="line"></span><br><span class="line">sudo dpkg --add-architecture i386</span><br><span class="line"></span><br><span class="line">sudo apt update</span><br><span class="line"></span><br><span class="line">sudo apt install libc6:i386 libncurses5:i386 libstdc++6:i386</span><br><span class="line"></span><br><span class="line">sudo apt install libxml2-utils</span><br><span class="line"></span><br><span class="line">sudo apt install openjdk-8-jdk</span><br><span class="line"></span><br><span class="line">sudo apt-get install libncurses5</span><br><span class="line"></span><br><span class="line">sudo apt install htop</span><br><span class="line"></span><br><span class="line">sudo apt-get install bc bison build-essential ccache curl flex g++-multilib gcc-multilib git gnupg gperf imagemagick lib32ncurses5-dev lib32readline-dev lib32z1-dev libelf-dev liblz4-tool libncurses5 libncurses5-dev libsdl1.2-dev libssl-dev libxml2 libxml2-utils lzop pngcrush rsync schedtool squashfs-tools xsltproc zip zlib1g-dev</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>For Ubuntu versions older than 20.04 (focal), install also:</p>
+<ul>
+<li><code>libwxgtk3.0-dev</code></li>
+</ul>
+<p>While for Ubuntu versions older than 16.04 (xenial), install:</p>
+<ul>
+<li><code>libwxgtk2.8-dev</code></li>
+</ul>
+<p>mouxuejie.com&#x2F;blog&#x2F;2019-11-17&#x2F;aosp-setup&#x2F;</p>
+<p><a target="_blank" rel="noopener" href="https://mirrors.tuna.tsinghua.edu.cn/help/AOSP/">https://mirrors.tuna.tsinghua.edu.cn/help/AOSP/</a></p>
+<p>使用清华源，先下载 repo 工具</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">proxychains repo init -u https://mirrors.tuna.tsinghua.edu.cn/git/AOSP/platform/manifest -b android-8.1.0_r1</span><br><span class="line"></span><br><span class="line">repo sync</span><br><span class="line"></span><br><span class="line">rm -rf .repo</span><br><span class="line"></span><br><span class="line">// 打个A</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>下载驱动</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">https://source.android.com/setup/start/build-numbers#source-code-tags-and-builds</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">https://developers.google.com/android/drivers</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">https://developers.google.com/android/drivers#sailfishopm1.171019.011</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>解压驱动后生成 ventor 目录。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">source build/envsetup.sh</span><br><span class="line"></span><br><span class="line">lunch(选aosp_sailfish-userdebug)</span><br><span class="line"></span><br><span class="line">make -j16</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>其他错误处理</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export LC_ALL=C</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>下载<code>sailfish-opm1.171019.011-factory-56d15350</code>并解包，然后解压里面的<code>image-sailfish-opm1.171019.011.zip</code>,将原来的 img 文件全部删除，替换成我们刚刚编译好的 aosp 里的 img，其路径在<code>out/target/product/sailfish</code>,然后重新打包成<code>image-sailfish-opm1.171019.011.zip</code>,刷入即可</p>
+<p>记得要使用刚刚编译出来的 aosp 里内置的那个 Fastboot,位置在如下这里</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">/home/tg/gitsource/repo/build/out/host/linux-x86/bin</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">./flash-all.sh</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="清理拖拽文件缓存"><a href="#清理拖拽文件缓存" class="headerlink" title="清理拖拽文件缓存"></a>清理拖拽文件缓存</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cd ~/.cache/vmware/drag_and_drop/</span><br><span class="line"></span><br><span class="line">du -d 1 -h</span><br><span class="line"></span><br><span class="line">rm -rf *</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="编译-aosp-内核"><a href="#编译-aosp-内核" class="headerlink" title="编译 aosp 内核"></a>编译 aosp 内核</h2><p><a target="_blank" rel="noopener" href="https://source.android.com/setup/build/building-kernels">https://source.android.com/setup/build/building-kernels</a></p>
+<p><a target="_blank" rel="noopener" href="https://source.android.com/setup/build/building-kernels-deprecated">https://source.android.com/setup/build/building-kernels-deprecated</a></p>
+<ul>
+<li>goldfish 项目包含适用于模拟平台的内核源代码。</li>
+<li>msm 项目包含适用于 ADP1、ADP2、Nexus One、Nexus 4、Nexus 5、Nexus 6、Nexus 5X、Nexus 6P、Nexus 7 (2013)、Pixel 和 Pixel XL 的源代码，可用作在 Qualcomm MSM 芯片组上开展相关工作的着手点。</li>
+</ul>
+<p>找到 aosp 里 kernel 的路径</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Pixel (sailfish)</span><br><span class="line"></span><br><span class="line">Pixel XL (marlin)	device/google/marlin-kernel	android-msm-marlin-3.18-pie-qpr2</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>改内核过反调试，以 trace pid 为例</p>
+<p>事实上，我们可以在设置 &gt; 关于手机 &gt; 内核版本 中直接查看内核版本信息，也可以通过 cat &#x2F;proc&#x2F;version 命令查看。内核版本信息的格式为 kernel version-gXXXXXXX,其中 XXXXXXX 部分的值是 git 提交中 的 short commit id 的值（即 kernel version-g</p>
+<p>），short commit id 的值为 commit id 值的前 7 位。Nexus 5 设备 Adnroid 4.4.4_r1 版本 AOSP 自带的内核值是&#96;3.4.0-gd59db4e , 并且刷入手机能正常运行。</p>
+<p>检出带代码有两种方式（推荐第二种)：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line">git clone https://aosp.tuna.tsinghua.edu.cn/kernel/msm.git</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">git checkout 1292056</span><br><span class="line"></span><br><span class="line">Updating files: 100% (52159/52159), done.</span><br><span class="line"></span><br><span class="line">Note: switching to &#x27;1292056&#x27;.</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">You are in &#x27;detached HEAD&#x27; state. You can look around, make experimental</span><br><span class="line"></span><br><span class="line">changes and commit them, and you can discard any commits you make in this</span><br><span class="line"></span><br><span class="line">state without impacting any branches by switching back to a branch.</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">If you want to create a new branch to retain commits you create, you may</span><br><span class="line"></span><br><span class="line">do so (now or later) by using -c with the switch command. Example:</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  git switch -c &lt;new-branch-name&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Or undo this operation with:</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  git switch -</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Turn off this advice by setting config variable advice.detachedHead to false</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">HEAD is now at 129205686dee qcacld-2.0: wlan host driver upgrade to 4.4.25.047</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">export ARCH=arm64</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"> export PATH=/home/tg/gitsource/repo/build/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9/bin:$PATH</span><br><span class="line"></span><br><span class="line">export CROSS_COMPILE=aarch64-linux-android-</span><br><span class="line"></span><br><span class="line">make marlin_defconfig</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><code>/home/tg/gitsource/repo/build/kernel/msm/arch/arm64/boot/Image.lz4-dtb</code>就是生成出来的 kernel</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">source build/envsetup.sh</span><br><span class="line"></span><br><span class="line">lunch(选aosp_sailfish-userdebug)</span><br><span class="line"></span><br><span class="line">export TARGET_PREBUILT_KERNEL=/home/tg/gitsource/repo/build/kernel/msm/arch/arm64/boot/Image.lz4-dtb</span><br><span class="line"></span><br><span class="line">make -j16</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>然后可以看到 out 里的 boot.img 已经更新了，重打包刷机即可。</p>
+<p>关于过 trace-pid，需要修改的代码在这里</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/lasting-yang/msm/commit/99ad1405ef0f12d94ca605de4db0b989da3a3b25">https://github.com/lasting-yang/msm/commit/99ad1405ef0f12d94ca605de4db0b989da3a3b25</a></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/probberechts">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#KUbuntu20-%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE"><span class="toc-number">1.</span> <span class="toc-text">KUbuntu20 环境配置</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-proxychains"><span class="toc-number">1.1.</span> <span class="toc-text">安装 proxychains</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85Qv2ray"><span class="toc-number">1.2.</span> <span class="toc-text">安装Qv2ray</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85vcore%E7%89%88%E6%9C%AC"><span class="toc-number">1.2.1.</span> <span class="toc-text">安装vcore版本</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-IDE"><span class="toc-number">1.3.</span> <span class="toc-text">安装 IDE</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#vscode"><span class="toc-number">1.3.1.</span> <span class="toc-text">vscode</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#android-studio"><span class="toc-number">1.3.2.</span> <span class="toc-text">android studio</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#clion"><span class="toc-number">1.3.3.</span> <span class="toc-text">clion</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#pycharm-community"><span class="toc-number">1.3.4.</span> <span class="toc-text">pycharm-community</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#intellij-idea-community"><span class="toc-number">1.3.5.</span> <span class="toc-text">intellij-idea-community</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#IDA-Pro-with-Wine"><span class="toc-number">1.4.</span> <span class="toc-text">IDA Pro with Wine</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">1.4.1.</span> <span class="toc-text">遇到的问题</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#sip"><span class="toc-number">1.4.1.1.</span> <span class="toc-text">sip</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Typora"><span class="toc-number">1.5.</span> <span class="toc-text">Typora</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E5%B8%B8%E7%94%A8-build-%E5%B7%A5%E5%85%B7"><span class="toc-number">1.6.</span> <span class="toc-text">安装常用 build 工具</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E5%92%8C%E9%85%8D%E7%BD%AE-zsh"><span class="toc-number">1.7.</span> <span class="toc-text">安装和配置 zsh</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8-tmux"><span class="toc-number">1.8.</span> <span class="toc-text">安装和使用 tmux</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E7%9B%91%E6%8E%A7%E5%92%8C-CPU-x2F-%E5%86%85%E5%AD%98%E7%9B%91%E6%8E%A7"><span class="toc-number">1.9.</span> <span class="toc-text">网络监控和 CPU&#x2F;内存监控</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-pyenv"><span class="toc-number">1.10.</span> <span class="toc-text">安装 pyenv</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E8%AF%91-aosp"><span class="toc-number">1.11.</span> <span class="toc-text">编译 aosp</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B8%85%E7%90%86%E6%8B%96%E6%8B%BD%E6%96%87%E4%BB%B6%E7%BC%93%E5%AD%98"><span class="toc-number">1.12.</span> <span class="toc-text">清理拖拽文件缓存</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E8%AF%91-aosp-%E5%86%85%E6%A0%B8"><span class="toc-number">1.13.</span> <span class="toc-text">编译 aosp 内核</span></a></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://tugohost.github.io.com/2022/10/06/KUbuntu%2020%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://tugohost.github.io.com/2022/10/06/KUbuntu%2020%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/&text=KUbuntu20 环境配置"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://tugohost.github.io.com/2022/10/06/KUbuntu%2020%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/&title=KUbuntu20 环境配置"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://tugohost.github.io.com/2022/10/06/KUbuntu%2020%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/&is_video=false&description=KUbuntu20 环境配置"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=KUbuntu20 环境配置&body=Check out this article: http://tugohost.github.io.com/2022/10/06/KUbuntu%2020%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://tugohost.github.io.com/2022/10/06/KUbuntu%2020%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/&title=KUbuntu20 环境配置"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://tugohost.github.io.com/2022/10/06/KUbuntu%2020%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/&title=KUbuntu20 环境配置"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://tugohost.github.io.com/2022/10/06/KUbuntu%2020%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/&title=KUbuntu20 环境配置"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://tugohost.github.io.com/2022/10/06/KUbuntu%2020%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/&title=KUbuntu20 环境配置"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://tugohost.github.io.com/2022/10/06/KUbuntu%2020%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/&name=KUbuntu20 环境配置&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://tugohost.github.io.com/2022/10/06/KUbuntu%2020%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/&t=KUbuntu20 环境配置"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2023
+    TUGOhost
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

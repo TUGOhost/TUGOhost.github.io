@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="前段时间，看了菜鸟入门，较浅的认识一下golang的语法习惯和规则，然后跟别人做了个爬虫项目，但是对于golang语言的语法结构还不是很懂。又看了遍《go实战》第二章。 构建程序在构建可执行文件时，需要找到这个已经声明的main函数，把它作为程序的入口。 关键字import就是导入一段代码，让用户可以访问其中的标识符，如类型、函数、常量和接口。 所有处于同一个文件夹里的代码文件，必须使用同一个包名">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Golang语言细节小结">
+<meta property="og:url" content="http://tugohost.github.io.com/2019/05/18/Golang%E8%AF%AD%E8%A8%80%E7%BB%86%E8%8A%82%E5%B0%8F%E7%BB%93/index.html">
+<meta property="og:site_name" content="TUGOhost">
+<meta property="og:description" content="前段时间，看了菜鸟入门，较浅的认识一下golang的语法习惯和规则，然后跟别人做了个爬虫项目，但是对于golang语言的语法结构还不是很懂。又看了遍《go实战》第二章。 构建程序在构建可执行文件时，需要找到这个已经声明的main函数，把它作为程序的入口。 关键字import就是导入一段代码，让用户可以访问其中的标识符，如类型、函数、常量和接口。 所有处于同一个文件夹里的代码文件，必须使用同一个包名">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2019-05-18T02:28:25.000Z">
+<meta property="article:modified_time" content="2023-09-13T18:59:37.027Z">
+<meta property="article:author" content="TUGOhost">
+<meta property="article:tag" content="Golang">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Golang语言细节小结</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E7%9A%84%E6%89%93%E5%8C%85%E5%92%8C%E5%B7%A5%E5%85%B7%E9%93%BE/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2018/04/30/CISCN2018-WP/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://tugohost.github.io.com/2019/05/18/Golang%E8%AF%AD%E8%A8%80%E7%BB%86%E8%8A%82%E5%B0%8F%E7%BB%93/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://tugohost.github.io.com/2019/05/18/Golang%E8%AF%AD%E8%A8%80%E7%BB%86%E8%8A%82%E5%B0%8F%E7%BB%93/&text=Golang语言细节小结"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://tugohost.github.io.com/2019/05/18/Golang%E8%AF%AD%E8%A8%80%E7%BB%86%E8%8A%82%E5%B0%8F%E7%BB%93/&title=Golang语言细节小结"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://tugohost.github.io.com/2019/05/18/Golang%E8%AF%AD%E8%A8%80%E7%BB%86%E8%8A%82%E5%B0%8F%E7%BB%93/&is_video=false&description=Golang语言细节小结"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Golang语言细节小结&body=Check out this article: http://tugohost.github.io.com/2019/05/18/Golang%E8%AF%AD%E8%A8%80%E7%BB%86%E8%8A%82%E5%B0%8F%E7%BB%93/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://tugohost.github.io.com/2019/05/18/Golang%E8%AF%AD%E8%A8%80%E7%BB%86%E8%8A%82%E5%B0%8F%E7%BB%93/&title=Golang语言细节小结"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://tugohost.github.io.com/2019/05/18/Golang%E8%AF%AD%E8%A8%80%E7%BB%86%E8%8A%82%E5%B0%8F%E7%BB%93/&title=Golang语言细节小结"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://tugohost.github.io.com/2019/05/18/Golang%E8%AF%AD%E8%A8%80%E7%BB%86%E8%8A%82%E5%B0%8F%E7%BB%93/&title=Golang语言细节小结"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://tugohost.github.io.com/2019/05/18/Golang%E8%AF%AD%E8%A8%80%E7%BB%86%E8%8A%82%E5%B0%8F%E7%BB%93/&title=Golang语言细节小结"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://tugohost.github.io.com/2019/05/18/Golang%E8%AF%AD%E8%A8%80%E7%BB%86%E8%8A%82%E5%B0%8F%E7%BB%93/&name=Golang语言细节小结&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://tugohost.github.io.com/2019/05/18/Golang%E8%AF%AD%E8%A8%80%E7%BB%86%E8%8A%82%E5%B0%8F%E7%BB%93/&t=Golang语言细节小结"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        Golang语言细节小结
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">TUGOhost</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-05-18T02:28:25.000Z" class="dt-published" itemprop="datePublished">2019-05-18</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/Golang/" rel="tag">Golang</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>前段时间，看了菜鸟入门，较浅的认识一下golang的语法习惯和规则，然后跟别人做了个爬虫项目，但是对于golang语言的语法结构还不是很懂。又看了遍《go实战》第二章。</p>
+<p>构建程序在构建可执行文件时，需要找到这个已经声明的main函数，把它作为程序的入口。</p>
+<p>关键字import就是导入一段代码，让用户可以访问其中的标识符，如类型、函数、常量和接口。</p>
+<p>所有处于同一个文件夹里的代码文件，必须使用同一个包名。</p>
+<p>下划线（_）这个技术是为了让Go语言对包做初始化操作，但是并不使用包里的标识符。下划线让编译器接受这类导入，并且调用对应包内的所有代码文件里定义的init函数。</p>
+<p>编译器查找包的时候，总是会到GOROOT和GOPATH环境变量引用的位置去查找。</p>
+<p>在Go语言里，标识符要么从包里公开，要么不从包里公开。<code>以小写字母开头的标识符是不公开的，不能被其他包中的代码直接访问；大写字母相反</code>。</p>
+<p>map是Go语言里的引用类型，需要使用make来构造。</p>
+<p>在Go语言中，所有变量都被初始化为其零值。对于数值类型，零值是0；对于字符串类型，零值是空字符串；对于布尔类型，零值是false；对于指针，零值是nil。</p>
+<p>Go语言使用关键字func声明函数，关键字后面紧跟这函数名、参数以及返回值。</p>
+<p><code>func function_name( [parameter list] ) [return_types] &#123;   函数体&#125;</code></p>
+<p>函数定义解析：</p>
+<ul>
+<li>func：函数由 func 开始声明</li>
+<li>function_name：函数名称，函数名和参数列表一起构成了函数签名。</li>
+<li>parameter list：参数列表，参数就像一个占位符，当函数被调用时，你可以将值传递给参数，这个值被称为实际参数。参数列表指定的是参数类型、顺序、及参数个数。参数是可选的，也就是说函数也可以不包含参数。</li>
+<li>return_types：返回类型，函数返回一列值。return_types 是该列值的数据类型。有些功能不需要返回值，这种情况下 return_types 不是必须的。</li>
+<li>函数体：函数定义的代码集合。</li>
+</ul>
+<p>切片是一种实现了一个动态数组的引用类型。在Go语言里可以用切片来操作一组数据。</p>
+<p>简化变量声明运行符（:&#x3D;）。这个运算符用于声明一个变量，同时给这个变量赋予初始值。</p>
+<p>如果需要声明初始值为零值的变量，应该使用var关键字声明变量；如果提供确切的非零值初始化变量或者使用函数返回值创建变量，应该使用简化变量声明运算符。</p>
+<p>在Go语言中，如果main函数返回，整个程序也就终止了。Go程序终止时，还会关闭所有之前启动且还在运行的goroutine。写并发程序的时候，最佳做法是，在main函数返回前，清理并终止所有之前启动的goroutine。</p>
+<p>&#96;引号里的部分被称作标记（tag）。</p>
+<p>error类型的值，用来表示函数是否调用成功。</p>
+<p>关键字defer会安排随后的函数调用函数返回时才执行。关键字defer可以缩短打开文件和关闭文件间隔的代码行数，有助于提高代码可读性，减少错误。</p>
+<p>interface关键字声明了一个接口，这个接口声明了结构类型或者具名类型需要实现的性为。一个接口的行为最终由在这个接口类型中声明的方法决定。如果接口类型只包含一个方法，那么这个类型的名字以er结尾。如果接口类型内部声明了多个方法，起名字需要与其行为关联。</p>
+<p>程序里所有的init方法都会在main函数启动前被调用。</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/probberechts">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://tugohost.github.io.com/2019/05/18/Golang%E8%AF%AD%E8%A8%80%E7%BB%86%E8%8A%82%E5%B0%8F%E7%BB%93/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://tugohost.github.io.com/2019/05/18/Golang%E8%AF%AD%E8%A8%80%E7%BB%86%E8%8A%82%E5%B0%8F%E7%BB%93/&text=Golang语言细节小结"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://tugohost.github.io.com/2019/05/18/Golang%E8%AF%AD%E8%A8%80%E7%BB%86%E8%8A%82%E5%B0%8F%E7%BB%93/&title=Golang语言细节小结"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://tugohost.github.io.com/2019/05/18/Golang%E8%AF%AD%E8%A8%80%E7%BB%86%E8%8A%82%E5%B0%8F%E7%BB%93/&is_video=false&description=Golang语言细节小结"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Golang语言细节小结&body=Check out this article: http://tugohost.github.io.com/2019/05/18/Golang%E8%AF%AD%E8%A8%80%E7%BB%86%E8%8A%82%E5%B0%8F%E7%BB%93/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://tugohost.github.io.com/2019/05/18/Golang%E8%AF%AD%E8%A8%80%E7%BB%86%E8%8A%82%E5%B0%8F%E7%BB%93/&title=Golang语言细节小结"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://tugohost.github.io.com/2019/05/18/Golang%E8%AF%AD%E8%A8%80%E7%BB%86%E8%8A%82%E5%B0%8F%E7%BB%93/&title=Golang语言细节小结"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://tugohost.github.io.com/2019/05/18/Golang%E8%AF%AD%E8%A8%80%E7%BB%86%E8%8A%82%E5%B0%8F%E7%BB%93/&title=Golang语言细节小结"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://tugohost.github.io.com/2019/05/18/Golang%E8%AF%AD%E8%A8%80%E7%BB%86%E8%8A%82%E5%B0%8F%E7%BB%93/&title=Golang语言细节小结"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://tugohost.github.io.com/2019/05/18/Golang%E8%AF%AD%E8%A8%80%E7%BB%86%E8%8A%82%E5%B0%8F%E7%BB%93/&name=Golang语言细节小结&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://tugohost.github.io.com/2019/05/18/Golang%E8%AF%AD%E8%A8%80%E7%BB%86%E8%8A%82%E5%B0%8F%E7%BB%93/&t=Golang语言细节小结"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2023
+    TUGOhost
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
