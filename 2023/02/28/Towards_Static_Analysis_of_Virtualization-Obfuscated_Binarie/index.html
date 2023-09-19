@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="摘要虚拟化混淆通过将程序编译成随机虚拟架构的字节码并附加相应的解释器来保护程序免受人工或自动分析。静态分析在这种程序上似乎是无能为力的，只有解释器的代码是直接可见的。在本文中，我们解释了静态分析解释器和字节代码组合的特殊挑战。计算可能变量值的静态分析通常只精确到程序位置。然而，在解释器循环中，这结合了来自字节码程序不同位置的不相关的数据流信息。为了避免这种信息的损失，我们展示了如何将现有的静态分析">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[译文]争取实现对虚拟化混淆的二进制文件的静态分析">
+<meta property="og:url" content="http://tugohost.github.io.com/2023/02/28/Towards_Static_Analysis_of_Virtualization-Obfuscated_Binarie/index.html">
+<meta property="og:site_name" content="TUGOhost">
+<meta property="og:description" content="摘要虚拟化混淆通过将程序编译成随机虚拟架构的字节码并附加相应的解释器来保护程序免受人工或自动分析。静态分析在这种程序上似乎是无能为力的，只有解释器的代码是直接可见的。在本文中，我们解释了静态分析解释器和字节代码组合的特殊挑战。计算可能变量值的静态分析通常只精确到程序位置。然而，在解释器循环中，这结合了来自字节码程序不同位置的不相关的数据流信息。为了避免这种信息的损失，我们展示了如何将现有的静态分析">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://tugohost.github.io.com/img/11.png">
+<meta property="og:image" content="http://tugohost.github.io.com/img/12.png">
+<meta property="og:image" content="http://tugohost.github.io.com/img/13.png">
+<meta property="og:image" content="http://tugohost.github.io.com/img/14.png">
+<meta property="og:image" content="http://tugohost.github.io.com/img/15.png">
+<meta property="og:image" content="http://tugohost.github.io.com/img/16.png">
+<meta property="article:published_time" content="2023-02-27T18:00:25.000Z">
+<meta property="article:modified_time" content="2023-09-19T06:31:12.213Z">
+<meta property="article:author" content="TUGOhost">
+<meta property="article:tag" content="论文翻译">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://tugohost.github.io.com/img/11.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>[译文]争取实现对虚拟化混淆的二进制文件的静态分析</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/TUGOhost">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2023/01/17/android_protect_shell/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://tugohost.github.io.com/2023/02/28/Towards_Static_Analysis_of_Virtualization-Obfuscated_Binarie/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://tugohost.github.io.com/2023/02/28/Towards_Static_Analysis_of_Virtualization-Obfuscated_Binarie/&text=[译文]争取实现对虚拟化混淆的二进制文件的静态分析"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://tugohost.github.io.com/2023/02/28/Towards_Static_Analysis_of_Virtualization-Obfuscated_Binarie/&title=[译文]争取实现对虚拟化混淆的二进制文件的静态分析"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://tugohost.github.io.com/2023/02/28/Towards_Static_Analysis_of_Virtualization-Obfuscated_Binarie/&is_video=false&description=[译文]争取实现对虚拟化混淆的二进制文件的静态分析"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=[译文]争取实现对虚拟化混淆的二进制文件的静态分析&body=Check out this article: http://tugohost.github.io.com/2023/02/28/Towards_Static_Analysis_of_Virtualization-Obfuscated_Binarie/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://tugohost.github.io.com/2023/02/28/Towards_Static_Analysis_of_Virtualization-Obfuscated_Binarie/&title=[译文]争取实现对虚拟化混淆的二进制文件的静态分析"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://tugohost.github.io.com/2023/02/28/Towards_Static_Analysis_of_Virtualization-Obfuscated_Binarie/&title=[译文]争取实现对虚拟化混淆的二进制文件的静态分析"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://tugohost.github.io.com/2023/02/28/Towards_Static_Analysis_of_Virtualization-Obfuscated_Binarie/&title=[译文]争取实现对虚拟化混淆的二进制文件的静态分析"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://tugohost.github.io.com/2023/02/28/Towards_Static_Analysis_of_Virtualization-Obfuscated_Binarie/&title=[译文]争取实现对虚拟化混淆的二进制文件的静态分析"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://tugohost.github.io.com/2023/02/28/Towards_Static_Analysis_of_Virtualization-Obfuscated_Binarie/&name=[译文]争取实现对虚拟化混淆的二进制文件的静态分析&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://tugohost.github.io.com/2023/02/28/Towards_Static_Analysis_of_Virtualization-Obfuscated_Binarie/&t=[译文]争取实现对虚拟化混淆的二进制文件的静态分析"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%91%98%E8%A6%81"><span class="toc-number">1.</span> <span class="toc-text">摘要</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">2.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%83%8C%E6%99%AF"><span class="toc-number">3.</span> <span class="toc-text">背景</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%99%9A%E6%8B%9F%E5%8C%96%E6%B7%B7%E6%B7%86"><span class="toc-number">3.1.</span> <span class="toc-text">虚拟化混淆</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9D%99%E6%80%81%E5%88%86%E6%9E%90"><span class="toc-number">3.2.</span> <span class="toc-text">静态分析</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AF%B9%E8%A7%A3%E9%87%8A%E7%9A%84%E4%BB%A3%E7%A0%81%E8%BF%9B%E8%A1%8C%E9%9D%99%E6%80%81%E5%88%86%E6%9E%90"><span class="toc-number">4.</span> <span class="toc-text">对解释的代码进行静态分析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B7%A5%E4%BD%9C%E7%A4%BA%E4%BE%8B"><span class="toc-number">4.1.</span> <span class="toc-text">工作示例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%86%E5%9F%9F%E5%B9%B3%E5%9D%A6%E5%8C%96"><span class="toc-number">4.2.</span> <span class="toc-text">领域平坦化</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AF%B9VPC%E6%95%8F%E6%84%9F%E7%9A%84%E9%9D%99%E6%80%81%E5%88%86%E6%9E%90"><span class="toc-number">5.</span> <span class="toc-text">对VPC敏感的静态分析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E9%99%A4%E6%8A%BD%E8%B1%A1%E5%9F%9F"><span class="toc-number">5.1.</span> <span class="toc-text">解除抽象域</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%A9%E5%B1%95%E4%BC%A0%E9%80%92%E5%87%BD%E6%95%B0"><span class="toc-number">5.2.</span> <span class="toc-text">扩展传递函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%A0%E5%AE%BD%E5%92%8C%E7%BB%88%E6%AD%A2"><span class="toc-number">5.3.</span> <span class="toc-text">加宽和终止</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%A7%A3%E9%99%A4%E7%BA%A6%E6%9D%9F%E7%9A%84%E5%9C%B0%E5%9D%80%E8%B7%9F%E8%B8%AA"><span class="toc-number">6.</span> <span class="toc-text">解除约束的地址跟踪</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%9C%E4%B8%BA%E9%9D%99%E6%80%81%E5%88%86%E6%9E%90%E7%9A%84BAT"><span class="toc-number">6.1.</span> <span class="toc-text">作为静态分析的BAT</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#VPC-%E6%95%8F%E6%84%9F%E7%9A%84BAT"><span class="toc-number">6.2.</span> <span class="toc-text">VPC-敏感的BAT</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C"><span class="toc-number">7.</span> <span class="toc-text">实验</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0"><span class="toc-number">7.1.</span> <span class="toc-text">实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B7%B7%E6%B7%86%E5%92%8C%E5%88%86%E6%9E%90%E7%9B%AE%E6%A0%87"><span class="toc-number">7.2.</span> <span class="toc-text">混淆和分析目标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E6%9E%9C"><span class="toc-number">7.3.</span> <span class="toc-text">结果</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E5%B7%A5%E4%BD%9C"><span class="toc-number">8.</span> <span class="toc-text">相关工作</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BB%93%E8%AE%BA"><span class="toc-number">9.</span> <span class="toc-text">结论</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        [译文]争取实现对虚拟化混淆的二进制文件的静态分析
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">TUGOhost</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2023-02-27T18:00:25.000Z" class="dt-published" itemprop="datePublished">2023-02-28</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/%E8%AE%BA%E6%96%87%E7%BF%BB%E8%AF%91/" rel="tag">论文翻译</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>虚拟化混淆通过将程序编译成随机虚拟架构的字节码并附加相应的解释器来保护程序免受人工或自动分析。静态分析在这种程序上似乎是无能为力的，只有解释器的代码是直接可见的。<br>在本文中，我们解释了静态分析解释器和字节代码组合的特殊挑战。计算可能变量值的静态分析通常只精确到程序位置。然而，在解释器循环中，这结合了来自字节码程序不同位置的不相关的数据流信息。<br>为了避免这种信息的损失，我们展示了如何将现有的静态分析提升到一个额外的位置维度，对虚拟程序计数器的值变得敏感。因此，静态分析只合并来自平等字节码位置的数据流。我们提升了在Jakstab静态分析器中实现的现有分析，并提出了处理一个虚拟化混淆的二进制文件的初步结果。</p>
+<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>虚拟化混淆是一个强大的混淆方案，以加强程序对逆向工程的影响[9, 10, 1]。其基本思想是将程序代码翻译成随机生成的虚拟架构的指令（字节码），并合成一个相应的解释器。这个解释器从字节码中再现了原始程序的可观察行为。因此，只需将解释器作为代码，并将翻译后的字节码作为数据存储，就可以生成一个等价但受保护的原始程序版本。对于反向工程师或自动分析器来说，解释器是立即可见的，但决定程序语义的字节码是一个不可理解的数据块。</p>
+<p>虽然虚拟化混淆在保护密钥验证方案和许可证管理器方面有合法用途，但它在恶意软件作者中特别受欢迎。由于架构的随机性，字节码和解释器可以从一个受保护的实例到另一个实例有很大的不同，防止产生可靠的恶意软件签名。但是，解释器本身并不是恶意的，而且可能确实在保护一个合法的程序；在不了解字节码语义的情况下，仅仅检测到解释器的存在就发出警告，会导致误报。</p>
+<p>在早期的工作中，我们主张将静态分析应用于x86二进制文件，用于验证API合同的规范[5]和检测恶意软件[7]。静态分析可以通过提取有关程序行为的数据流信息（不变量）来帮助反向工程。例如，它可以计算程序变量的边界或检测系统调用之间的信息流。但是，当直接应用于受虚拟化混淆保护的程序时，它只计算解释器上的数据流信息。为解释器中的位置计算的不变性涵盖了字节码程序中的许多不同指令。因此，它们太弱了，无法帮助逆向工程，并使自动方法，如恶意软件检测或验证完全不可能。我们通过以下贡献来解决这些挑战。</p>
+<ul>
+<li><p>我们隔离并确定了虚拟化混淆的影响。静态分析由于有效地变得对位置不敏感而无法提取有用的信息，这种现象我们称之为领域扁平化：在分析解释器时，来自原始程序中不同的、不相关的位置的抽象状态被合并，需要极其保守的过度近似。</p>
+</li>
+<li><p>我们展示了如何调整现有的静态分析来克服这个问题。我们可以定义一个静态分析的提升变体，为虚拟程序计数器（VPC）的每个值保留单独的抽象状态。然后，提升的分析在被混淆的代码上实现了与未被混淆的代码相同的精度。</p>
+</li>
+<li><p>我们将专门用于分析二进制文件的静态分析Bounded Address Tracking[5]提升到VPC-sensitivity，并讨论了在JAKSTAB静态分析器中的实现。我们提出了分析一个混淆的可执行文件例子的初步结果。</p>
+</li>
+</ul>
+<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>利用一个解释器和程序的运行实例，我们现在简要介绍一下虚拟化混淆和静态分析的概念。</p>
+<h2 id="虚拟化混淆"><a href="#虚拟化混淆" class="headerlink" title="虚拟化混淆"></a>虚拟化混淆</h2><p>受虚拟化-混淆保护的程序都具有相同的一般结构，即在一个大的开关语句上循环，以区分各个字节码指令。一个简单的解释器的例子显示在图1。请注意，混淆的目标通常是二进制代码；为了便于阐述，我们在这里使用了C语言风格的高级表述。翻译成字节码的原始代码存储在静态数组代码内；字节码处理的所有数据，包括它的堆栈，都分配给第二个数组数据。在循环的每次迭代中，解释器从虚拟程序计数器（VPC）所指向的代码数组中的位置读取一个操作码。根据操作码，解释器从代码数组中读取操作数地址，并对数据数组中的位置执行操作。解释完一条指令后，VPC被设置为指向下一条指令。对于跳转，VPC被增加（有条件地）到目标地址的相对偏移。</p>
+<p>混淆引擎可以通过随机化虚拟指令集为同一个程序生成许多不同的字节码表示。随机性的一个程度是操作码到字节码指令的映射。但是引擎也可以将字节码指令合并或拆分成更大或更小的功能单元。因此，直接分析或模式匹配字节码以了解程序的潜在行为的希望不大。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">1 int code = &#123; ... &#125;;</span><br><span class="line">2 int data = &#123; ... &#125;;</span><br><span class="line">34 void interpret() &#123;</span><br><span class="line">5 int vpc = 0, op1, op2;</span><br><span class="line">6 while (true) &#123;</span><br><span class="line">7 switch(code[vpc]) &#123;</span><br><span class="line">8 case 03: // increment</span><br><span class="line">9 op1 = code[vpc + 1];</span><br><span class="line">10 data[op1]++;</span><br><span class="line">11 vpc += 2;</span><br><span class="line">12 break;</span><br><span class="line">13 case 08: // conditional jump</span><br><span class="line">14 op1 = code[vpc + 1];</span><br><span class="line">15 op2 = code[vpc + 2];</span><br><span class="line">16 if (data[op1] &lt;= 0)</span><br><span class="line">17 vpc += data[op2]</span><br><span class="line">18 else</span><br><span class="line">19 vpc += 3;</span><br><span class="line">20 break;</span><br><span class="line">21 case 18: // call ext. function</span><br><span class="line">22 op1 = code[vpc + 1];</span><br><span class="line">23 apiCall(data[op1]);</span><br><span class="line">24 vpc += 2;</span><br><span class="line">25 break;</span><br><span class="line">26 case 52: // assignment</span><br><span class="line">27 op1 = code[vpc + 1];</span><br><span class="line">28 op2 = code[vpc + 2];</span><br><span class="line">29 data[op1] = data[op2];</span><br><span class="line">30 vpc += 3;</span><br><span class="line">31 break;</span><br><span class="line">32 default: // halt</span><br><span class="line">33 return;</span><br><span class="line">34 &#125; // end switch</span><br><span class="line">35 &#125; // end while</span><br><span class="line">36 &#125;</span><br></pre></td></tr></table></figure>
+
+<p>目前，有两个主要的虚拟化混淆工具，Code Virtualizer（<a target="_blank" rel="noopener" href="http://oreans.com/codevirtualizer.php%EF%BC%89%E5%92%8CVMProtect%EF%BC%88http://vmpsoft.com%EF%BC%89%E3%80%82%E4%B8%A4%E8%80%85%E9%83%BD%E8%A2%AB%E5%AE%A3%E4%BC%A0%E4%B8%BA%E4%BF%9D%E6%8A%A4%E5%85%B1%E4%BA%AB%E8%BD%AF%E4%BB%B6%E7%A8%8B%E5%BA%8F%E6%88%96%E8%AE%B8%E5%8F%AF%E8%AF%81%E7%AE%A1%E7%90%86%E5%99%A8%E4%B8%AD%E7%9A%84%E5%AF%86%E9%92%A5%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95%EF%BC%8C%E4%BD%86%E5%AE%83%E4%BB%AC%E4%B9%9F%E8%A2%AB%E5%B9%BF%E6%B3%9B%E7%94%A8%E4%BA%8E%E5%8A%A0%E5%AF%86%E6%81%B6%E6%84%8F%E8%BD%AF%E4%BB%B6%E3%80%82%E6%9E%B6%E6%9E%84%E9%9A%8F%E6%9C%BA%E5%8C%96%E6%8F%90%E4%BE%9B%E4%BA%86%E8%B6%B3%E5%A4%9F%E7%9A%84%E7%86%B5%EF%BC%8C%E4%BD%BF%E5%85%B6%E6%97%A0%E6%B3%95%E4%BD%BF%E7%94%A8%E7%BB%88%E7%AB%AF%E7%94%A8%E6%88%B7%E5%8F%8D%E7%97%85%E6%AF%92%E4%BA%A7%E5%93%81%E4%B8%AD%E9%87%87%E7%94%A8%E7%9A%84%E6%A0%87%E5%87%86%E6%8C%87%E7%BA%B9%E6%8A%80%E6%9C%AF%E6%9D%A5%E7%B2%BE%E7%A1%AE%E8%AF%86%E5%88%AB%E4%B8%80%E4%B8%AA%E6%81%B6%E6%84%8F%E8%BD%AF%E4%BB%B6%E3%80%82%E9%80%9A%E5%B8%B8%E6%83%85%E5%86%B5%E4%B8%8B%EF%BC%8C%E5%8F%8D%E7%97%85%E6%AF%92%E8%BD%AF%E4%BB%B6%E4%BE%9B%E5%BA%94%E5%95%86%E9%80%89%E6%8B%A9%E5%AF%B9%E4%BB%BB%E4%BD%95%E7%A8%8B%E5%BA%8F%E5%8F%91%E5%87%BA%E9%80%9A%E7%94%A8%E8%AD%A6%E5%91%8A%EF%BC%8C%E5%9B%A0%E4%B8%BA%E4%BB%96%E4%BB%AC%E7%9A%84%E5%90%AF%E5%8F%91%E5%BC%8F%E7%BB%84%E4%BB%B6%E8%AE%A4%E4%B8%BA%E8%AF%A5%E7%A8%8B%E5%BA%8F">http://oreans.com/codevirtualizer.php）和VMProtect（http://vmpsoft.com）。两者都被宣传为保护共享软件程序或许可证管理器中的密钥验证方法，但它们也被广泛用于加密恶意软件。架构随机化提供了足够的熵，使其无法使用终端用户反病毒产品中采用的标准指纹技术来精确识别一个恶意软件。通常情况下，反病毒软件供应商选择对任何程序发出通用警告，因为他们的启发式组件认为该程序</a> “看起来 “像是以这种方式受到保护的–这就有可能出现误报现象。</p>
+<h2 id="静态分析"><a href="#静态分析" class="headerlink" title="静态分析"></a>静态分析</h2><p>静态分析是在不执行程序的情况下对其进行推理。为了确保分析的终止，它引入了抽象，也就是说，它过度接近程序语义，并分析程序的所有具体行为的超集。这使得它与动态分析具有双重性，例如测试，它只是通过在一些输入上具体执行程序来探索具体行为的子集。</p>
+<p>静态分析是由一个抽象的域来定义的，它在这个域上操作（例如，区间）和一个抽象的转移函数，计算程序执行如何影响抽象域的元素（例如，x++将区间x∈[0；10]改为x∈[1；11]）。</p>
+<p><img src="/img/11.png"></p>
+<p>考虑到图2中简单的未被混淆的例子程序。区间分析能够确定第9行的外部调用处的变量y的（精确）边界。从初始状态开始，x和y的边界是无限的、未知的，第2行的赋值转移函数计算出y的单值区间[10；10]的继任者。分析通过第3行和第4行进行，更新图2中控制流图中注释的值。从第5行开始，有两条流出的控制流边，一个用于if语句的每个分支。then分支导致x的限制区间[1; ∞]，第6行的增量是y∈[13; 13]。else分支将x的区间限制为[-∞；0]。两个分支在第9行重新组合。因为分析只是在每个位置为每个变量保留一个区间，它必须合并两个状态的区间。因此，x又是无界的，y已知是在区间[12; 13]内，这也构成了第9行中外部调用的可能参数。</p>
+<p>对于一个有循环的程序，分析会反复计算转移函数，直到它在从位置到抽象状态的映射上达到一个fixpoint。为了加速找到该点，否则可能需要无限多的步骤，该分析可以应用拓宽[2]。也就是说，它进一步过度逼近传递函数，以保证在有限的步骤中达到一个固定点。在区间域中，拓宽通常涉及将一个边界设置为无穷大或中间的程序特定常数。</p>
+<p>在抽象解释的框架内[2]，程序分析通常是通过提升和点扩展转移函数的方式，使用较小的抽象域来定义。例如，区间分析的完整抽象域可以通过将单个变量的(N×N)类型的区间提升到所有程序位置L的所有变量Var的区间来构建：区间分析因此将程序的数据流信息表示为从程序位置到变量到区间的映射，即L→Var→(N×N)。</p>
+<p>在下文中，我们将只考虑常见的正向分析的情况，这些分析被提升到单个程序的位置，也就是说，它们的抽象域是位置与域S的抽象状态的映射D&#x3D;L→S。我们将把这些分析称为对位置敏感的分析。位置敏感的。对于位置敏感域来说，为单个位置定义转移函数是很方便的。对位置敏感域来说，为单个 语句fc的类型S×Stmt→S，它计算了 的抽象状态的继任者。语句集Stmt中给定的语句c的后继者。转移函数f :: D → D的全域的转移函数 的转移函数f:: D → D，然后被推导为</p>
+<p><img src="/img/12.png"><br>其中 l0 是程序入口点， ι 是初始的 抽象状态，G⊆L×Stmt×L是控制流 图，d(<code>0 )表示s0，使</code>0 7→s0∈d。从D的一个元素d，也就是一个从地点到抽象状态的映射，f计算出一个新的映射，通过应用 语句转移函数沿每条控制 流的边缘应用每个语句的转移函数。在控制流连接点，合并 运算符t将每个输入边的抽象状态 传入的边缘的抽象状态。然后，计算分析相当于 从D的最小（底部）元素开始，找到f的最小费点。(底部)的元素开始。</p>
+<h1 id="对解释的代码进行静态分析"><a href="#对解释的代码进行静态分析" class="headerlink" title="对解释的代码进行静态分析"></a>对解释的代码进行静态分析</h1><p>当图2的简单程序被虚拟化后，在静态分析器看来，它就像图1所示的解释器，控制流图如图3所示。原有程序的所有具体内容都存储在静态代码和数据数组中。在某种意义上，原始程序 “仍然存在”；毕竟，执行混淆的版本会产生相同的可观察行为。但是，静态分析器在为被混淆的程序产生有用的结果方面面临着严重的困难。</p>
+<p>如果静态分析器是健全的，它将总是计算出一个技术上正确的结果。也就是说，它将计算出一个有效的程序语义的超近似值。至少，静态分析器会计算出全局不变的 “真”，也就是抽象域中最不精确的元素。我们面临的挑战是计算一个过度近似值，这个近似值仍然足够精确，以证明属性或为反向工程师提供有用的信息。在这项工作中，我们假设静态分析的目标是精确描述外部函数调用的参数集，这些参数在感兴趣的程序的所有执行过程中都是可能的。</p>
+<h2 id="工作示例"><a href="#工作示例" class="headerlink" title="工作示例"></a>工作示例</h2><p><img src="/img/13.png"></p>
+<p>我们再看一下静态区间分析是如何处理现在的虚拟化混淆程序的。原始程序的变量不再可见；但回顾一下，我们感兴趣的是在外部函数调用的地方近似地计算可能的参数值。这就要求分析支持数组访问。数组的长度和初始内容对分析来说是已知的，而且我们假设分析精确地将每个元素抽象为一个单独的区间。混淆者可以自由选择在数据阵列中分配局部变量和常量的位置以及如何初始化它们，但在这里我们假设x和y分别被分配在索引0和1处，静态数据阵列被初始化为{00，00，10，05}，如图3所示。我们用dx和dy分别表示data[0]和data[1]。作为foo的一个参数，dx在函数调用时可以持有任何数值。最后，我们尽可能精确地计算区间分析，也就是说，我们不会使用早期加宽步骤来加速寻找fixpoint，而是精确分析几个循环迭代。</p>
+<p>在将vpc初始化为[0；0]之后，静态分析跟随程序进入解释器循环。因此，解释器第6行的抽象状态是{vpc 7→ [0; 0], dx ∈ [-∞; ∞], dy ∈ [0; 0]}。存储在code[0]的第一条字节码指令的操作码是52，操作数是01（y的位置）和02（常数10的位置），对应于原程序第2行的初始赋值（图2）。因此，静态分析确定在当前状态下，只有switch语句的第四个case（赋值）是可以达到的。在第26-31行的case块内，解释器使用局部变量op1和op2暂时保存它们的数据数组索引，将常数10赋值给y。最后，它将VPC增加3以指向下一条指令。静态区间分析能够精确地表示所有这些事实。对于每个变量，它只确定一个在当前状态下可行的单一值。在离开案例块到第34行时，状态已经变成{vpc 7→[3; 3], dx∈[-∞; ∞], dy∈[10; 10]}。</p>
+<p>下一条指令只在解释器循环的下一次迭代中被分析。在沿着whileloop的后边从位置34到6计算了抽象的继承者后，分析合并了第6行的抽象状态。第6行的新抽象状态现在变成{vpc 7→ [0; 3], dx ∈ [-∞; ∞], dy ∈ [0; 10]}，过度接近执行原程序第2行之前和之后的状态。</p>
+<p>在这个阶段，VPC的区间已经包括了前面字节码指令的操作数，其值01和02可能被误解为操作码。然而，一个精心设计的带有精确转移函数的分析仍然能够推断出，除了第四种情况，只有switch语句的第一种和默认情况是可行的。通过对假设与数组内容进行评估，分析能够缩小每种情况的vpc。默认情况下退出程序，而第四种情况的最终状态没有变化。在第一个案例的开始，第9行的抽象状态变成{vpc 7→ [3; 3], dx∈ [-∞; ∞], dy∈ [0; 10]}。在评估了case块中的所有语句后，最终的状态是{vpc 7→ [5; 5], dx ∈ [0; 0], dy ∈ [1; 11]}。</p>
+<p>同样，这个状态在处理完while循环的后边后被合并，这次在第6行得到{vpc 7→ [0; 5], dx ∈ [-∞; ∞], dy ∈ [0; 11]}。注意，第一种情况必然仍然是可行的。但现在它也可以通过vpc为5来达到，所以边码[vpc]&#x3D;&#x3D;03只能将vpc的值限制在[3；5]。因此，op1从[4；6]中读出，并确定为[1；3]。第10行的增量不能<br>除了y，这还包括用于初始化y的常数和用于条件跳跃的相对偏移。因此，不精确性导致分析失去了对代码阵列中哪些索引构成适当的操作码的跟踪。此外，分析还继续在第一种情况中循环，每次都增加y和常数的间隔。结果，分析无法确定调用参数y的精确界限。</p>
+<h2 id="领域平坦化"><a href="#领域平坦化" class="headerlink" title="领域平坦化"></a>领域平坦化</h2><p>这个例子表明，经典的静态分析不能在虚拟化混淆的程序上取得合理的精确结果。对位置敏感的静态分析合并了同一程序位置上的所有域元素。在一个虚拟化混淆的程序中，原始程序的所有指令，每一条都位于单独的程序位置，被解释为使用相同的位置。相同类型的指令只是在解释器循环中共享相同的情况。但所有指令都共享解释器循环的剩余部分。因此，所有在原始程序中会是独立的抽象状态在被混淆的程序中被合并成一个单一的状态。因此，虚拟化-混淆有效地将对位置敏感的静态分析减少到对位置不敏感的静态分析。我们称这种效果为域扁平化，因为它从抽象域中删除了一维的敏感性。</p>
+<p>因此，很明显，位置敏感的分析，在常规程序的静态分析中是对精度和成本的合理权衡，不适合于分析虚拟化混淆的程序。在常规程序中，只要该位置的所有具体程序状态足够相似，以至于可以用一个精确的不变量来概括，那么在该位置上合并抽象状态的策略就是有效的。在虚拟化混淆的代码中，在解释器循环中计算的不变性必须涵盖原始程序的整个执行过程。常规的抽象域不能为这个范围产生精确的不变式。</p>
+<p>我们将在下一节中利用的主要见解是，虚拟化混淆要求分析不仅要对位置敏感，而且要对程序位置的第二个维度–虚拟程序计数器–精确。</p>
+<h1 id="对VPC敏感的静态分析"><a href="#对VPC敏感的静态分析" class="headerlink" title="对VPC敏感的静态分析"></a>对VPC敏感的静态分析</h1><p>我们现在展示如何修改现有的位置敏感静态分析的组件 现有的对位置敏感的静态分析的组件，以便在虚拟化混淆的情况下工作。虚拟化混淆的情况下工作。</p>
+<h2 id="解除抽象域"><a href="#解除抽象域" class="headerlink" title="解除抽象域"></a>解除抽象域</h2><p>使分析对VPC敏感并因此对域扁平化具有鲁棒性的主要想法是为其抽象域D配备一个额外的程序位置维度来代表虚拟程序计数器。VPC的值本身是由分析决定的，并表示为一个抽象的值。</p>
+<p>我们通过将抽象的VPC值映射到D的元素来将D提升到VPC敏感度。在新的域ˆD中，每个抽象状态不仅是针对程序位置的，而且是针对位置和VPC值这一对。在位置敏感的一般情况下 在一般情况下，对位置敏感的程序分析定义在一个抽象域上 D &#x3D; L → S，提升的域成为ˆD &#x3D; V → D。其中V是抽象的VPC值的域。</p>
+<p>许多域，如区间的域。保持抽象状态S &#x3D; Var → U作为从变量到抽象值的映射。变量到某个每变量的抽象值的映射。域U，因此具有E &#x3D; L → Var → U的结构。Var → U。对于这样的域，我们可以使用相同的 对于这样的域，我们可以对单个变量使用与抽象出 VPC。因此，我们设定V&#x3D;U，并将提升的 域定义为：E &#x3D; U → L → Var → U。</p>
+<h2 id="扩展传递函数"><a href="#扩展传递函数" class="headerlink" title="扩展传递函数"></a>扩展传递函数</h2><p>提升后的抽象域的转移函数fˆ是基于f的点状扩展，即从抽象的VPC值到原域D的元素的映射。与fc在位置敏感分析中单独应用于每个位置一样，我们在此将其单独应用于映射到位置和VPC值对的抽象状态。剩下的就是定义从一个三联体（&#96;7→v 7→s）中计算出一个后续的VPC值，这样抽象的后续状态就会被映射到正确的VPC值。一般来说，转移函数可以自由定义，只要它过度接近具体的转移函数就可以了。但对于抽象域E将位置映射到变量到抽象值的常见情况，我们现在描述一种自动得出ˆE的解除转移函数的方法。</p>
+<p>现有的虚拟化混淆器专门用一个特定的寄存器来存储VPC（可能是出于性能的考虑）。然而，这并不是一个固定的要求；在用于读取下一个指令操作码之前，VPC可能会被暂时存储在不同的内存区域。因此，我们只要求VPC的存储位置对于一个特定的程序位置是唯一的。我们进一步假设存在一个函数vpcLoc(&#96;)，用于可靠地检测VPC的存储位置。如果VPC不是一个固定的寄存器，它可以通过追踪数据流来检测，从开关跳转的位置开始，在继任者计算过程中跟随分配。一般来说，寻找VPC也可能涉及到候选VPC位置的多个细化步骤或人工分析。</p>
+<p>我们现在可以建立一个域ˆD &#x3D; U → L → S，S &#x3D; Var → U的传递函数。每个域元素v 7→ <code>7→ s是由元素v0i 7→</code> 0 i 7→ s0i的传递函数计算出来的，从而</p>
+<ul>
+<li>(<code>0 i, C, </code>)∈G是一个控制流边。</li>
+<li>v &#x3D; fc(s0i )(vpcLoc(&#96; )) 是s0i后续的新VPC值，并且</li>
+<li>s &#x3D; F i fc(s0i) 是从所有抽象状态中加入的 和VPC v有相同的位置&#96;和VPC。</li>
+</ul>
+<p><img src="/img/14.png"></p>
+<p>这里，s(x)表示变量x在s中被映射到的抽象值。注意，提升的转移函数只对同一程序位置上VPC评估为相同值的状态应用合并算子t，即它对VPC敏感。</p>
+<p>例子。图4显示了VPC移位对应用于运行实例的区间分析的影响。为了简洁起见，我们只显示了解释器循环的情况1，以及只显示了对应于三个增量指令的索引和字节码数组中的外部调用的抽象VPC值。特殊值⊥标志着程序位置和VPC的不可达组合：在进入第6行的循环之前，VPC不能是3；对于VPC为12（条件跳转操作码的位置）的第一种情况（第9-11行）是不可达的，因为控制流经第二种情况。在循环结束时（第34行），间隔与位置敏感分析为未经混淆的程序中的相应位置确定的间隔相同（见图2）。</p>
+<h2 id="加宽和终止"><a href="#加宽和终止" class="headerlink" title="加宽和终止"></a>加宽和终止</h2><p>我们必须对原始分析中现有的拓宽运算符进行调整，以确保解除的分析的终止。为被提升的域定义加宽的一个直接方法是以点的方式应用原始域的加宽算子。然而，提升会产生一个原域与可能无限的VPC值域的交叉产物，而程序位置总是有限的。这意味着，虽然点式拓宽可以防止在相同的VPC值和程序位置上的抽象状态的无限迭代，但在同一个程序位置上可能会积累无限多不同的VPC值。</p>
+<p>VPC值编码了有限字节码阵列中指令的有限多个位置。因此，直观地看，有限数量的抽象VPC值应该足以区分所有的索引。然而，VPC值并不保证指向有效的数组索引。解释器可能会使用多个步骤计算下一个有效的VPC值，涉及任意多的中间值。因此，我们需要允许在不同的VPC值之间拓宽，以保证分析的终止。</p>
+<p>对于实现一个合适的拓宽运算符，有几个选择。它只需要满足一个条件，即在有限的步骤内达到一个固定的点。一种可能的策略是，一旦超过VPC值的某个阈值，就触发拓宽；一个合理的界限可以由程序中存在的静态数据的大小给出。然后，拓宽可以分两步进行。</p>
+<ul>
+<li><p>一旦某个位置<code>的阈值被超过，所有VPC值为vi 7→ </code> 7→ si的抽象状态si都被合并成一个单一的状态，用于总结VPC，即变成F Vi vi 7→ <code> 7→ F i si，其中t V合并抽象VPC值，t合并抽象状态。</code>处的每个新的VPC值随后也会被合并。</p>
+</li>
+<li><p>随着新的VPC值被合并到摘要VPC中，定期拓宽适用于摘要VPC以保证终止。在时间间隔内。例如，一个边界可以被设置为无穷大。</p>
+</li>
+</ul>
+<h1 id="解除约束的地址跟踪"><a href="#解除约束的地址跟踪" class="headerlink" title="解除约束的地址跟踪"></a>解除约束的地址跟踪</h1><p>我们现在给出了有界地址跟踪（BAT）[5]的改编形式，这是一个专门针对二进制文件的静态分析，并应用我们的提升来推导出一个对VPC敏感的变体。</p>
+<h2 id="作为静态分析的BAT"><a href="#作为静态分析的BAT" class="headerlink" title="作为静态分析的BAT"></a>作为静态分析的BAT</h2><p>抽象地址。BAT中的基本抽象值是抽象地址。抽象地址是由抽象内存区域r∈R和偏移量o∈N组成的对（r，o）。内存区域R的集合包括堆栈、分配的堆区域和全局地址空间。为了便于阐述，偏移量用整数来定义（实现支持不同字长的位向量值）。由于二进制文件中缺乏类型，指针与整数无法区分。因此，普通的整数值被表示为全局地址空间中的抽象地址。全局地址空间中的抽象地址。内存区域标识符 代表静态未知的基础地址 各个区域在运行时被分配到的基础地址，这就是 0的全局地址空间。</p>
+<p>对于每个区域r，特殊的抽象地址（r，&gt;）代表一个地址，其中偏移量在一个区域内是未知的。当一个变量的取值超过精确表示的可行性时，这被用来抽象出多个偏移量。最后，单一的特殊值（&gt; R, &gt; ）代表一个未知区域内的未知偏移。因此，抽象内存地址集A被定义为A &#x3D; {(&gt; R, &gt; )}∪(R×(N∪&gt;))。</p>
+<p>抽象域。直观地说，BAT类似于一个具体的语义。它被定义在一个从变量（寄存器和内存位置）到值（抽象地址）的映射幂集上。这些映射基本上是使用抽象地址的具体机器状态 而不是具体的地址，也就是说，如果我们假设一个 程序变量的顺序，它们就被表示为 向量A×. . .×A. 一个抽象状态是这些向量的一个集合 向量的集合，以便它能过度接近程序位置的可达 的具体状态。形式上，抽象域被定义为 抽象域被定义为L → P(A × . . × A)。即，从程序位置到抽象地址向量集的映射 抽象地址的向量集的映射。两个状态的合并被定义为 是指计算两个向量集的联合。</p>
+<p>请注意，BAT与常见的抽象域（如区间）不同：那些域将每个 位置映射为一个从变量到抽象值的映射。而BAT将每个位置映射为一组从 变量到抽象值的一组映射。</p>
+<p>传递函数。传递函数被定义为 是指根据各语句的效果，更新每个单独的值向量 各自声明的影响。这些更新 遵循具体的语义，有特殊的规则用于 处理未知的偏移量和区域的特殊规则（详情可参见 详见[5]）。使得该分析在实践中可行的关键部分是 分析在实践中是可行的。在计算继任状态时发生的。对于每个变量，BAT只允许在所有值向量中最多有k个不同的 在抽象状态的所有值向量中最多允许k个不同的值。如果一个变量超过了这个界限，它的值（r, o）就会被 分两步进行抽象化。首先，所有的偏移量被合并到 (r, &gt; ). 第二，如果也有超过k个区域。所有的值都被合并到(&gt; R, &gt; )。</p>
+<p>因此，BAT对关系、路径和上下文是敏感的。对关系、路径和上下文都很敏感，直到每个变量的值有一定的界限。位置的变量值的一定范围内。这保证了分析的终止，因为 防止循环中的状态无限累积 或递归函数调用的状态的无限积累。变量界限可以 可以根据可用的计算资源来调整 资源进行调整。路径敏感度可以防止信息的合并，因此可以用 “暴力 “的方法来分析虚拟化混淆的程序。虚拟化混淆的程序的分析。由于 由于域的扁平化，这种方法需要很高的值 然而，这种方法需要很高的价值界限。否则，BAT将不得不合并 解释器循环的几次迭代后，BAT将不得不合并数值，并且 将失去对代码和数据指针值的跟踪。</p>
+<h2 id="VPC-敏感的BAT"><a href="#VPC-敏感的BAT" class="headerlink" title="VPC-敏感的BAT"></a>VPC-敏感的BAT</h2><p>为了使BAT具备VPC的敏感性，必须对抽象域和传递函数进行调整。</p>
+<p>抽象域。BAT的抽象域被定义为A → L → P(A × . . × A)，并使用抽象地址作为VPC值的值域。为了应用我们的提升，我们利用了在常规BAT中，与一个位置相关的抽象状态是一组向量。因此，对VPC敏感度的提升等同于根据每个向量中的VPC值来划分向量集。</p>
+<p>转移函数。为了实现单个抽象状态的转移函数，我们修改了每个变量的抽象地址的计数，以尊重分区的规定。对VPC敏感的BAT允许在同一分区的所有值向量中最多有k个不同的值。如果一个变量x在VPC值v和位置<code>处超过了界限，那么在状态si中x的所有抽象地址值，如v 7→ </code> 7→ si都被合并。如第4.2节所述，每个后续状态的新VPC值直接从值向量中提取。</p>
+<p>如第4.3节所述，我们需要修改提升域中的拓宽步骤以保证终止。我们对每个位置追踪的不同VPC值的数量引入了一个额外的约束m。一旦达到这个界限，VPC就会以与常规抽象地址相同的方式被拓宽。在这个位置的所有状态，其VPC值被新的摘要VPC所包含的状态被加入，因此它们的值计数被合并。这可能会导致对程序变量的额外过度估计。在实践中，m应该被设置为一个高的（但有限的）值，以防止过早的扩大。</p>
+<h1 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h1><p>现在我们简要地讨论一下我们的原型实现，并介绍了在虚拟化混淆的二进制文件上的初步实验结果。虚拟化混淆的二进制文件的初步实验结果。</p>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>我们在JAKSTAB二进制文件静态分析平台上实现了我们的分析[4]。JAKSTAB是基于抽象解释的理论[2]。它对二进制程序的语义进行了过度逼近，并考虑到了指令的获取。因此，它不需要控制流图，而控制流图对于二进制程序是不可用的。相反，它从可执行文件的入口点开始处理程序，每次都对程序进行分解和分析。</p>
+<p>在其分析周期的每个迭代中，JAKSTAB读取当前程序计数器值所指向的字节，解码下一条指令，并将其翻译成一种中间语言。然后，分支指令被分解成一个或多个控制流 边，基于当前的抽象状态。对于间接 分支，抽象状态决定了哪些目标 地址是可行的。非分支指令被 简单地转换为控制流边，指向 到后继者[6]。</p>
+<p>这些明确的控制流边允许JAKSTAB使用给定抽象域的语句明智转移函数来计算继任状态。抽象状态有两个目的：它们被解析步骤用来计算跳转目标，而且，像通常的静态分析一样，它们被用来计算后续状态。<br>在静态分析中，它们被用来验证规范。如果所有抽象状态的集合不违反一个属性，那么这个属性就被证明是成立的。</p>
+<p>JAKSTAB已经作为开源发布，可以从<a target="_blank" rel="noopener" href="http://www.jakstab.org,同时还可以获得vpc敏感的bat的原型实现./">http://www.jakstab.org，同时还可以获得VPC敏感的BAT的原型实现。</a></p>
+<h2 id="混淆和分析目标"><a href="#混淆和分析目标" class="headerlink" title="混淆和分析目标"></a>混淆和分析目标</h2><p>对于我们的实验，我们依靠一个在源代码上操作的混淆工具，这是亚利桑那大学正在进行的研究项目的一部分。使用研究型混淆器而不是VMProtect或CodeVirtualizer，使我们能够孤立地研究虚拟化-混淆，而没有额外的保护层和其他噪音。我们的原型并没有为分析被混淆的二进制文件提供一个完整的端到端解决方案，而是专注于虚拟化的特殊影响。尽管如此，我们正在努力扩展我们的原型，以支持野外混淆的二进制文件。</p>
+<p>作为评估目标，我们使用一个简单的程序来反复计算并最终打印第n个斐波那契数，其中n是作为一个命令行参数提供。该程序经过混淆处理，随后在分析前被编译成二进制文件。为了评估分析的精确性，我们计算分析能够检测到的最后外部调用printf的不同参数的数量，然后再无一例外地扩大数值（因为斐波那契数列增长到无穷大，不可能详尽地呈现所有数值）。这个指标在恶意软件检测中的应用是有代表性的，例如，外部系统调用的可能参数会根据恶意软件的规范进行评估[7]。事实上，大多数逆向工程应用将有类似的精度要求，因为他们至少需要为每个位置提供一组精确的可能的VPC值。例如，提取许可证检查功能需要识别必然在某些事件（如使用API调用创建一个新窗口）之前的精确的VPC值序列。</p>
+<h2 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h2><p>我们用JAKSTAB分析了被混淆的斐波那契例子，使用了标准的BAT和VPC敏感的BAT，并使用了不同的值界k。VPC敏感的BAT在所有配置中遇到了108个不同的VPC值。我们使用了m&#x3D;2000的VPC界线，所以分析从未合并过不同的VPC值。</p>
+<p><img src="/img/15.png"></p>
+<p>图5显示了所发现的精确参数值的数量和针对k产生的不同变量向量的数量（每个向量是变量到抽象地址的独特映射）。表1提供了一些数据点的额外细节。我们可以看到，常规的BAT在k&#x3D;60的数值界限以下无法产生任何关于调用参数的精确信息，而VPC敏感的BAT从k&#x3D;1开始发现数值，并显示出k和参数值数量之间的线性关系。事实上，检测到的不同参数的数量是k+2；这等于两个基本情况，它们被明确地检查，以及迭代中每个被跟踪的值的一个额外值。正则BAT也从k &#x3D; 60开始发现参数。从k&#x3D;68开始也是线性的，但速度较慢，约为k2，并且在生成的值向量的数量上成本较高。在界线30和68之间，普通的BAT在5分钟后就结束了，生成了大约150’000个向量。对于这些界限，扩大的信息损失导致在解释器中探索许多不可行的路径。在68以上，常规BAT通过完全路径敏感分析的 “蛮力 “来防止信息损失。</p>
+<p><img src="/img/16.png"></p>
+<p>然而，在所有的实验中，常规BAT无法解决几个内存的写入，不得不对全局地址空间进行弱更新。在严格的语义下，这种弱更新也会影响到程序的静态数据区，包括导入；分析不健全，因为它不能探索到可能被覆盖的地址的控制流。因此，该分析未能计算出一个合理的程序行为的超近似值。另一方面，对VPC敏感的BAT在所有情况下都完成了合理和精确的超近似计算。</p>
+<p>与所有的Java程序一样，表1中报告的JAKSTAB的内存使用统计数字应该被视为是有价值的。由于垃圾收集的原因，向量的数量和分配的堆内存之间没有线性关系。然而，我们可以看到，对VPC敏感的BAT产生的内存成本与普通BAT相当，甚至更低。</p>
+<h1 id="相关工作"><a href="#相关工作" class="headerlink" title="相关工作"></a>相关工作</h1><p>Rolles[9]讨论了如何对虚拟化程序进行解惑，表明虚拟化-解惑所提供的保护容易受到人工攻击。Sharif等人[10]提出了一种对这类程序进行自动反向工程的开创性方法。他们确定字节码指令的语义，以便对程序进行反混淆。这类方法在生成不同粒度的字节码指令的混淆器中面临困难。一般来说，为了得到一个正常的二进制文件，对虚拟化字节码的脱混淆与反编译类似。</p>
+<p>Coogan等人[1]展示了如何成功地应用动态分析来检测虚拟化去混淆的二进制文件中影响系统调用参数的代码。他们分析了单个跟踪中的依赖关系，目的是将解释器内的依赖关系与原始程序引起的依赖关系区分开来。他们的工作是独特的，因为它从使用的具体虚拟化引擎中抽象出来。他们对调用和返回的检测包含了适应程序间分析的有希望的想法，我们计划在未来的工作中对此进行研究。然而，该方法存在着与任何动态分析相同的不完整性；没有执行的代码随后也不会被分析。</p>
+<p>虚拟化-混淆的净效果与控制流扁平化相似。控制流扁平化将程序分割成基本块，并通过一个调度器循环和一个虚拟程序计数器（称为调度器变量[11]）将它们联系起来。与虚拟化的主要区别是，程序位置没有被折叠，即每一个原始程序位置，在被混淆的程序中都有一个。因此，只有调度器循环可以引起不相关的抽象状态的合并。Udupa等人[11]表明，这可以通过克隆共享的程序位置和使用常数传播来追踪调度器变量来解决。然而，在虚拟化中，单个指令的额外共享代码使这种方法不能有效地发挥作用。由于循环的原因，如果直接应用同样的方法，可能会有无限多的位置被克隆。</p>
+<p>最后，提升抽象领域以提高其精度的想法也出现在跟踪分区领域[8]中，它为现有的分析增加了一定程度的路径敏感性。ESP[3]也同样通过对属性自动机的状态进行提升来提高静态分析的精度。</p>
+<h1 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h1><p>虚拟化混淆器带来了巨大的挑战，但它们的具体影响可以被精确地描述出来。我们展示了如何为现有的静态分析的位置敏感性增加一个额外的维度，使其对这种混淆行为具有鲁棒性。在一个玩具例子上的实验显示了有希望的结果；我们正在努力将我们的原型的适用性扩展到野外的代码例子中。</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="https://github.com/TUGOhost">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%91%98%E8%A6%81"><span class="toc-number">1.</span> <span class="toc-text">摘要</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">2.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%83%8C%E6%99%AF"><span class="toc-number">3.</span> <span class="toc-text">背景</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%99%9A%E6%8B%9F%E5%8C%96%E6%B7%B7%E6%B7%86"><span class="toc-number">3.1.</span> <span class="toc-text">虚拟化混淆</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9D%99%E6%80%81%E5%88%86%E6%9E%90"><span class="toc-number">3.2.</span> <span class="toc-text">静态分析</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AF%B9%E8%A7%A3%E9%87%8A%E7%9A%84%E4%BB%A3%E7%A0%81%E8%BF%9B%E8%A1%8C%E9%9D%99%E6%80%81%E5%88%86%E6%9E%90"><span class="toc-number">4.</span> <span class="toc-text">对解释的代码进行静态分析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B7%A5%E4%BD%9C%E7%A4%BA%E4%BE%8B"><span class="toc-number">4.1.</span> <span class="toc-text">工作示例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%86%E5%9F%9F%E5%B9%B3%E5%9D%A6%E5%8C%96"><span class="toc-number">4.2.</span> <span class="toc-text">领域平坦化</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AF%B9VPC%E6%95%8F%E6%84%9F%E7%9A%84%E9%9D%99%E6%80%81%E5%88%86%E6%9E%90"><span class="toc-number">5.</span> <span class="toc-text">对VPC敏感的静态分析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E9%99%A4%E6%8A%BD%E8%B1%A1%E5%9F%9F"><span class="toc-number">5.1.</span> <span class="toc-text">解除抽象域</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%A9%E5%B1%95%E4%BC%A0%E9%80%92%E5%87%BD%E6%95%B0"><span class="toc-number">5.2.</span> <span class="toc-text">扩展传递函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%A0%E5%AE%BD%E5%92%8C%E7%BB%88%E6%AD%A2"><span class="toc-number">5.3.</span> <span class="toc-text">加宽和终止</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%A7%A3%E9%99%A4%E7%BA%A6%E6%9D%9F%E7%9A%84%E5%9C%B0%E5%9D%80%E8%B7%9F%E8%B8%AA"><span class="toc-number">6.</span> <span class="toc-text">解除约束的地址跟踪</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%9C%E4%B8%BA%E9%9D%99%E6%80%81%E5%88%86%E6%9E%90%E7%9A%84BAT"><span class="toc-number">6.1.</span> <span class="toc-text">作为静态分析的BAT</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#VPC-%E6%95%8F%E6%84%9F%E7%9A%84BAT"><span class="toc-number">6.2.</span> <span class="toc-text">VPC-敏感的BAT</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C"><span class="toc-number">7.</span> <span class="toc-text">实验</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0"><span class="toc-number">7.1.</span> <span class="toc-text">实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B7%B7%E6%B7%86%E5%92%8C%E5%88%86%E6%9E%90%E7%9B%AE%E6%A0%87"><span class="toc-number">7.2.</span> <span class="toc-text">混淆和分析目标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E6%9E%9C"><span class="toc-number">7.3.</span> <span class="toc-text">结果</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E5%B7%A5%E4%BD%9C"><span class="toc-number">8.</span> <span class="toc-text">相关工作</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BB%93%E8%AE%BA"><span class="toc-number">9.</span> <span class="toc-text">结论</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://tugohost.github.io.com/2023/02/28/Towards_Static_Analysis_of_Virtualization-Obfuscated_Binarie/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://tugohost.github.io.com/2023/02/28/Towards_Static_Analysis_of_Virtualization-Obfuscated_Binarie/&text=[译文]争取实现对虚拟化混淆的二进制文件的静态分析"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://tugohost.github.io.com/2023/02/28/Towards_Static_Analysis_of_Virtualization-Obfuscated_Binarie/&title=[译文]争取实现对虚拟化混淆的二进制文件的静态分析"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://tugohost.github.io.com/2023/02/28/Towards_Static_Analysis_of_Virtualization-Obfuscated_Binarie/&is_video=false&description=[译文]争取实现对虚拟化混淆的二进制文件的静态分析"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=[译文]争取实现对虚拟化混淆的二进制文件的静态分析&body=Check out this article: http://tugohost.github.io.com/2023/02/28/Towards_Static_Analysis_of_Virtualization-Obfuscated_Binarie/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://tugohost.github.io.com/2023/02/28/Towards_Static_Analysis_of_Virtualization-Obfuscated_Binarie/&title=[译文]争取实现对虚拟化混淆的二进制文件的静态分析"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://tugohost.github.io.com/2023/02/28/Towards_Static_Analysis_of_Virtualization-Obfuscated_Binarie/&title=[译文]争取实现对虚拟化混淆的二进制文件的静态分析"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://tugohost.github.io.com/2023/02/28/Towards_Static_Analysis_of_Virtualization-Obfuscated_Binarie/&title=[译文]争取实现对虚拟化混淆的二进制文件的静态分析"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://tugohost.github.io.com/2023/02/28/Towards_Static_Analysis_of_Virtualization-Obfuscated_Binarie/&title=[译文]争取实现对虚拟化混淆的二进制文件的静态分析"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://tugohost.github.io.com/2023/02/28/Towards_Static_Analysis_of_Virtualization-Obfuscated_Binarie/&name=[译文]争取实现对虚拟化混淆的二进制文件的静态分析&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://tugohost.github.io.com/2023/02/28/Towards_Static_Analysis_of_Virtualization-Obfuscated_Binarie/&t=[译文]争取实现对虚拟化混淆的二进制文件的静态分析"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2018-2023
+    TUGOhost
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/TUGOhost">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
