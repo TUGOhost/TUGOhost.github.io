@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="摘要以较低的开销记录和重放程序执行的能力使许多应用成为可能，例如反向执行调试、调试难以重现的测试失败，以及对已部署系统的失败进行 “黑盒 “取证分析。现有的记录和重放方法限制了部署性，因为它们需要记录整个虚拟机（重量级）、修改操作系统内核（增加部署和维护成本）、需要普遍的代码检测（带来显著的性能和复杂性开销），或者修改编译器和运行时系统（限制了通用性）。 我们研究了是否有可能建立一个实用的记录和重">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[译文]可部署性工程记录和回放扩展技术报告 rr-debuger">
+<meta property="og:url" content="http://tugohost.github.io.com/2023/09/16/rr_debugger/index.html">
+<meta property="og:site_name" content="TUGOhost">
+<meta property="og:description" content="摘要以较低的开销记录和重放程序执行的能力使许多应用成为可能，例如反向执行调试、调试难以重现的测试失败，以及对已部署系统的失败进行 “黑盒 “取证分析。现有的记录和重放方法限制了部署性，因为它们需要记录整个虚拟机（重量级）、修改操作系统内核（增加部署和维护成本）、需要普遍的代码检测（带来显著的性能和复杂性开销），或者修改编译器和运行时系统（限制了通用性）。 我们研究了是否有可能建立一个实用的记录和重">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="c:\Users\TG\AppData\Roaming\Typora\typora-user-images\image-20230919151657432.png">
+<meta property="og:image" content="c:\Users\TG\AppData\Roaming\Typora\typora-user-images\image-20230919154232654.png">
+<meta property="og:image" content="c:\Users\TG\AppData\Roaming\Typora\typora-user-images\image-20230919155534942.png">
+<meta property="og:image" content="c:\Users\TG\AppData\Roaming\Typora\typora-user-images\image-20230919155730421.png">
+<meta property="article:published_time" content="2023-09-15T18:00:25.000Z">
+<meta property="article:modified_time" content="2023-09-20T12:04:53.507Z">
+<meta property="article:author" content="TUGOhost">
+<meta property="article:tag" content="论文翻译">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="c:\Users\TG\AppData\Roaming\Typora\typora-user-images\image-20230919151657432.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>[译文]可部署性工程记录和回放扩展技术报告 rr-debuger</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/TUGOhost">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2023/02/28/Towards_Static_Analysis_of_Virtualization-Obfuscated_Binarie/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://tugohost.github.io.com/2023/09/16/rr_debugger/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://tugohost.github.io.com/2023/09/16/rr_debugger/&text=[译文]可部署性工程记录和回放扩展技术报告 rr-debuger"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://tugohost.github.io.com/2023/09/16/rr_debugger/&title=[译文]可部署性工程记录和回放扩展技术报告 rr-debuger"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://tugohost.github.io.com/2023/09/16/rr_debugger/&is_video=false&description=[译文]可部署性工程记录和回放扩展技术报告 rr-debuger"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=[译文]可部署性工程记录和回放扩展技术报告 rr-debuger&body=Check out this article: http://tugohost.github.io.com/2023/09/16/rr_debugger/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://tugohost.github.io.com/2023/09/16/rr_debugger/&title=[译文]可部署性工程记录和回放扩展技术报告 rr-debuger"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://tugohost.github.io.com/2023/09/16/rr_debugger/&title=[译文]可部署性工程记录和回放扩展技术报告 rr-debuger"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://tugohost.github.io.com/2023/09/16/rr_debugger/&title=[译文]可部署性工程记录和回放扩展技术报告 rr-debuger"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://tugohost.github.io.com/2023/09/16/rr_debugger/&title=[译文]可部署性工程记录和回放扩展技术报告 rr-debuger"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://tugohost.github.io.com/2023/09/16/rr_debugger/&name=[译文]可部署性工程记录和回放扩展技术报告 rr-debuger&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://tugohost.github.io.com/2023/09/16/rr_debugger/&t=[译文]可部署性工程记录和回放扩展技术报告 rr-debuger"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%91%98%E8%A6%81"><span class="toc-number">1.</span> <span class="toc-text">摘要</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%8B%E7%BB%8D"><span class="toc-number">2.</span> <span class="toc-text">介绍</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AE%BE%E8%AE%A1"><span class="toc-number">3.</span> <span class="toc-text">设计</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">3.1.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%81%BF%E5%85%8D%E6%95%B0%E6%8D%AE%E7%AB%9E%E4%BA%89"><span class="toc-number">3.2.</span> <span class="toc-text">避免数据竞争</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8"><span class="toc-number">3.3.</span> <span class="toc-text">系统调用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%92%E7%97%95%E7%BC%93%E5%86%B2%E5%8C%BA-Scratch-Buffers"><span class="toc-number">3.3.1.</span> <span class="toc-text">划痕缓冲区 Scratch Buffers</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ptrace%E6%A8%A1%E6%8B%9F"><span class="toc-number">3.3.2.</span> <span class="toc-text">ptrace模拟</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9C%A8trance%E7%8E%AF%E5%A2%83%E4%B8%8B%E6%89%A7%E8%A1%8C%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8"><span class="toc-number">3.3.3.</span> <span class="toc-text">在trance环境下执行系统调用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E6%A0%B8%E5%91%BD%E5%90%8D%E7%A9%BA%E9%97%B4"><span class="toc-number">3.3.4.</span> <span class="toc-text">内核命名空间</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Seccomp"><span class="toc-number">3.3.5.</span> <span class="toc-text">Seccomp</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E5%BB%BA%E6%A8%A1%E5%AE%9E%E8%B7%B5"><span class="toc-number">3.3.6.</span> <span class="toc-text">系统调用建模实践</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%87%8D%E6%94%BE"><span class="toc-number">3.3.7.</span> <span class="toc-text">重放</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%87%8D%E6%94%BE%E5%A4%8D%E6%9D%82%E7%9A%84%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8"><span class="toc-number">3.3.8.</span> <span class="toc-text">重放复杂的系统调用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%E5%99%A8"><span class="toc-number">3.3.9.</span> <span class="toc-text">信号处理器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%E5%92%8C%E4%B8%AD%E6%96%AD%E7%9A%84%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8"><span class="toc-number">3.3.10.</span> <span class="toc-text">信号处理和中断的系统调用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%82%E6%AD%A5%E4%BA%8B%E4%BB%B6"><span class="toc-number">3.4.</span> <span class="toc-text">异步事件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9D%9E%E7%A1%AE%E5%AE%9A%E6%80%A7%E6%80%A7%E8%83%BD%E8%AE%A1%E6%95%B0%E5%99%A8"><span class="toc-number">3.4.1.</span> <span class="toc-text">非确定性性能计数器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9D%9E%E7%A1%AE%E5%AE%9A%E8%AE%A1%E6%95%B0%E5%99%A8%E7%9A%84%E6%9B%BF%E4%BB%A3%E6%96%B9%E6%B3%95"><span class="toc-number">3.4.2.</span> <span class="toc-text">非确定计数器的替代方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%99%9A%E6%9C%9F%E4%B8%AD%E6%96%AD%E7%82%B9%E7%81%AB-Late-Interrupt-Firing"><span class="toc-number">3.4.3.</span> <span class="toc-text">晚期中断点火 Late Interrupt Firing</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B1%E4%BA%AB%E5%86%85%E5%AD%98"><span class="toc-number">3.5.</span> <span class="toc-text">共享内存</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9D%9E%E7%A1%AE%E5%AE%9A%E6%80%A7%E6%8C%87%E4%BB%A4"><span class="toc-number">3.6.</span> <span class="toc-text">非确定性指令</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8B%E5%8A%A1%E6%80%A7%E6%8C%87%E4%BB%A4"><span class="toc-number">3.6.1.</span> <span class="toc-text">事务性指令</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%8F%E5%B0%91Trace%E5%A4%A7%E5%B0%8F"><span class="toc-number">3.7.</span> <span class="toc-text">减少Trace大小</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E4%B8%AD%E7%B3%BB%E7%BB%9F%E5%91%BC%E5%8F%AB%E6%8B%A6%E6%88%AA"><span class="toc-number">4.</span> <span class="toc-text">进程中系统呼叫拦截</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8B%A6%E6%88%AA%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8"><span class="toc-number">4.1.</span> <span class="toc-text">拦截系统调用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%89%E9%80%89%E6%8B%A9%E5%9C%B0%E6%8D%95%E8%8E%B7%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8"><span class="toc-number">4.2.</span> <span class="toc-text">有选择地捕获系统调用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A3%80%E6%B5%8B%E8%A2%AB%E9%98%BB%E5%A1%9E%E7%9A%84%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8"><span class="toc-number">4.3.</span> <span class="toc-text">检测被阻塞的系统调用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86"><span class="toc-number">4.4.</span> <span class="toc-text">信号处理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A2%AB%E4%B8%AD%E6%96%AD%E7%9A%84%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8"><span class="toc-number">4.5.</span> <span class="toc-text">被中断的系统调用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BA%BF%E7%A8%8B-%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8-Thread-Local-Storage"><span class="toc-number">4.6.</span> <span class="toc-text">线程-本地存储 Thread-Local Storage</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%88%E5%A4%84%E7%90%86"><span class="toc-number">4.7.</span> <span class="toc-text">栈处理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%84%E7%90%86%E9%87%8D%E6%94%BE"><span class="toc-number">4.8.</span> <span class="toc-text">处理重放</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%A9%E7%94%A8%E5%8C%BA%E5%9D%97%E5%85%8B%E9%9A%86%E4%BC%98%E5%8C%96%E8%AF%BB%E6%93%8D%E4%BD%9C"><span class="toc-number">4.9.</span> <span class="toc-text">利用区块克隆优化读操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9E%E9%A1%BE"><span class="toc-number">4.10.</span> <span class="toc-text">回顾</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%88%90%E6%9E%9C%E5%B1%95%E7%A4%BA"><span class="toc-number">5.</span> <span class="toc-text">成果展示</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B7%A5%E4%BD%9C%E9%87%8F"><span class="toc-number">5.1.</span> <span class="toc-text">工作量</span></a></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        [译文]可部署性工程记录和回放扩展技术报告 rr-debuger
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">TUGOhost</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2023-09-15T18:00:25.000Z" class="dt-published" itemprop="datePublished">2023-09-16</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/%E8%AE%BA%E6%96%87%E7%BF%BB%E8%AF%91/" rel="tag">论文翻译</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>以较低的开销记录和重放程序执行的能力使许多应用成为可能，例如反向执行调试、调试难以重现的测试失败，以及对已部署系统的失败进行 “黑盒 “取证分析。现有的记录和重放方法限制了部署性，因为它们需要记录整个虚拟机（重量级）、修改操作系统内核（增加部署和维护成本）、需要普遍的代码检测（带来显著的性能和复杂性开销），或者修改编译器和运行时系统（限制了通用性）。 我们研究了是否有可能建立一个实用的记录和重放系统来避免所有这些问题。 答案是肯定的–只要 CPU 和操作系统满足某些非显而易见的限制条件。幸运的是，现代英特尔 CPU、Linux 内核和用户空间框架确实满足了这些约束条件，尽管这只是最近才实现的。通过一些新颖的优化，我们的 RR 系统以较低的开销记录和重播了真实世界中的低并行度工作负载，并使用现有硬件、编译器、运行时和操作系统实现了完全的用户空间。RR 是开源反向执行调试器的基础，在实践中得到了广泛应用。我们介绍了 RR 的设计和实现，描述了它在各种工作负载上的性能，并确定了支持我们的方法所需的硬件和操作系统设计限制。</p>
+<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>以较低的开销记录程序运行并精确回放的能力有很多应用[17, 18, 22]，并受到研究界的极大关注。它甚至已在 VMware Workstation [31]、Simics [23]、UndoDB [3] 和 TotalView [25] 等产品中实现。遗憾的是，由于种种原因，这些技术的应用受到了限制。有些方法[20, 23, 31]需要记录和重放整个虚拟机，这是很麻烦的–用户必须设置和管理虚拟机，而且必须记录和重放的状态包括整个操作系统，而用户往往只关心一些特定的进程。这在反向执行调试等记录和重放应用中尤其成问题，因为在这些应用中，重放状态的检查点经常被创建和恢复。 其他方法[9, 17, 29, 32]需要运行修改过的操作系统内核，这不仅阻碍了部署，还增加了系统的安全性和稳定性风险。要求修改编译器和语言运行时[32]也会妨碍部署，尤其是当应用程序包含自己的 JIT 编译器时。有些方法[27, 33, 37]需要定制硬件，但目前还没有。许多方法 [3, 10, 25, 36] 需要对代码进行普遍检测，这增加了复杂性和开销，尤其是自修改代码（常用于多态内联缓存 [28] 和现代技术中的其他实现技术）。</p>
+<p>Mozilla 开发人员发现，开发人员需要花费大量时间进行调试，尤其是在确定性错误上。 记录和重放调试似乎是一项很有前途的技术，但由于上述原因，现有的系统都不容易部署。我们启动了 RR 项目，试图建立一个适合 Mozilla 使用的系统，或者找出无法建立这样一个系统的原因（只需适度的实施工作）。</p>
+<p>因此，我们着手构建一个可部署性最大化的系统：记录和重放未经修改的用户空间应用程序，这些应用程序使用现有的 Linux 内核、编译器、语言运行时和 x86&#x2F;x86-64 CPU，在没有特殊权限的情况下运行完全用户空间的实现，并且不使用无处不在的代码工具Xiv:1705.05937v1 [cs.PL] 16 May 2017 tation。鉴于我们的开发资源有限（开发一个能调试 Firefox 的原型需要几个人几年的时间，迄今为止总共可能需要五个人几年的时间），我们避免采用需要巨大工程努力的方法。我们假定 RR 应该运行未修改的应用程序，它们会出现我们希望忠实记录和重放的错误（包括数据竞赛），但这些应用程序不会恶意试图颠覆记录或重放。我们将已知的、但以前未在实际系统中演示过的技术结合在一起：主要是使用 ptrace 来记录和重放系统调用结果和信号，通过一次只运行一个线程来避免非确定性数据竞赛，以及使用 CPU 硬件性能计数器来测量应用程序的进度，以便在正确的时刻发送异步信号和上下文切换事件 [35]。第 2 节更详细地介绍了我们的方法。</p>
+<p>在此基础上，我们发现低并行性工作负载（尤其是运行 Firefox 测试套件的 Firefox）的主要性能瓶颈是使用 ptrace 监视系统调用时引起的上下文切换。我们采用了一种新颖的进程内系统调用拦截技术来消除这些上下文切换，从而显著降低了重要实际工作负载的记录和重放开销。这一优化依赖于现代 Linux 内核功能：seccomp-bpf 用于选择性地抑制某些系统调用的 ptrace 陷阱，perf 上下文切换事件用于检测内核中阻塞的记录线程。第 3 节介绍了这项工作，第 4 节给出了一些性能结果，显示在重要的应用工作负载上，RR 记录和重放的速度减慢不到 2 倍。</p>
+<p>我们依赖的是为其他目标设计的硬件和操作系统功能，因此 RR 的成功令人惊讶。事实上，它只是在可行性的边缘徘徊；尤其是它无法在 ARM CPU 上实现。第 5 节总结了 RR 的硬件和软件要求，我们希望这些要求能对系统设计者产生影响。</p>
+<p>RR 是许多开发人员日常使用的高效反向执行调试器的基础，可用于 Samba、Firefox、Chromium、QEMU、LibreOffice 和 Wine 等复杂应用程序。它是免费软件，可从 <a target="_blank" rel="noopener" href="https://github.com/rr-debugger/rr">https://github.com/rr-debugger/rr</a> 获取。本文的研究贡献如下：</p>
+<ul>
+<li>我们的研究表明，在现代库存硬件和软件上记录和回放用户空间进程，而不使用无处不在的代码工具是可能的，也是切实可行的。</li>
+<li>我们介绍了一种进程内系统调用拦截技术，并证明它能显著降低开销。</li>
+<li>我们的研究表明，对于低并行性工作负载，RR 记录和重放开销相当低，低于其他具有可比部署性的方法。</li>
+<li>我们确定了支持我们的方法所需的硬件和操作系统设计限制。</li>
+</ul>
+<p>本扩展技术报告对已发表的论文进行了详细阐述，提供了更多技术细节，并在第 6 节中对 RR 的设计、使用和发展进行了反思。</p>
+<h1 id="设计"><a href="#设计" class="headerlink" title="设计"></a>设计</h1><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>大多数低开销记录与重放系统都依赖于对 CPU 确定性的观察。 我们围绕状态和计算确定一个边界，记录边界内的所有非确定性来源和进入边界的所有输入，并通过重放非确定性和输入来重新执行边界内的计算。如果所有输入和非确定性都被捕获，重放时边界内的状态和计算将与记录时一致。</p>
+<p>为了能够记录和重放任意 Linux 应用程序，而不需要修改内核或虚拟机，RR 记录并重放一组进程的用户空间执行情况。为了简化不变式，并使重放尽可能忠实，重放保留了用户空间执行的几乎所有细节。尤其是用户空间的内存和寄存器值，除了本文后面提到的少数例外情况外，都被完全保留。 这意味着 CPU 级控制流在录制和重放之间完全相同，内存布局也是如此。</p>
+<p>重放保留了用户空间的状态和执行，但在重放过程中只会重现极少量的内核状态。例如，文件描述符不会打开，信号处理器不会安装，文件系统操作也不会执行。相反，我们会重放记录的这些操作的用户空间不可见效果，以及未来的相关操作。我们会为每个记录的线程创建一个重放线程（严格来说并非必要），并为每个记录的地址空间创建一个重放地址空间（即进程）以及匹配的内存映射。</p>
+<p>通过这种设计，我们的记录边界就是用户空间和内核之间的接口。非确定性的输入和来源主要是系统调用的结果和异步事件的时间。</p>
+<h2 id="避免数据竞争"><a href="#避免数据竞争" class="headerlink" title="避免数据竞争"></a>避免数据竞争</h2><p>当线程在多个内核上运行时，不同线程对同一内存位置的竞速读写访问将成为非确定性的来源。因此，我们采用了常见的方法 [20, 31, 3, 18]，每次只运行一个线程。RR 先发制人地调度这些线程，因此上下文切换时序是必须记录的非确定性。如果上下文切换发生在执行过程中的正确位置，数据竞赛错误仍可被观察到（尽管由于弱内存模型导致的错误无法被观察到）。</p>
+<p>这种方法比其他方法[10, 21, 36, 41, 32]更简单、更易部署，避免了假定程序是无竞赛的[17, 32]，对低并行度工作负载也很有效。对于并行性持续较高的工作负载，速度会大大降低；然而，即使对于潜在并行性较高的应用程序，用户通常也会将 RR 应用于数据集相对较小因而并行性有限的测试工作负载。</p>
+<p>一次只能运行一个线程的限制是通过 <code>ptrace</code> 系统调用对所有跟踪进程&#x2F;线程进行监控来实现的。每当一个线程进入系统调用时，RR 就会收到内核发出的 “ptrace stop “事件，并决定是否允许上下文切换或继续运行当前线程（在任何可能阻塞的系统调用中，我们都必须允许上下文切换）。(在任何可能阻塞的系统调用中，我们都必须允许上下文切换。）当允许上下文切换时，RR 会使用 <code>PTRACE SYSCALL</code> 让线程继续运行到系统调用退出，然后选择另一个线程运行，并通过<code>PTRACE CONT</code>（或类似）<code>ptrace</code> 操作恢复它。当新线程依次到达重新调度点时，RR 会使用 <code>waitpid</code> 查询所有线程的状态，以确定哪些线程（如果有的话）已准备好退出阻塞的系统调用，从而成为候选调度线程。</p>
+<p>RR 通过异步信号定期中断正在运行的线程，执行抢占式上下文切换（参见第 2.4 节）。正常调度器严格遵守 Linux 线程的优先级：优先级较高的线程总是优先于优先级较低的线程运行。优先级相同的线程以循环方式运行。</p>
+<h2 id="系统调用"><a href="#系统调用" class="headerlink" title="系统调用"></a>系统调用</h2><p>系统调用通过修改寄存器和内存将数据返回到用户空间，这些变化必须被记录下来。 通过 <code>ptrace</code> 系统调用，可以在跟踪线程进入或退出系统调用时同步通知进程。当跟踪线程进入内核进行系统调用时，它将被暂停并通知 RR。 当 RR 选择再次运行该线程时，系统调用将完成，并再次通知 RR，使其有机会记录系统调用结果。RR 包含大多数 Linux 系统调用的模型，描述了在系统调用输入参数和结果的情况下，系统调用可以修改的用户空间内存。</p>
+<h3 id="划痕缓冲区-Scratch-Buffers"><a href="#划痕缓冲区-Scratch-Buffers" class="headerlink" title="划痕缓冲区 Scratch Buffers"></a>划痕缓冲区 Scratch Buffers</h3><p>如上所述，RR 通常通过一次只调度一个线程来避免竞赛。但是，如果系统调用在内核中阻塞，RR 必须在阻塞的系统调用完成时尝试调度另一个应用程序线程运行。运行中的线程有可能访问系统调用的输出缓冲区，并与内核向该缓冲区的写入发生竞赛（尽管可能性不大）。为了避免这种情况，我们将系统调用输出缓冲区重定向到每个线程的临时 “抓取内存”，否则应用程序将无法使用该内存。当我们收到阻塞的系统调用完成的 ptrace 事件时，RR 会在没有其他线程运行的情况下将抓取缓冲区的内容复制到真正的用户空间目标，从而消除竞赛。(实际上，我们并没有证据表明由从头开始缓冲区阻止的竞赛会在实际中发生，因此消除从头开始缓冲区或许值得一试）。</p>
+<p><img src="C:\Users\TG\AppData\Roaming\Typora\typora-user-images\image-20230919151657432.png" alt="image-20230919151657432"></p>
+<p>图 1 演示录制一个简单的读取系统调用。灰色方框代表内核代码。</p>
+<h3 id="ptrace模拟"><a href="#ptrace模拟" class="headerlink" title="ptrace模拟"></a>ptrace模拟</h3><p>除了通过抓取缓冲区重定向和记录内存影响外，大多数系统调用在记录过程中都会正常执行。ptrace 不仅被调试器使用，也被一些复杂的应用程序使用，例如在 Firefox 中收集数据用于崩溃报告，或在 Wine 中提供仿真设施[6]。Linux 只允许一个线程拥有一个 ptrace 监督器，因此如果一个跟踪器试图直接跟踪另一个跟踪器，就会失败，因为后者已经将 RR 作为 ptrace 监督器。 ptrace 语义非常复杂，因此这种 ptrace 仿真的实现也必然相当复杂。</p>
+<h3 id="在trance环境下执行系统调用"><a href="#在trance环境下执行系统调用" class="headerlink" title="在trance环境下执行系统调用"></a>在trance环境下执行系统调用</h3><p>在许多情况下（例如 mmap 处理，见下文），RR 必须在跟踪线程的上下文中执行任意系统调用。RR 会在跟踪线程的地址空间中找到系统调用指令，并使用 ptrace 临时改变跟踪线程的执行上下文，以执行该指令，并在寄存器中设置所需的参数。有时还需要内存参数，在这种情况下，可读内存会位于堆栈上（或在极端情况下位于地址空间的任何位置），并用所需的参数临时覆盖，然后在系统调用完成后重置为原来的内容。</p>
+<h3 id="内核命名空间"><a href="#内核命名空间" class="headerlink" title="内核命名空间"></a>内核命名空间</h3><p>Linux 内核命名空间是用于实现 “容器 “的强大功能，也用于在复杂的应用程序（如 Firefox 和 Chromium）中实现沙箱。它们大多不需要特殊处理，只是有时沙箱进程需要与 RR 通信，例如打开共享文件或套接字。为了做到这一点，我们在沙箱中开了一个洞，在所有跟踪进程中分配了一个保留文件描述符，该描述符指向 RR 查看到的根目录；有了这个描述符，跟踪进程就可以打开 RR 创建的临时文件或套接字，即使其挂载命名空间或根目录已被更改。</p>
+<p>恶意但已进入沙盒的跟踪者如果发现了这个漏洞，就可能利用它逃出沙盒，这也是我们假设跟踪者不是恶意跟踪者的原因之一。</p>
+<h3 id="Seccomp"><a href="#Seccomp" class="headerlink" title="Seccomp"></a>Seccomp</h3><p>另一项 Linux 沙箱功能是 seccomp 过滤。它会在内核中安装一个 seccomp-bpf 过滤器，该字节码会评估每个系统调用的寄存器参数，并确定系统调用是可以正常进行，还是应该产生错误、信号或 ptrace 陷阱。沙箱通常使用这一功能将允许的系统调用列入白名单，并触发对其他系统调用的模拟。这种沙盒会干扰 RR 在跟踪上下文中执行的系统调用，从而破坏 RR。</p>
+<p>每次<code>execve</code>后，我们都会立即在一个固定地址（即 “RR 页”）上映射一页内存，其中包含一条 “特权 “系统调用指令。我们会检测安装 <code>seccomp-bpf</code> 过滤器的系统调用，并在程序计数器位于 “特权 “指令地址时，用 “允许 “提前退出的序言修补过滤器字节码。当在跟踪上下文中执行 RR 系统调用时，我们会使用该 “特权 “指令。</p>
+<p>我们还记录了 seccomp-bpf 过滤器对常规系统调用的影响，并忠实地重播了这些影响。我们只需观察内核行为即可做到这一点，而无需在 RR 中实际执行 BPF 解释器。</p>
+<h3 id="系统调用建模实践"><a href="#系统调用建模实践" class="headerlink" title="系统调用建模实践"></a>系统调用建模实践</h3><p>RR 假设可以从系统调用前后的用户空间状态（可能还包括对以前系统调用的观察）有效地确定系统调用所修改内存位置的合理边界。例如，如果系统调用向内存中的随机位置写入内容，而不以某种方式指明哪些位置被修改，我们就无法处理该系统调用。这一假设在实践中是充分成立的，但要创建和维护描述如何确定每次系统调用所修改的内存的模型，却需要做大量的工作。</p>
+<p>最大的问题在于ioctl 系统调用，它提供了针对每个设备（因此是可扩展的）的系统调用命名空间。在 ioctl 参数中，有一个对写入内存的地址和长度进行编码的约定，但往往没有得到遵守。RR 内置了许多 ioctl 的知识，但这必然是不完整的，需要不时扩展以处理新的应用。</p>
+<p>这个问题并非 RR 独有，例如 Valgrind Memcheck 也需要这些信息。如果有一个共享的系统调用描述库，我们的模型就可以从中生成，这将非常有用。</p>
+<p>对所有系统调用进行建模的另一种方法是使用 Linux “软脏 “跟踪 API [4]，以识别被不常用或未知系统调用修改的页面。我们还没有尝试过这种方法，因为虽然这种方法最终可能会减少工作量，但会增加复杂性，而且无法与那些为满足自身需要而使用 “软变脏 “的应用程序兼容。此外，要求 RR 感知所有系统调用的语义意味着我们要检测需要 RR 特殊处理的新系统调用。</p>
+<h3 id="重放"><a href="#重放" class="headerlink" title="重放"></a>重放</h3><p>在重放过程中，当要重放的下一个事件是截获的系统调用时，我们会在系统调用指令的地址处设置一个临时断点（记录在跟踪中）。我们使用 ptrace 运行跟踪线程，直到它碰到断点，然后移除断点，将程序计数器向前推进到系统调用指令之前，并应用记录的寄存器和内存变化。 与使用 <code>PTRACE_SYSEMU</code> 进入和抑制系统调用的执行相比，这种方法既简单又高效，因为它将 ptracestop 通知的次数从两次（进入系统调用和退出系统调用）减少到一次。(这些通知的代价相对较高，因为每次通知都需要从跟踪器到 RR 再到 RR 的上下文切换）。</p>
+<p>在某些情况下，这种技术可能无法可靠运行。 例如，被跟踪者可能会将系统调用指令写入内存，然后跳转到该位置，在这种情况下，设置在该位置的软件断点就会被覆盖。我们可以使用硬件断点，但这可能与被跟踪者自己使用硬件断点相冲突，因为 x86 CPU 支持的硬件断点数量有限（通常为四个）。因此，如果要重放的系统调用指令位于共享内存或可写内存中，我们会使用 <code>PTRACE_SYSEMU</code> 提前执行下一个系统调用，并承担两次 ptrace-stop 通知的代价。</p>
+<h3 id="重放复杂的系统调用"><a href="#重放复杂的系统调用" class="headerlink" title="重放复杂的系统调用"></a>重放复杂的系统调用</h3><p>有些系统调用会操纵线程或地址空间，需要在重放过程中进行特殊处理。例如，记录文件 mmap 会将映射文件的原始内容保存到跟踪中（通常以优化的零拷贝方式保存；参见第 2.7 节）。使用 MAP FIXED 选项重放映射副本可确保在正确地址创建映射。</p>
+<p>execve 系统调用的记录和重放都很复杂。记录 execve 完成后，RR 会读取 &#x2F;proc&#x2F;…&#x2F;maps 以发现新地址空间中的内存映射，并将其记录下来。在重放时，RR 会针对正确的架构（32 位或 64 位）执行一个小型存根可执行文件，删除地址空间中的所有内存映射（因为它们可能与记录时创建的映射完全不同，例如由于 ASLR 的原因），然后创建新的映射以匹配记录的映射。</p>
+<h3 id="信号处理器"><a href="#信号处理器" class="headerlink" title="信号处理器"></a>信号处理器</h3><p>当同步或异步信号在记录过程中触发信号处理程序时，内核会为处理程序设置一个用户空间堆栈帧，并将控制权转移到处理程序的地址。ptrace 会通过 ptrace-stop 通知报告信号的传递，然后 RR 会通过发出 PTRACE_SINGLESTEP 请求来触发信号处理程序的转换。(RR 必须在内部跟踪哪些信号有处理程序，以便提前知道哪些信号将触发处理程序。例如，当代码触发 SIGILL 或 SIGSEGV 时，但被跟踪者使用了 sigprocmask 来阻止信号，这时信号会被传递，但处理程序不会运行（通常会带来致命的结果））。</p>
+<p>当 RR 过渡到信号处理器时，它会记录堆栈帧和内核设置的寄存器的内容。在重放过程中，不会设置信号处理器，也不会传递真正的信号。要重放信号处理程序的入口，我们只需将记录的信号处理程序帧写入内存，并将寄存器设置为记录的值。通过在重放过程中不发送真实信号，我们可以避免在重放过程中设置信号处理器状态。</p>
+<h3 id="信号处理和中断的系统调用"><a href="#信号处理和中断的系统调用" class="headerlink" title="信号处理和中断的系统调用"></a>信号处理和中断的系统调用</h3><p>在正常的非记录执行过程中，当系统调用被信号中断时，内核会用紧随系统调用指令之后的程序计数器和系统调用结果寄存器中的特殊<code> -ERESTARTSYS</code>（或类似）值来调整用户空间寄存器。如果需要运行信号处理器，则会建立信号框架，并正常运行信号处理器。当执行通过<code>sigreturn</code>返回到处理程序前的状态，或者信号处理程序没有运行，但线程通过其他机制恢复时，内核的系统调用重启机制就会在返回用户空间前启动：当内核返回用户空间时，如果系统调用结果寄存器中包含 <code>-ERESTARTSYS </code>且满足某些其他条件，内核就会自动将程序计数器倒退到系统调用指令之前，并恢复系统调用编号寄存器。这将导致系统调用重新执行。</p>
+<p>RR 避免干扰这种重启机制，而是依靠内核像通常一样重启被中断的系统调用。不过，由于我们在系统调用入口处设置了预期在系统调用出口处处理的状态，因此我们必须检测 ptrace 系统调用通知何时对应于重新启动的系统调用，而不是新的系统调用。虽然没有万无一失的方法，但我们有一个行之有效的启发式方法。我们保留了一个待处理的中断系统调用及其保存的参数寄存器堆栈。在每个系统调用条目中，如果参数寄存器与最近一次待中断系统调用的参数相匹配，我们就认为该系统调用正在重启，并将其从堆栈中弹出。如果信号处理器中断了一个系统调用，然后返回，但被中断的系统调用没有立即重启，我们就认为该系统调用已被放弃，并将其从堆栈中弹出。</p>
+<h2 id="异步事件"><a href="#异步事件" class="headerlink" title="异步事件"></a>异步事件</h2><p>我们需要支持两种异步事件：抢占式上下文切换和信号。我们将前者视为后者的特例，通过向运行中的跟踪线程发送信号来强制进行上下文切换。我们需要确保在重放期间，当程序处于与录制期间发送信号时完全相同的状态时，才会发送信号。</p>
+<p>与之前的工作[20, 35, 13]一样，我们使用 CPU 硬件性能计数器来测量应用程序的进度。理想情况下，我们会在录制过程中对异步事件发生前的退役指令进行计数，并在重放过程中对 CPU 进行编程，以便在退役指令达到一定数量后触发中断–但这种方法在实际应用中需要进行修改。</p>
+<h3 id="非确定性性能计数器"><a href="#非确定性性能计数器" class="headerlink" title="非确定性性能计数器"></a>非确定性性能计数器</h3><p>我们要求每次执行给定的用户空间指令序列时，计数器值的变化量只取决于指令序列，而不取决于用户空间不可见的系统状态（例如缓存内容、页表状态或投机性 CPU 状态）。(从 RR 的角度来看，这些影响表现为噪声，使得计数器变得不可靠）。这一特性（通常被称为 “确定性”[42]）在实际应用中并不适用于大多数 CPU 性能计数器[20, 42]。例如，在任何已知的 x86 CPU 型号上，任何 “已退役指令 “计数器都不具备这种特性（例如，由于触发页面故障的指令会被重启并计算两次）。</p>
+<p>幸运的是，现代英特尔 CPU 恰好有一个确定性的性能计数器： “退行条件分支”（”RCB”），因此我们使用它。我们不能只在录制过程中计算 RCB 的数量，然后在重放过程中执行完该数量的 RCB 后再发送信号，因为 RCB 数量并不能唯一确定发送信号的执行点。 因此，我们将 RCB 计数与通用寄存器（包括程序计数器）的完整状态配对，以确定执行点。</p>
+<p>一般来说，这仍然不能唯一识别执行点（例如，考虑无限循环<code>label：inc [global-var]; jmp label;</code>）。不过，在实践中，我们发现这种方法非常可靠；返回到同一指令且中间没有条件分支的代码一定非常罕见，只有在异步事件发生在这样的指令上时，RR 才会考虑定期重放，在这种情况下，重放很可能会出现偏差并失败。</p>
+<p>当 RR 不仅仅用于普通的记录和重放，尤其是用于实现反向执行调试时，它对通用寄存器和 RCB 计数无法唯一标识程序状态的情况就会变得更加敏感，因为我们的反向执行实现有时会执行非常频繁的停止（例如单步执行时），并将一个停止点与另一个停止点进行多次比较。 我们遇到过一些实际例子，在这些例子中，具有相同通用寄存器和 RCB 数量的不同程序状态会导致反向执行调试失败。在这些例子中，函数 A 包含对同一函数 B 的多次调用，A 或 B 中均未出现条件分支，并且由于优化，B 中某些指令的通用寄存器在两次调用中最终具有相同的值。为了解决这个问题，我们在每个停止点从堆栈中收集了一些数据，并将其添加到程序状态标识符中。现在看来，这种方法是稳健的；几年来，我们在这方面没有遇到任何新问题。</p>
+<h3 id="非确定计数器的替代方法"><a href="#非确定计数器的替代方法" class="headerlink" title="非确定计数器的替代方法"></a>非确定计数器的替代方法</h3><p>其他工作[20, 13]通过计算退行分支的数量来避免这些唯一性问题；在没有分支介入的情况下，一个给定地址上的指令不能被执行超过一次（重复字符串指令除外，这些指令需要将<code>ECX/RCX</code>寄存器添加到程序态标识符中）。遗憾的是，分支计数器是非确定性的；例如，从硬件中断出来的过渡对用户进程来说是计数的，但对 RR 来说却是不可见的。更糟糕的是，从 “系统管理模式 “中断中跳出会被计入用户进程，而主机内核甚至看不到。在用户级解决这些问题似乎比 RR 一直使用的方法更难。</p>
+<p>另一个有趣的问题是，云虚拟化服务一直不愿启用硬件性能计数器的虚拟化，部分原因是低级 CPU 状态导致的计数器非确定性往往代表着从一个客户虚拟机到另一个客户虚拟机的信息泄漏。根据定义，确定性计数器不会受到其进程中尚未显现的信息的影响，因此我们希望它更有可能被安全地虚拟化。(在撰写本文时，大多数云提供商都没有虚拟化任何性能计数器，因此 RR 无法在这些计数器上运行，但 Digital Ocean 除外，RR 在其上运行）。</p>
+<p>另一种衡量进展的明显方法是放弃硬件性能计数器，改用二进制仪表来计算指令 [36, 10, 3]。 我们认为，就我们的目的而言，二进制仪表的开销和实施复杂性仍使其不如使用硬件计数器理想。</p>
+<h3 id="晚期中断点火-Late-Interrupt-Firing"><a href="#晚期中断点火-Late-Interrupt-Firing" class="headerlink" title="晚期中断点火 Late Interrupt Firing"></a>晚期中断点火 Late Interrupt Firing</h3><p>硬件性能计数器的另一个问题是，虽然可以对 CPU 进行编程，使其在观察到指定数量的性能事件后触发中断，但中断并不会立即触发。 在实践中，我们经常会在几十条指令退役后才观察到它的启动。为了弥补这一缺陷，在重放过程中，我们会对中断进行编程，使其比我们预期的实际 RCB 数提前触发一定数量的事件。然后，我们在试图达到的状态的程序计数器值处设置一个临时断点，并反复运行到断点，直到 RCB 计数和通用寄存器值与记录值一致。</p>
+<h2 id="共享内存"><a href="#共享内存" class="headerlink" title="共享内存"></a>共享内存</h2><p>通过一次只调度一个线程，RR 可以避免共享内存上的竞赛问题，只要该内存仅由跟踪线程写入即可。已记录的进程有可能与其他进程甚至内核设备驱动程序共享内存，在这种情况下，非记录代码可以执行与跟踪线程的访问相竞争的写入操作。幸运的是，在常见 Linux 桌面环境下运行的应用程序很少出现这种情况，只有四种常见情况：与 PulseAudio 守护进程共享内存的应用程序、与 X 服务器共享内存的应用程序、与内核图形驱动程序和 GPU 共享内存的应用程序以及 vdso 系统调用。我们通过自动禁止 PulseAudio 和 X 使用共享内存（在这两种情况下都退回到套接字传输），并禁止应用程序直接访问 GPU，从而避免了前三个问题。</p>
+<p><code>vdso</code> syscalls 是一种 Linux 优化，它完全在用户空间实现一些常见的只读系统调用（如 gettimeofday），部分是通过读取与内核共享的内存，并由内核异步更新。我们对 vdso 系统调用的用户空间实现进行修补，使其执行等效的真实系统调用，从而禁用 vdso 系统调用。 应用程序仍可能以有问题的方式与非记录进程共享内存，不过这种情况在实践中并不多见，通常只需扩大 RR 记录的进程组范围即可解决。</p>
+<p>应用程序仍可能以有问题的方式与非记录进程共享内存，不过这种情况在实践中并不多见，通常只需扩大 RR 记录的进程组范围即可解决。</p>
+<h2 id="非确定性指令"><a href="#非确定性指令" class="headerlink" title="非确定性指令"></a>非确定性指令</h2><p>几乎所有 CPU 指令都是确定性的，但有些指令不是。RDTSC 是一种常见的非确定性 x86 指令，用于读取时间戳计数器。这种特殊指令很容易处理，因为 CPU 可以配置为对 RDTSC 进行捕获，Linux 通过 prctl API 公开了这一功能，因此我们可以对每个 RDTSC 进行捕获、仿真和记录。</p>
+<p>RDRAND 生成随机数，但愿不是确定性的。我们只在 GNU libstdc++ 中的一处使用过 RDRAND，因此 RR 对其进行了明确修补。</p>
+<p>CPUID 指令在很大程度上是确定性的，但它的一个特性是返回运行内核的索引，而该索引会影响 glibc 中的深层行为，并会随着内核在不同内核间迁移进程而发生变化。我们使用 Linux sched setaffinity API 强制所有跟踪线程在特定固定内核上运行，并在重放过程中强制它们在该内核上运行。</p>
+<p>如果我们能从用户空间捕获并仿真 CPUID 指令，就能在运行良好的程序中轻松避免上述大部分问题，因为这样我们就能屏蔽表示支持 RDRAND、硬件事务等的特征位，并记录和重放记录 CPU 返回的准确值。现代英特尔 CPU 支持这种功能（”CPUID 故障”）；我们正在为 Linux 添加用户可访问的 API。(事实上，它刚刚在 Linux 4.12 中发布）。</p>
+<h3 id="事务性指令"><a href="#事务性指令" class="headerlink" title="事务性指令"></a>事务性指令</h3><p>现代英特尔 CPU 支持两种形式的事务扩展。”受限事务内存”（”RTM”）将事务作为一种架构特性，使用 XBEGIN 和 XEND 指令显式启动和结束事务。”硬件锁消除”（”HLE”）通过在获取和释放锁的指令中添加 XACQUIRE 和 XRELEASE 前缀来支持隐式事务。后者是一种纯粹的向后兼容性能提示，不会改变可见的语义–失败的事务会自动重试，不会指定。前者由于显式暴露了事务失败，因此会产生可见的副作用。</p>
+<p>从用户空间的角度来看，RTM 是非决定性的，因为硬件事务的成功或失败取决于 CPU 缓存状态（可能还包括硬件中断的发生）。幸运的是，到目前为止，我们只发现系统的 pthreads 库在使用硬件事务，而且我们动态地对该库应用了自定义补丁，以禁止使用硬件事务。今后，我们将屏蔽 CPUID 中的 RTM 功能位，以阻止应用程序使用 RTM。</p>
+<p>HLE 不会产生用户空间可见的副作用，但常规的 RCB 计数器会计算 HLE 事务失败时退役的条件分支，因此在使用 HLE 时，该计数器是不确定的。我们无法通过 <code>CPUID</code> 禁用 HLE，因为 HLE 向后兼容意味着代码可以自由使用 HLE 前缀，而无需首先检查 CPUID。英特尔提供了一个选项（<code>IN_TXCP</code>），可以让硬件性能计数器只计算已提交事务中的事件，因此我们可以利用这个选项让 RCB 计数器重新具有确定性。遗憾的是，在 Linux 上，<code>IN_TXCP</code> 计数器无法在观察到一定数量的事件后配置为中断，因为这在某些情况下会导致无限循环。(情况是：计数器 C 被配置为在 N 个事件后中断，一个事务启动并执行了 N 个事件，中断触发并导致事务回滚，将计数器恢复为原始值，内核恢复进程，重复……）。我们的解决方案是使用一个非 <code>IN_TXCP</code> 计数器来触发中断，并使用一个 <code>IN_TXCP</code> 计数器来计算经过的事件。这意味着中断可能会提前触发，但这并不是问题，因为我们已经将其编程为提前触发。</p>
+<h2 id="减少Trace大小"><a href="#减少Trace大小" class="headerlink" title="减少Trace大小"></a>减少Trace大小</h2><p>对于许多应用程序来说，大部分输入都是内存映射文件，主要是可执行代码。在每次执行时将所有可执行文件和库复制到记录的跟踪中，会造成大量的时间和空间开销。RR 为内存映射的可执行文件创建硬链接，而不是复制它们；只要系统更新或重新编译将可执行文件替换为新文件，链接就会保留旧文件数据，而不是写入现有文件。这在实践中效果很好。</p>
+<p>更妙的是，XFS 和 Btrfs 等现代文件系统可提供文件（甚至文件中的块范围）的写时复制逻辑副本，非常适合我们的目的。当映射文件与记录的跟踪文件位于同一文件系统上，且文件系统支持克隆时，RR 就会将映射文件克隆到跟踪文件中。这些克隆操作在时间和空间上都是免费的，直到&#x2F;除非原始文件被修改或删除。</p>
+<p>RR 使用 <code>zlib</code> “deflate “方法压缩克隆文件和数据块之外的所有跟踪数据。现在有更好的压缩算法，我们应该在某个时候重新考虑这一选择。</p>
+<p>不过，有了这些优化，在实际应用中，轨迹存储就不是问题了。第 4.4 节介绍了一些结果。</p>
+<h1 id="进程中系统呼叫拦截"><a href="#进程中系统呼叫拦截" class="headerlink" title="进程中系统呼叫拦截"></a>进程中系统呼叫拦截</h1><p>上一节描述的方法可行，但开销之高令人失望（见下图 5）。核心问题在于，如图 1 所示，每一次跟踪器系统调用，跟踪器都要执行四次上下文切换：两次阻塞式 ptrace 通知，每次都需要从跟踪器到 RR 再到 RR 的上下文切换。对于常见的系统调用（如 gettimeofday 或从缓存文件读取），即使是一次上下文切换的成本也会使系统调用本身的成本相形见绌。为了大幅降低开销，我们必须避免在处理这些常见系统调用时将上下文切换到 RR。 因此，我们在记录进程中注入了一个库，它可以拦截常见的系统调用，在不触发 ptrace 陷阱的情况下执行系统调用，并将结果记录到与 RR 共享的专用缓冲区中。RR 每次收到同步停止通知时，都会将缓冲区刷新到其跟踪中。这个概念很简单，但有一些问题需要克服。</p>
+<p><img src="C:\Users\TG\AppData\Roaming\Typora\typora-user-images\image-20230919154232654.png" alt="image-20230919154232654"></p>
+<p>因此，我们在记录进程中注入了一个库，该库可拦截常见的系统调用，在不触发 ptrace 陷阱的情况下执行系统调用，并将结果记录到与 RR 共享的专用缓冲区中。RR 每次收到同步停止通知时，都会将缓冲区刷新到其跟踪中。这个概念很简单，但有一些问题需要克服。</p>
+<h2 id="拦截系统调用"><a href="#拦截系统调用" class="headerlink" title="拦截系统调用"></a>拦截系统调用</h2><p>在进程中拦截系统调用的常用技术是使用动态链接，在进行系统调用的 C 库函数上插入封装函数。在实践中，我们发现这种方法是不够的，因为应用程序会直接进行系统调用，而且由于 C 库的变化和应用程序需要自己预加载，这种方法也很脆弱[39, 6]）。</p>
+<p>相反，当被跟踪者进行系统调用时，RR 会通过 ptrace 陷阱收到通知，并尝试重写系统调用指令，以调用我们的拦截库。这很棘手，因为在 x86 系统中，系统调用指令只有两个字节长，但我们需要用五个字节的调用指令来替换它。(在 x86-64 上，为确保我们能从地址空间的任意位置调用拦截库，我们还需要在补丁代码的 2GB 范围内分配蹦床）。实际上，经常执行的系统调用指令后面都有一些已知的固定指令序列；例如，许多系统调用指令后面都有一个 cmpl $0xfffff001,%eax 指令来测试系统调用结果。我们在拦截库中添加了五个手写的存根，在返回打补丁代码前执行系统调用后的指令。在收到 ptrace 系统调用通知后，RR 会将系统调用指令及其后续指令替换为调用相应存根的指令。</p>
+<p>我们（试图）将所有系统调用指令重定向到拦截库，但为了简单起见，拦截库只包含最常见系统调用的封装器，对于其他系统调用，拦截库会返回到普通的 <code>ptrace-trapping </code>系统调用。</p>
+<h2 id="有选择地捕获系统调用"><a href="#有选择地捕获系统调用" class="headerlink" title="有选择地捕获系统调用"></a>有选择地捕获系统调用</h2><p><code>ptrace</code> 系统调用监控会触发所有系统调用的陷阱，但我们的拦截库需要避免特定系统调用的陷阱。幸运的是，现代 Linux 内核支持有选择地生成 ptrace 陷阱：<code>seccomp-bpf</code>。一个进程可以向另一个进程应用以字节码表示的<code> seccomp-bpf</code> 过滤函数；然后，对于目标进程执行的每一次系统调用，内核都会运行该过滤函数，并传入用户空间寄存器值，包括程序计数器。过滤器的结果会指示内核允许系统调用、以给定的 errno 失败、杀死目标进程或触发 ptrace 陷阱。执行过滤器的开销可以忽略不计，因为过滤器直接在内核中运行，并在大多数体系结构上编译为本地代码。</p>
+<p>图 2 展示了使用进程内系统调用拦截功能记录简单读取系统调用的过程。实线框代表拦截库中的代码，灰色框代表内核代码。</p>
+<p><img src="C:\Users\TG\AppData\Roaming\Typora\typora-user-images\image-20230919155534942.png" alt="image-20230919155534942"></p>
+<p>如上所述，RR 会在每个被跟踪进程的固定地址注入一个 “RR 页”。该页面包含一条特殊的系统调用指令–”未跟踪指令”。RR 会对每个被记录的进程应用 seccomp-bpf 过滤器，对每个系统调用触发 ptrace 陷阱–除非程序计数器位于未跟踪指令处，在这种情况下允许调用。 只要拦截库需要进行未跟踪的系统调用，就会使用该指令。</p>
+<h2 id="检测被阻塞的系统调用"><a href="#检测被阻塞的系统调用" class="headerlink" title="检测被阻塞的系统调用"></a>检测被阻塞的系统调用</h2><p>一些常见的系统调用有时会阻塞（例如在空管道上读取）。由于 RR 一次运行一个跟踪线程，如果一个线程在未通知 RR 的情况下进入了一个未跟踪的阻塞系统调用，它就会挂起，并可能导致整个记录陷入死锁（例如，如果另一个跟踪线程正要向管道<code>写入</code>内容）。我们需要内核在未跟踪系统调用阻塞时通知 RR 并挂起跟踪线程，以确保我们能调度不同的跟踪线程。</p>
+<p>我们使用 <code>Linux perf </code>事件系统监控 <code>PERF_COUNT_SW_CONTEXT_SWITCHES</code>。内核每次从 CPU 内核分拆线程时，都会引发其中一个事件。拦截库会监控每个线程的这些事件，并请求内核在每次事件发生时向受阻线程发送信号。这些信号会触发 ptrace 通知 RR，同时阻止线程继续执行。为避免出现虚假信号（例如，当线程因正常的时间片到期而取消调度时），通常会禁用该事件，并在可能阻塞的非跟踪系统调用中明确启用。不过，在启用和禁用事件之间的任何时刻都可能出现虚假 SWITCHES；我们会通过仔细检查跟踪状态来处理这些边缘情况。</p>
+<p>图 3 展示了使用系统调用拦截功能记录阻塞读取系统调用的过程。内核对线程进行调度，触发 perf 事件，向线程发送信号，重新调度线程，中断系统调用，并向记录器发送 ptrace 通知。记录器会进行记账，记录线程 T 中被拦截的系统调用已被中断，然后检查阻塞系统调用中的任何跟踪线程是否已进入系统调用退出阶段，并生成 ptrace 通知。在本例中，T2 完成了一个（未被拦截的）阻塞 futex 系统调用，因此我们继续执行 T2。</p>
+<p><img src="C:\Users\TG\AppData\Roaming\Typora\typora-user-images\image-20230919155730421.png" alt="image-20230919155730421"></p>
+<p>与此同时，T 中的读取系统调用被重新启动，并被当作普通的非拦截系统调用来处理。 其参数被改写为使用从头缓冲区。T 使用 PTRACE SYSCALL 恢复，这样线程就会在系统调用退出时停止。系统调用退出后，T 最终将被重新调度。此时，系统调用的退出将被记录下来。由于系统调用是正常记录的，因此它不应被记录在截取库的跟踪缓冲区中。因此，RR 在重新开始之前会在截取库的内存中设置一个 “中止提交 “标志。</p>
+<h2 id="信号处理"><a href="#信号处理" class="headerlink" title="信号处理"></a>信号处理</h2><p>如果拦截代码在记录系统调用结果的中途被上下文切换或异步信号打断，那将是灾难性的。当 ptrace 报告有信号到达拦截代码中的线程时，RR 会将信号藏匿起来，并设置一个标志，指示拦截代码在返回应用代码前必须执行一个跟踪的 “虚假 “系统调用，然后在不传递信号的情况下恢复跟踪。当拦截代码执行跟踪系统调用（”假 “系统调用，或我们没有快速自记录路径的其他系统调用）时，RR 会安排在允许跟踪系统调用继续进行之前（通过在跟踪系统调用入口点设置断点，同时存在隐藏的信号）耗尽隐藏的信号。</p>
+<p>一个棘手的边缘情况涉及未跟踪的 sigprocmask 系统调用。内核可能会在 sigprocmask 阻止信号之前，尝试向拦截库中的线程发送信号。如果 RR 将信号存储起来，并尝试在 sigprocmask 之后注入信号，则信号可能无法传递。 因此，当有匿藏信号时，RR 会在未跟踪的系统调用指令上设置断点。如果信号在未跟踪的 sigprocmask 之前到达，则会触发断点，RR 会模拟 sigprocmask 返回 EAGAIN，导致拦截代码自动使用跟踪的系统调用重试，这样 RR 就有机会注入所有储藏的信号（如上所述），并且总是成功。</p>
+<p>另一种困难的边缘情况涉及多个信号。正常的信号发送会自动屏蔽未来的信号，有时是永久屏蔽（例如使用 sigaction sa 屏蔽功能）。例如，假设信号 S1 和 S2 被发送到一个有两个线程 T1 和 T2 的进程，而 S1 的处理程序被配置为阻止 S2 并退出线程。然后，假设在 RR 下，内核将 S1 发送给 T1，此时 T1 处于拦截代码中；RR 将 S1 隐藏，并恢复 T1。如果内核将 S2 传递给 T1，我们就会遇到问题，因为任何线程都不会处理 S2，而在非记录执行期间，内核会将其传递给 T2。如果 S2 在 T1 中被阻塞，用户空间没有足够的信息来确定内核会将其发送到哪里（尤其是我们无法区分发送给特定线程的信号和发送给进程的信号）。</p>
+<p>因此，必须确保内核不会向已记录的线程发送信号，除非该线程肯定能处理该信号。当一个线程有一个已存储信号时，我们会阻止向该线程发送更多信号。这意味着一个线程永远不会有一个以上的匿名信号。</p>
+<h2 id="被中断的系统调用"><a href="#被中断的系统调用" class="headerlink" title="被中断的系统调用"></a>被中断的系统调用</h2><p>未跟踪系统调用可能会被信号中断，导致信号处理程序运行，之后未跟踪系统调用可能会恢复。这与上述处理阻塞的非跟踪系统调用类似，我们的处理方式也大致相同。主要的额外复杂因素是，当拦截库代码在堆栈上时，信号处理器可以运行应用程序代码。为了防止再次进入拦截库代码，我们在线程本地设置了一个 “锁定 “标志，以指示任何被拦截的系统调用在信号处理器返回之前，应避免尝试使用未跟踪的快速路径。</p>
+<h2 id="线程-本地存储-Thread-Local-Storage"><a href="#线程-本地存储-Thread-Local-Storage" class="headerlink" title="线程-本地存储 Thread-Local Storage"></a>线程-本地存储 Thread-Local Storage</h2><p>拦截库代码需要访问线程本地数据。遗憾的是，在某些罕见的情况下，标准的 Linux 线程本地数据机制无法正确设置，例如某些应用程序（Chromium！）使用原始克隆系统调用创建线程时。为了解决这个问题，RR 在每个进程中分配了一个固定地址的特殊 “线程本地 “内存页，并在每次上下文切换时拷贝掉旧线程的值，同时拷贝新线程的值到该内存页中。</p>
+<p>这种方法还简化了 fork 的处理。与普通的 Linux 线程本地存储不同，我们让线程本地在分叉后初始化为零。 这样，在分叉后调用拦截库时，它就可以重新初始化。</p>
+<h2 id="栈处理"><a href="#栈处理" class="headerlink" title="栈处理"></a>栈处理</h2><p>在 x86-64 上，允许叶子函数使用堆栈指针下方的 128 字节 “红色区域 “内存，以避免调整堆栈指针的代价。拦截库需要避免修改该内存。使用低于 “红色区域 “的内存是危险的，因为它可能导致虚假的堆栈溢出。(因此，进入拦截库的蹦床也会将堆栈切换到作为线程抓取缓冲区的一部分分配的临时堆栈。</p>
+<p>从理论上讲，这种堆栈切换可能会给应用程序信号处理器带来问题，因为它们希望在常规堆栈上被调用，但却看到了我们切换后的堆栈。 但在实践中，这还不是问题。如果出现问题，我们可能需要大幅修改应用信号处理策略，以便完全解除拦截库栈帧，并像中断原始系统调用指令一样运行应用信号处理程序。</p>
+<h2 id="处理重放"><a href="#处理重放" class="headerlink" title="处理重放"></a>处理重放</h2><p>从概念上讲，在录制过程中，我们需要将系统调用输出缓冲区复制到跟踪缓冲区，而在重放过程中，我们需要将跟踪缓冲区的结果复制到系统调用输出缓冲区。这是一个问题，因为拦截库是记录和重放的一部分，因此在两种情况下都应执行相同的代码。 (以前的用户级系统调用拦截工作[14, 38, 24, 32]对重放保真度的要求不那么严格，因此避免了这些问题）。</p>
+<p>出于这个原因（同时也是为了避免 2.3 节讨论的那种竞赛），拦截库会重定向系统调用输出，直接写入跟踪缓冲区。系统调用完成后，拦截库将输出数据从跟踪缓冲区复制到原始输出缓冲区。在重放过程中，未跟踪的系统调用指令被替换为 no-op，因此系统调用不会发生；结果已经存在于跟踪缓冲区中，因此从跟踪缓冲区到输出缓冲区的系统调用后拷贝可以满足我们的需要。</p>
+<p>在记录过程中，每个未跟踪的系统调用都会设置一个结果寄存器，拦截库会将其写入跟踪缓冲区。重放时必须从跟踪缓冲区读取结果寄存器。我们使用条件移动指令，使记录和重放之间的控制流完全一致。条件是从重放全局变量中加载的，因此保存条件的寄存器在很短的指令时间跨度内是不同的（之后会明确清除）。</p>
+<p>处理 “进出 “系统调用内存参数非常棘手。在录制过程中，我们会将输入缓冲区复制到跟踪缓冲区，将指向跟踪缓冲区的指针传递给系统调用，然后将跟踪缓冲区的内容复制回输入缓冲区。在重放过程中执行第一次复制将覆盖跟踪缓冲区中保存系统调用结果的值，因此在重放过程中，我们使用条件移动将源地址复制到目标地址，从而将复制变为无操作。</p>
+<p>我们可以允许重放拦截库，使其进一步偏离记录的行为，但必须非常小心。我们必须确保两条路径上的 RCB 计数完全相同，而且在退出拦截库或在拦截库内捕获 RR 时，寄存器值必须保持一致。 最简单的办法就是尽量减少分歧。</p>
+<p>截取库的重放可以稍加简化，方法是在重放过程中将未跟踪的系统调用转化为跟踪的系统调用。不过，对重放性能来说，重要的是重放未跟踪的系统调用时要避免上下文切换到 RR 监控进程，而对我们的目的来说，重放性能是非常重要的。</p>
+<h2 id="利用区块克隆优化读操作"><a href="#利用区块克隆优化读操作" class="headerlink" title="利用区块克隆优化读操作"></a>利用区块克隆优化读操作</h2><p>当输入文件与记录的跟踪文件位于同一文件系统，且文件系统支持文件块的写入复制克隆时，对于大块对齐读取，系统调用拦截代码会将数据克隆到每个线程的 “克隆数据 “跟踪文件中，从而绕过正常的系统调用记录逻辑。这大大减少了文件读取密集型工作负载的空间和时间开销；请参阅下一节。</p>
+<p>这种优化的工作原理是克隆输入块，然后从原始输入文件中读取输入数据。这就可能出现竞赛：在克隆和读取之间，另一个进程可能会覆盖输入文件数据，在这种情况下，重放时读取的数据将与记录时读取的数据不同，从而导致重放失败。不过，在 Linux 下，当文件读取与写入发生竞赛时，读取器可能会接收到新旧数据的任意混合，因此这种行为几乎肯定是一个严重的错误，而在实践中，这种错误似乎并不常见。从克隆数据文件而不是原始输入文件读取数据可以避免竞赛，但这样做的效果很差，因为它破坏了 Linux 的超前读取优化（因为克隆数据文件中的数据在需要时才会出现）。</p>
+<h2 id="回顾"><a href="#回顾" class="headerlink" title="回顾"></a>回顾</h2><p>进程内系统调用拦截在原理上看起来相当简单，但在实践中却是一个巨大的维护负担。它必须在记录和重放过程中保持工作状态不变，必须尽可能表现得与普通系统调用一样（例如，在信号方面是原子的），还必须防止各种应用程序的不当行为。它不能免受恶意应用程序的攻击。另一方面，没有它，我们就无法实现性能目标。</p>
+<h1 id="成果展示"><a href="#成果展示" class="headerlink" title="成果展示"></a>成果展示</h1><h2 id="工作量"><a href="#工作量" class="headerlink" title="工作量"></a>工作量</h2><p>选择基准测试的目的是为了说明 RR 的优缺点，同时也代表真实世界的使用情况。对这些基准进行了调整，使其适合在系统内存中运行（以尽量减少 I&#x2F;O 对测试结果的影响），每个基准的运行时间约为 30 秒（cp 除外，因为其 30 秒的运行时间要求其不适合在内存中运行）。</p>
+<p>cp 使用 cp -a 复制了 glibc 的 git 签出（修订版 2d02fd07）（根据 du -h 显示，15200 个文件构成 732MB 的数据）。cp 是单线程的，大量使用同步读取和其他各种文件系统相关的系统调用。</p>
+<p>make builds DynamoRio [11]（版本 6.1.0）时使用 make -j8（仅限于单核时省略 -j8）。这将测试许多短命进程的潜在并行执行能力。</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="https://github.com/TUGOhost">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%91%98%E8%A6%81"><span class="toc-number">1.</span> <span class="toc-text">摘要</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%8B%E7%BB%8D"><span class="toc-number">2.</span> <span class="toc-text">介绍</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AE%BE%E8%AE%A1"><span class="toc-number">3.</span> <span class="toc-text">设计</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">3.1.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%81%BF%E5%85%8D%E6%95%B0%E6%8D%AE%E7%AB%9E%E4%BA%89"><span class="toc-number">3.2.</span> <span class="toc-text">避免数据竞争</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8"><span class="toc-number">3.3.</span> <span class="toc-text">系统调用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%92%E7%97%95%E7%BC%93%E5%86%B2%E5%8C%BA-Scratch-Buffers"><span class="toc-number">3.3.1.</span> <span class="toc-text">划痕缓冲区 Scratch Buffers</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ptrace%E6%A8%A1%E6%8B%9F"><span class="toc-number">3.3.2.</span> <span class="toc-text">ptrace模拟</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9C%A8trance%E7%8E%AF%E5%A2%83%E4%B8%8B%E6%89%A7%E8%A1%8C%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8"><span class="toc-number">3.3.3.</span> <span class="toc-text">在trance环境下执行系统调用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E6%A0%B8%E5%91%BD%E5%90%8D%E7%A9%BA%E9%97%B4"><span class="toc-number">3.3.4.</span> <span class="toc-text">内核命名空间</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Seccomp"><span class="toc-number">3.3.5.</span> <span class="toc-text">Seccomp</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E5%BB%BA%E6%A8%A1%E5%AE%9E%E8%B7%B5"><span class="toc-number">3.3.6.</span> <span class="toc-text">系统调用建模实践</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%87%8D%E6%94%BE"><span class="toc-number">3.3.7.</span> <span class="toc-text">重放</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%87%8D%E6%94%BE%E5%A4%8D%E6%9D%82%E7%9A%84%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8"><span class="toc-number">3.3.8.</span> <span class="toc-text">重放复杂的系统调用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%E5%99%A8"><span class="toc-number">3.3.9.</span> <span class="toc-text">信号处理器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%E5%92%8C%E4%B8%AD%E6%96%AD%E7%9A%84%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8"><span class="toc-number">3.3.10.</span> <span class="toc-text">信号处理和中断的系统调用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%82%E6%AD%A5%E4%BA%8B%E4%BB%B6"><span class="toc-number">3.4.</span> <span class="toc-text">异步事件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9D%9E%E7%A1%AE%E5%AE%9A%E6%80%A7%E6%80%A7%E8%83%BD%E8%AE%A1%E6%95%B0%E5%99%A8"><span class="toc-number">3.4.1.</span> <span class="toc-text">非确定性性能计数器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9D%9E%E7%A1%AE%E5%AE%9A%E8%AE%A1%E6%95%B0%E5%99%A8%E7%9A%84%E6%9B%BF%E4%BB%A3%E6%96%B9%E6%B3%95"><span class="toc-number">3.4.2.</span> <span class="toc-text">非确定计数器的替代方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%99%9A%E6%9C%9F%E4%B8%AD%E6%96%AD%E7%82%B9%E7%81%AB-Late-Interrupt-Firing"><span class="toc-number">3.4.3.</span> <span class="toc-text">晚期中断点火 Late Interrupt Firing</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B1%E4%BA%AB%E5%86%85%E5%AD%98"><span class="toc-number">3.5.</span> <span class="toc-text">共享内存</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9D%9E%E7%A1%AE%E5%AE%9A%E6%80%A7%E6%8C%87%E4%BB%A4"><span class="toc-number">3.6.</span> <span class="toc-text">非确定性指令</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8B%E5%8A%A1%E6%80%A7%E6%8C%87%E4%BB%A4"><span class="toc-number">3.6.1.</span> <span class="toc-text">事务性指令</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%8F%E5%B0%91Trace%E5%A4%A7%E5%B0%8F"><span class="toc-number">3.7.</span> <span class="toc-text">减少Trace大小</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E4%B8%AD%E7%B3%BB%E7%BB%9F%E5%91%BC%E5%8F%AB%E6%8B%A6%E6%88%AA"><span class="toc-number">4.</span> <span class="toc-text">进程中系统呼叫拦截</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8B%A6%E6%88%AA%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8"><span class="toc-number">4.1.</span> <span class="toc-text">拦截系统调用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%89%E9%80%89%E6%8B%A9%E5%9C%B0%E6%8D%95%E8%8E%B7%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8"><span class="toc-number">4.2.</span> <span class="toc-text">有选择地捕获系统调用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A3%80%E6%B5%8B%E8%A2%AB%E9%98%BB%E5%A1%9E%E7%9A%84%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8"><span class="toc-number">4.3.</span> <span class="toc-text">检测被阻塞的系统调用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86"><span class="toc-number">4.4.</span> <span class="toc-text">信号处理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A2%AB%E4%B8%AD%E6%96%AD%E7%9A%84%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8"><span class="toc-number">4.5.</span> <span class="toc-text">被中断的系统调用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BA%BF%E7%A8%8B-%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8-Thread-Local-Storage"><span class="toc-number">4.6.</span> <span class="toc-text">线程-本地存储 Thread-Local Storage</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%88%E5%A4%84%E7%90%86"><span class="toc-number">4.7.</span> <span class="toc-text">栈处理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%84%E7%90%86%E9%87%8D%E6%94%BE"><span class="toc-number">4.8.</span> <span class="toc-text">处理重放</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%A9%E7%94%A8%E5%8C%BA%E5%9D%97%E5%85%8B%E9%9A%86%E4%BC%98%E5%8C%96%E8%AF%BB%E6%93%8D%E4%BD%9C"><span class="toc-number">4.9.</span> <span class="toc-text">利用区块克隆优化读操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9E%E9%A1%BE"><span class="toc-number">4.10.</span> <span class="toc-text">回顾</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%88%90%E6%9E%9C%E5%B1%95%E7%A4%BA"><span class="toc-number">5.</span> <span class="toc-text">成果展示</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B7%A5%E4%BD%9C%E9%87%8F"><span class="toc-number">5.1.</span> <span class="toc-text">工作量</span></a></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://tugohost.github.io.com/2023/09/16/rr_debugger/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://tugohost.github.io.com/2023/09/16/rr_debugger/&text=[译文]可部署性工程记录和回放扩展技术报告 rr-debuger"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://tugohost.github.io.com/2023/09/16/rr_debugger/&title=[译文]可部署性工程记录和回放扩展技术报告 rr-debuger"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://tugohost.github.io.com/2023/09/16/rr_debugger/&is_video=false&description=[译文]可部署性工程记录和回放扩展技术报告 rr-debuger"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=[译文]可部署性工程记录和回放扩展技术报告 rr-debuger&body=Check out this article: http://tugohost.github.io.com/2023/09/16/rr_debugger/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://tugohost.github.io.com/2023/09/16/rr_debugger/&title=[译文]可部署性工程记录和回放扩展技术报告 rr-debuger"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://tugohost.github.io.com/2023/09/16/rr_debugger/&title=[译文]可部署性工程记录和回放扩展技术报告 rr-debuger"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://tugohost.github.io.com/2023/09/16/rr_debugger/&title=[译文]可部署性工程记录和回放扩展技术报告 rr-debuger"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://tugohost.github.io.com/2023/09/16/rr_debugger/&title=[译文]可部署性工程记录和回放扩展技术报告 rr-debuger"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://tugohost.github.io.com/2023/09/16/rr_debugger/&name=[译文]可部署性工程记录和回放扩展技术报告 rr-debuger&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://tugohost.github.io.com/2023/09/16/rr_debugger/&t=[译文]可部署性工程记录和回放扩展技术报告 rr-debuger"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2018-2023
+    TUGOhost
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/TUGOhost">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
