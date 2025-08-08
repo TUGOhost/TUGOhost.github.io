@@ -9,12 +9,12 @@
     <meta name="description" content="前言一直好奇，MIUI的隐私行为咋做的，但是一直没有什么动力去分析。目前公司有个新的活，做出来一套无侵入式的隐私分析沙箱，一开始认为单纯的填写相应API代码就行了，后来实操下来发现真的太天真了，那个UID调用的API无从知晓，而且无法控制UID，所以突然想看看MIUI的隐私行为咋做的，才有这篇小文章。 过程一开始肯定要定位那个App具体实现了隐私行为功能了，所以直接用adb的命令直接获取到隐私行为">
 <meta property="og:type" content="article">
 <meta property="og:title" content="MIUI隐私行为逆向分析">
-<meta property="og:url" content="http://tugohost.github.io.com/2023/01/01/MIUI_PrivacyManager/index.html">
+<meta property="og:url" content="https://tugohost.github.io/2023/01/01/MIUI_PrivacyManager/index.html">
 <meta property="og:site_name" content="TUGOhost">
 <meta property="og:description" content="前言一直好奇，MIUI的隐私行为咋做的，但是一直没有什么动力去分析。目前公司有个新的活，做出来一套无侵入式的隐私分析沙箱，一开始认为单纯的填写相应API代码就行了，后来实操下来发现真的太天真了，那个UID调用的API无从知晓，而且无法控制UID，所以突然想看看MIUI的隐私行为咋做的，才有这篇小文章。 过程一开始肯定要定位那个App具体实现了隐私行为功能了，所以直接用adb的命令直接获取到隐私行为">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-01-01T02:28:25.000Z">
-<meta property="article:modified_time" content="2025-08-08T16:22:26.500Z">
+<meta property="article:modified_time" content="2025-08-08T16:39:00.317Z">
 <meta property="article:author" content="TUGOhost">
 <meta property="article:tag" content="逆向">
 <meta name="twitter:card" content="summary">
@@ -74,11 +74,7 @@
      --><!--
        --><li><a href="/archives/">Writing</a></li><!--
      --><!--
-       --><li><a target="_blank" rel="noopener" href="https://github.com/TUGOhost">Projects</a></li><!--
-     --><!--
-       --><li><a href="/books/">Books</a></li><!--
-     --><!--
-       --><li><a href="/photo/">Photo</a></li><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">Projects</a></li><!--
      -->
       </ul>
     </span>
@@ -102,17 +98,17 @@
     <br/>
     <div id="share" style="display: none">
       <ul>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://tugohost.github.io.com/2023/01/01/MIUI_PrivacyManager/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://tugohost.github.io.com/2023/01/01/MIUI_PrivacyManager/&text=MIUI隐私行为逆向分析"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://tugohost.github.io.com/2023/01/01/MIUI_PrivacyManager/&title=MIUI隐私行为逆向分析"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://tugohost.github.io.com/2023/01/01/MIUI_PrivacyManager/&is_video=false&description=MIUI隐私行为逆向分析"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=MIUI隐私行为逆向分析&body=Check out this article: http://tugohost.github.io.com/2023/01/01/MIUI_PrivacyManager/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://tugohost.github.io.com/2023/01/01/MIUI_PrivacyManager/&title=MIUI隐私行为逆向分析"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://tugohost.github.io.com/2023/01/01/MIUI_PrivacyManager/&title=MIUI隐私行为逆向分析"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://tugohost.github.io.com/2023/01/01/MIUI_PrivacyManager/&title=MIUI隐私行为逆向分析"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://tugohost.github.io.com/2023/01/01/MIUI_PrivacyManager/&title=MIUI隐私行为逆向分析"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://tugohost.github.io.com/2023/01/01/MIUI_PrivacyManager/&name=MIUI隐私行为逆向分析&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://tugohost.github.io.com/2023/01/01/MIUI_PrivacyManager/&t=MIUI隐私行为逆向分析"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://tugohost.github.io/2023/01/01/MIUI_PrivacyManager/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://tugohost.github.io/2023/01/01/MIUI_PrivacyManager/&text=MIUI隐私行为逆向分析"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://tugohost.github.io/2023/01/01/MIUI_PrivacyManager/&title=MIUI隐私行为逆向分析"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://tugohost.github.io/2023/01/01/MIUI_PrivacyManager/&is_video=false&description=MIUI隐私行为逆向分析"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=MIUI隐私行为逆向分析&body=Check out this article: https://tugohost.github.io/2023/01/01/MIUI_PrivacyManager/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://tugohost.github.io/2023/01/01/MIUI_PrivacyManager/&title=MIUI隐私行为逆向分析"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://tugohost.github.io/2023/01/01/MIUI_PrivacyManager/&title=MIUI隐私行为逆向分析"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://tugohost.github.io/2023/01/01/MIUI_PrivacyManager/&title=MIUI隐私行为逆向分析"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://tugohost.github.io/2023/01/01/MIUI_PrivacyManager/&title=MIUI隐私行为逆向分析"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://tugohost.github.io/2023/01/01/MIUI_PrivacyManager/&name=MIUI隐私行为逆向分析&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://tugohost.github.io/2023/01/01/MIUI_PrivacyManager/&t=MIUI隐私行为逆向分析"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
@@ -127,44 +123,7 @@
 
     
     <div class="content index py4 ">
-        <header id="header">
-  <a class="u-url u-uid" href="/">
-  
-    
-      <img id="logo" alt class="u-logo" src="/images/logo.png" />
-    
-  
-    <div id="title">
-      <h1 class="p-name">TUGOhost</h1>
-    </div>
-  </a>
-  <div id="nav">
-    <ul>
-      <li class="icon">
-        <a href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-2x"></i></a>
-      </li>
-      <!--
-     --><li><a href="/">Home</a></li><!--
-   --><!--
-     --><li><a href="/about/">About</a></li><!--
-   --><!--
-     --><li><a href="/archives/">Writing</a></li><!--
-   --><!--
-     --><li><a target="_blank" rel="noopener" href="https://github.com/TUGOhost">Projects</a></li><!--
-   --><!--
-     --><li><a href="/books/">Books</a></li><!--
-   --><!--
-     --><li><a href="/photo/">Photo</a></li><!--
-   -->
-      <li>
-        <button id="theme-toggle" aria-label="Toggle theme" title="切换深色/浅色主题">
-          <i class="fa-solid fa-moon"></i>
-        </button>
-      </li>
-    </ul>
-  </div>
-</header>
-
+        
         <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
   <header>
     
@@ -257,11 +216,7 @@
         
           <li><a href="/archives/">Writing</a></li>
         
-          <li><a target="_blank" rel="noopener" href="https://github.com/TUGOhost">Projects</a></li>
-        
-          <li><a href="/books/">Books</a></li>
-        
-          <li><a href="/photo/">Photo</a></li>
+          <li><a target="_blank" rel="noopener" href="http://github.com/probberechts">Projects</a></li>
         
       </ul>
     </div>
@@ -275,17 +230,17 @@
 
     <div id="share-footer" style="display: none">
       <ul>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://tugohost.github.io.com/2023/01/01/MIUI_PrivacyManager/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://tugohost.github.io.com/2023/01/01/MIUI_PrivacyManager/&text=MIUI隐私行为逆向分析"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://tugohost.github.io.com/2023/01/01/MIUI_PrivacyManager/&title=MIUI隐私行为逆向分析"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://tugohost.github.io.com/2023/01/01/MIUI_PrivacyManager/&is_video=false&description=MIUI隐私行为逆向分析"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=MIUI隐私行为逆向分析&body=Check out this article: http://tugohost.github.io.com/2023/01/01/MIUI_PrivacyManager/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://tugohost.github.io.com/2023/01/01/MIUI_PrivacyManager/&title=MIUI隐私行为逆向分析"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://tugohost.github.io.com/2023/01/01/MIUI_PrivacyManager/&title=MIUI隐私行为逆向分析"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://tugohost.github.io.com/2023/01/01/MIUI_PrivacyManager/&title=MIUI隐私行为逆向分析"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://tugohost.github.io.com/2023/01/01/MIUI_PrivacyManager/&title=MIUI隐私行为逆向分析"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://tugohost.github.io.com/2023/01/01/MIUI_PrivacyManager/&name=MIUI隐私行为逆向分析&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://tugohost.github.io.com/2023/01/01/MIUI_PrivacyManager/&t=MIUI隐私行为逆向分析"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://tugohost.github.io/2023/01/01/MIUI_PrivacyManager/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://tugohost.github.io/2023/01/01/MIUI_PrivacyManager/&text=MIUI隐私行为逆向分析"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://tugohost.github.io/2023/01/01/MIUI_PrivacyManager/&title=MIUI隐私行为逆向分析"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://tugohost.github.io/2023/01/01/MIUI_PrivacyManager/&is_video=false&description=MIUI隐私行为逆向分析"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=MIUI隐私行为逆向分析&body=Check out this article: https://tugohost.github.io/2023/01/01/MIUI_PrivacyManager/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://tugohost.github.io/2023/01/01/MIUI_PrivacyManager/&title=MIUI隐私行为逆向分析"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://tugohost.github.io/2023/01/01/MIUI_PrivacyManager/&title=MIUI隐私行为逆向分析"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://tugohost.github.io/2023/01/01/MIUI_PrivacyManager/&title=MIUI隐私行为逆向分析"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://tugohost.github.io/2023/01/01/MIUI_PrivacyManager/&title=MIUI隐私行为逆向分析"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://tugohost.github.io/2023/01/01/MIUI_PrivacyManager/&name=MIUI隐私行为逆向分析&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://tugohost.github.io/2023/01/01/MIUI_PrivacyManager/&t=MIUI隐私行为逆向分析"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
@@ -308,7 +263,7 @@
     Copyright &copy;
     
     
-    2018-2025
+    2016-2025
     TUGOhost
   </div>
   <div class="footer-right">
@@ -321,11 +276,7 @@
      --><!--
        --><li><a href="/archives/">Writing</a></li><!--
      --><!--
-       --><li><a target="_blank" rel="noopener" href="https://github.com/TUGOhost">Projects</a></li><!--
-     --><!--
-       --><li><a href="/books/">Books</a></li><!--
-     --><!--
-       --><li><a href="/photo/">Photo</a></li><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">Projects</a></li><!--
      -->
       </ul>
     </nav>
