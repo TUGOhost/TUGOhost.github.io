@@ -1,392 +1,55 @@
-<!DOCTYPE html>
-<html lang=en>
-<head>
-    <!-- so meta -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="HandheldFriendly" content="True">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-    <meta name="description" content="切片是一种数据结构，这种数据结构便于使用和管理数据集合。切片是围绕动态数组的概念构建的，可以按需自动增长和缩小。切片的动态增长是通过内置函数append来实现的。这个函数可以快速且高效的增长切片。还可以通过对切片再次切片来缩小切片的大小。因为切片的底层内存也是在连续块中分配的，所以切片还能获得索引、迭代以及垃圾回收优化的好处。 内部实现切片是一个很小的对象，对底层数组进行了抽象，并提供相关的操作方">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Go语言中切片的内部实现和基础功能">
-<meta property="og:url" content="https://tugohost.github.io/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E5%88%87%E7%89%87%E7%9A%84%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0%E5%92%8C%E5%9F%BA%E7%A1%80%E5%8A%9F%E8%83%BD/index.html">
-<meta property="og:site_name" content="TUGOhost">
-<meta property="og:description" content="切片是一种数据结构，这种数据结构便于使用和管理数据集合。切片是围绕动态数组的概念构建的，可以按需自动增长和缩小。切片的动态增长是通过内置函数append来实现的。这个函数可以快速且高效的增长切片。还可以通过对切片再次切片来缩小切片的大小。因为切片的底层内存也是在连续块中分配的，所以切片还能获得索引、迭代以及垃圾回收优化的好处。 内部实现切片是一个很小的对象，对底层数组进行了抽象，并提供相关的操作方">
-<meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://tugohost.github.io/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E5%88%87%E7%89%87%E7%9A%84%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0%E5%92%8C%E5%9F%BA%E7%A1%80%E5%8A%9F%E8%83%BD/1.png">
-<meta property="og:image" content="https://tugohost.github.io/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E5%88%87%E7%89%87%E7%9A%84%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0%E5%92%8C%E5%9F%BA%E7%A1%80%E5%8A%9F%E8%83%BD/2.png">
-<meta property="og:image" content="https://tugohost.github.io/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E5%88%87%E7%89%87%E7%9A%84%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0%E5%92%8C%E5%9F%BA%E7%A1%80%E5%8A%9F%E8%83%BD/3.png">
-<meta property="og:image" content="https://tugohost.github.io/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E5%88%87%E7%89%87%E7%9A%84%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0%E5%92%8C%E5%9F%BA%E7%A1%80%E5%8A%9F%E8%83%BD/4.png">
-<meta property="article:published_time" content="2019-05-20T02:28:25.000Z">
-<meta property="article:modified_time" content="2025-11-10T08:53:08.126Z">
-<meta property="article:author" content="TUGOhost">
-<meta property="article:tag" content="Golang">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://tugohost.github.io/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E5%88%87%E7%89%87%E7%9A%84%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0%E5%92%8C%E5%9F%BA%E7%A1%80%E5%8A%9F%E8%83%BD/1.png">
-    
-    
-      
-        
-          <link rel="shortcut icon" href="/images/favicon.ico">
-        
-      
-      
-        
-          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
-        
-      
-      
-        
-          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
-        
-      
-    
-    <!-- title -->
-    <title>Go语言中切片的内部实现和基础功能</title>
-    <!-- async scripts -->
-    <!-- Google Analytics -->
-
-
-    <!-- Umami Analytics -->
-
-
-    <!-- styles -->
-    
-<link rel="stylesheet" href="/css/style.css">
-
-    <!-- persian styles -->
-    
-    <!-- rss -->
-    
-    
-	<!-- mathjax -->
-	
-<meta name="generator" content="Hexo 6.3.0"></head>
-
-<body class="max-width mx-auto px3 ltr">
-    
-      <div id="header-post">
-  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
-  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
-  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
-  <span id="menu">
-    <span id="nav">
-      <ul>
-        <!--
-       --><li><a href="/">Home</a></li><!--
-     --><!--
-       --><li><a href="/about/">About</a></li><!--
-     --><!--
-       --><li><a href="/archives/">Writing</a></li><!--
-     --><!--
-       --><li><a target="_blank" rel="noopener" href="https://github.com/TUGOhost">Projects</a></li><!--
-     --><!--
-       --><li><a href="/books/">Books</a></li><!--
-     --><!--
-       --><li><a href="/photo/">Photo</a></li><!--
-     -->
-      </ul>
-    </span>
-    <br/>
-    <span id="actions">
-      <ul>
-        
-        <li><a class="icon" aria-label="Previous post" href="/2020/09/10/Frida%E5%85%A5%E9%97%A8/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
-        
-        
-        <li><a class="icon" aria-label="Next post" href="/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E6%95%B0%E7%BB%84%E7%9A%84%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0%E5%92%8C%E5%9F%BA%E7%A1%80%E5%8A%9F%E8%83%BD/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
-        
-        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
-        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
-      </ul>
-      <span id="i-prev" class="info" style="display:none;">Previous post</span>
-      <span id="i-next" class="info" style="display:none;">Next post</span>
-      <span id="i-top" class="info" style="display:none;">Back to top</span>
-      <span id="i-share" class="info" style="display:none;">Share post</span>
-    </span>
-    <br/>
-    <div id="share" style="display: none">
-      <ul>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://tugohost.github.io/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E5%88%87%E7%89%87%E7%9A%84%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0%E5%92%8C%E5%9F%BA%E7%A1%80%E5%8A%9F%E8%83%BD/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://tugohost.github.io/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E5%88%87%E7%89%87%E7%9A%84%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0%E5%92%8C%E5%9F%BA%E7%A1%80%E5%8A%9F%E8%83%BD/&text=Go语言中切片的内部实现和基础功能"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://tugohost.github.io/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E5%88%87%E7%89%87%E7%9A%84%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0%E5%92%8C%E5%9F%BA%E7%A1%80%E5%8A%9F%E8%83%BD/&title=Go语言中切片的内部实现和基础功能"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://tugohost.github.io/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E5%88%87%E7%89%87%E7%9A%84%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0%E5%92%8C%E5%9F%BA%E7%A1%80%E5%8A%9F%E8%83%BD/&is_video=false&description=Go语言中切片的内部实现和基础功能"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=Go语言中切片的内部实现和基础功能&body=Check out this article: https://tugohost.github.io/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E5%88%87%E7%89%87%E7%9A%84%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0%E5%92%8C%E5%9F%BA%E7%A1%80%E5%8A%9F%E8%83%BD/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://tugohost.github.io/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E5%88%87%E7%89%87%E7%9A%84%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0%E5%92%8C%E5%9F%BA%E7%A1%80%E5%8A%9F%E8%83%BD/&title=Go语言中切片的内部实现和基础功能"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://tugohost.github.io/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E5%88%87%E7%89%87%E7%9A%84%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0%E5%92%8C%E5%9F%BA%E7%A1%80%E5%8A%9F%E8%83%BD/&title=Go语言中切片的内部实现和基础功能"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://tugohost.github.io/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E5%88%87%E7%89%87%E7%9A%84%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0%E5%92%8C%E5%9F%BA%E7%A1%80%E5%8A%9F%E8%83%BD/&title=Go语言中切片的内部实现和基础功能"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://tugohost.github.io/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E5%88%87%E7%89%87%E7%9A%84%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0%E5%92%8C%E5%9F%BA%E7%A1%80%E5%8A%9F%E8%83%BD/&title=Go语言中切片的内部实现和基础功能"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://tugohost.github.io/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E5%88%87%E7%89%87%E7%9A%84%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0%E5%92%8C%E5%9F%BA%E7%A1%80%E5%8A%9F%E8%83%BD/&name=Go语言中切片的内部实现和基础功能&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://tugohost.github.io/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E5%88%87%E7%89%87%E7%9A%84%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0%E5%92%8C%E5%9F%BA%E7%A1%80%E5%8A%9F%E8%83%BD/&t=Go语言中切片的内部实现和基础功能"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
-</ul>
-
-    </div>
-    
-    
-      <div id="toc">
-        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.</span> <span class="toc-text">内部实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E5%92%8C%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-number">2.</span> <span class="toc-text">创建和初始化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E5%88%87%E7%89%87"><span class="toc-number">3.</span> <span class="toc-text">使用切片</span></a></li></ol>
-      </div>
-    
-  </span>
-</div>
-
-    
-    <div class="content index py4 ">
-        <header id="header">
-  <a class="u-url u-uid" href="/">
-  
-    
-      <img id="logo" alt class="u-logo" src="/images/logo.png" />
-    
-  
-    <div id="title">
-      <h1 class="p-name">TUGOhost</h1>
-    </div>
-  </a>
-  <div id="nav">
-    <ul>
-      <li class="icon">
-        <a href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-2x"></i></a>
-      </li>
-      <!--
-     --><li><a href="/">Home</a></li><!--
-   --><!--
-     --><li><a href="/about/">About</a></li><!--
-   --><!--
-     --><li><a href="/archives/">Writing</a></li><!--
-   --><!--
-     --><li><a target="_blank" rel="noopener" href="https://github.com/TUGOhost">Projects</a></li><!--
-   --><!--
-     --><li><a href="/books/">Books</a></li><!--
-   --><!--
-     --><li><a href="/photo/">Photo</a></li><!--
-   -->
-      <li>
-        <button id="theme-toggle" aria-label="Toggle theme" title="切换深色/浅色主题">
-          <i class="fa-solid fa-moon"></i>
-        </button>
-      </li>
-    </ul>
-  </div>
-</header>
-
-        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
-  <header>
-    
-    <h1 class="posttitle p-name" itemprop="name headline">
-        Go语言中切片的内部实现和基础功能
-    </h1>
-
-
-
-    <div class="meta">
-      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
-        <span class="p-name" itemprop="name">TUGOhost</span>
-      </span>
-      
-    <div class="postdate">
-      
-        <time datetime="2019-05-20T02:28:25.000Z" class="dt-published" itemprop="datePublished">2019-05-20</time>
-        
-      
-    </div>
-
-
-      
-
-      
-    <div class="article-tag">
-        <i class="fa-solid fa-tag"></i>
-        <a class="p-category" href="/tags/Golang/" rel="tag">Golang</a>
-    </div>
-
-
-    </div>
-  </header>
-  
-
-  <div class="content e-content" itemprop="articleBody">
-    <p>切片是一种数据结构，这种数据结构便于使用和管理数据集合。切片是围绕动态数组的概念构建的，可以按需自动增长和缩小。切片的动态增长是通过内置函数append来实现的。这个函数可以快速且高效的增长切片。还可以通过对切片再次切片来缩小切片的大小。因为切片的底层内存也是在连续块中分配的，所以切片还能获得索引、迭代以及垃圾回收优化的好处。</p>
-<h3 id="内部实现"><a href="#内部实现" class="headerlink" title="内部实现"></a>内部实现</h3><p>切片是一个很小的对象，对底层数组进行了抽象，并提供相关的操作方法。切片有3个字段的数据结构，这些数据结构包含Go语言需要操作底层数组的元数据。<br><img src="/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E5%88%87%E7%89%87%E7%9A%84%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0%E5%92%8C%E5%9F%BA%E7%A1%80%E5%8A%9F%E8%83%BD/1.png"></p>
+<!DOCTYPE html><html lang="zh-CN" data-theme="auto"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="切片是一种数据结构，这种数据结构便于使用和管理数据集合。切片是围绕动态数组的概念构建的，可以按需自动增长和缩小。切片的动态增长是通过内置函数append来实现的。这个函数可以快速且高效的增长切片。还可以通过对切片再次切片来缩小切片的大小。因"><meta name="color-scheme" content="light dark"><link rel="icon" href="/images/favicon.ico"><link rel="apple-touch-icon" href="/images/apple-touch-icon.png"><title>Go语言中切片的内部实现和基础功能 · TUGOhost</title><script>
+      (() => {
+        let saved = null;
+        try {
+          saved = window.localStorage.getItem("theme");
+        } catch {
+          saved = null;
+        }
+        document.documentElement.dataset.theme =
+          saved === "light" || saved === "dark" ? saved : "auto";
+      })();
+    </script><link rel="stylesheet" href="/_astro/BaseLayout.CPniBOtw.css"></head> <body> <div class="site-shell"> <header class="site-header"> <a class="brand" href="/" aria-label="TUGOhost home"> <span class="brand-mark" aria-hidden="true">T</span> <span class="brand-text"> <span class="brand-title">TUGOhost</span> <span class="brand-subtitle">日常记录与技术分享</span> </span> </a> <nav class="site-nav" aria-label="Main navigation"> <a href="/"> 首页 </a><a href="/tech/"> 技术 </a><a href="/daily/"> 日常 </a><a href="/archives/"> 归档 </a><a href="/tags/"> 标签 </a><a href="/books/"> 书单 </a><a href="/photo/"> 照片 </a><a href="/about/"> 关于 </a> <button class="theme-toggle" type="button" data-theme-toggle aria-label="Theme: auto"> <span data-theme-label>Auto</span> </button> </nav> </header> <main class="main">  <article class="post-frame tech"> <div class="post-body"> <header class="post-header"> <span class="post-kicker tech"> Tech </span> <h1 class="post-title">Go语言中切片的内部实现和基础功能</h1> <p class="post-summary">切片是一种数据结构，这种数据结构便于使用和管理数据集合。切片是围绕动态数组的概念构建的，可以按需自动增长和缩小。切片的动态增长是通过内置函数append来实现的。这个函数可以快速且高效的增长切片。还可以通过对切片再次切片来缩小切片的大小。因</p> <div class="post-meta"> <time datetime="2019-05-20T02:28:25.000Z">2019-05-20</time> <span> · </span> <a href="/2019/05/20/Go语言中切片的内部实现和基础功能/">Permalink</a> </div> <nav class="post-tags" aria-label="Post tags"> <a href="/tags/Golang/">Golang</a> </nav> </header> <div class="article-content">  <p>切片是一种数据结构，这种数据结构便于使用和管理数据集合。切片是围绕动态数组的概念构建的，可以按需自动增长和缩小。切片的动态增长是通过内置函数append来实现的。这个函数可以快速且高效的增长切片。还可以通过对切片再次切片来缩小切片的大小。因为切片的底层内存也是在连续块中分配的，所以切片还能获得索引、迭代以及垃圾回收优化的好处。</p>
+<h3 id="内部实现">内部实现</h3>
+<p>切片是一个很小的对象，对底层数组进行了抽象，并提供相关的操作方法。切片有3个字段的数据结构，这些数据结构包含Go语言需要操作底层数组的元数据。
+<img alt="" loading="lazy" decoding="async" width="710" height="330" src="/_astro/1.DZp2H9Rk_KUTD2.webp" srcset=""></p>
 <p>这3个字段分别是指向底层数组的指针、切片访问的元素的个数（即长度）和切片允许增长到的元素个数（即容量）。</p>
-<h3 id="创建和初始化"><a href="#创建和初始化" class="headerlink" title="创建和初始化"></a>创建和初始化</h3><ol>
-<li>make和切片字面量<br>一种创建切片的方法是使用内置的make函数。当使用make时，需要传入一个参数，指定切片的长度：</li>
+<h3 id="创建和初始化">创建和初始化</h3>
+<ol>
+<li>make和切片字面量
+一种创建切片的方法是使用内置的make函数。当使用make时，需要传入一个参数，指定切片的长度：</li>
 </ol>
 <p><code>slice := make([]string, 5)</code></p>
 <p>如果只指定长度，那么切片的容量和长度相等。也可以分别指定长度和容量：</p>
 <p><code>slice := make([]int, 3, 5)</code></p>
 <p>分别指定长度和容量时，创建的切片，底层数组的长度是指定的容量，但是初始化后并不能访问所有的数组元素。</p>
 <p>通过切片字面量来声明切片</p>
-<p><code>slice := []string&#123;&quot;Red&quot;,&quot;Blue&quot;,&quot;Green&quot;,&quot;Yello&quot;,&quot;Pink&quot;&#125;</code></p>
+<p><code>slice := []string{"Red","Blue","Green","Yello","Pink"}</code></p>
 <p>使用索引声明切片</p>
-<p><code>slice := []string&#123;99:&quot;&quot;&#125;</code></p>
+<p><code>slice := []string{99:""}</code></p>
 <p>声明数组和声明切片的不同</p>
-<p><code>array := [3]int&#123;10,20,30&#125;slice := []int&#123;10,20,30&#125;</code></p>
+<p><code>array := [3]int{10,20,30}slice := []int{10,20,30}</code></p>
 <ol>
-<li>nil和空切片<br>创建nil切片</li>
+<li>nil和空切片
+创建nil切片</li>
 </ol>
 <p><code>var slice []int</code></p>
-<p><img src="/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E5%88%87%E7%89%87%E7%9A%84%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0%E5%92%8C%E5%9F%BA%E7%A1%80%E5%8A%9F%E8%83%BD/2.png"></p>
+<p><img alt="" loading="lazy" decoding="async" width="646" height="246" src="/_astro/2.W00xZk5F_ZgiE3p.webp" srcset=""></p>
 <p>声明空切片</p>
-<p><code>slice := make([]int, 0)slice := []int&#123;&#125;</code></p>
-<p><img src="/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E5%88%87%E7%89%87%E7%9A%84%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0%E5%92%8C%E5%9F%BA%E7%A1%80%E5%8A%9F%E8%83%BD/3.png" alt="img"></p>
-<h3 id="使用切片"><a href="#使用切片" class="headerlink" title="使用切片"></a>使用切片</h3><ol>
-<li>赋值和切片<br>对切片里某个索引指向的元素赋值和对数组里某个索引指向的元素赋值的方法完全一样。使用<code>[]</code>操作符就可以改变某个元素的值。</li>
-</ol>
-<p><code>slice := []int&#123;10,20,30,40,50&#125;slice[1] = 25</code></p>
-<p>使用切片创建切片</p>
-<p><code>slice := []int&#123;10,20,30,40,50&#125;newSlice := slice[1:3]</code></p>
+<p><code>slice := make([]int, 0)slice := []int{}</code></p>
+<p><img alt="img" loading="lazy" decoding="async" width="646" height="246" src="/_astro/3.CnCfjLnh_31ROV.webp" srcset=""></p>
+<h3 id="使用切片">使用切片</h3>
 <ol>
-<li>切片增长<br>相对于数组而言，使用切片的一个好处是，可以按需增加切片的容量。Go语言内置的append函数会处理增加长度时的所有操作细节。<br>要使用append，需要一个被操作的切片和一个要追加的值:</li>
+<li>赋值和切片
+对切片里某个索引指向的元素赋值和对数组里某个索引指向的元素赋值的方法完全一样。使用<code>[]</code>操作符就可以改变某个元素的值。</li>
 </ol>
-<p><code>slice := []int&#123;10,20,30,40,50&#125;newSlice := slice[1:3]newSlice = append(newSlice, 60)</code></p>
-<p><img src="/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E5%88%87%E7%89%87%E7%9A%84%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0%E5%92%8C%E5%9F%BA%E7%A1%80%E5%8A%9F%E8%83%BD/4.png" alt="img"></p>
-
-  </div>
-</article>
-
-
-
-        
-          <div id="footer-post-container">
-  <div id="footer-post">
-
-    <div id="nav-footer" style="display: none">
-      <ul>
-        
-          <li><a href="/">Home</a></li>
-        
-          <li><a href="/about/">About</a></li>
-        
-          <li><a href="/archives/">Writing</a></li>
-        
-          <li><a target="_blank" rel="noopener" href="https://github.com/TUGOhost">Projects</a></li>
-        
-          <li><a href="/books/">Books</a></li>
-        
-          <li><a href="/photo/">Photo</a></li>
-        
-      </ul>
-    </div>
-
-    
-    
-      <div id="toc-footer" style="display: none">
-        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.</span> <span class="toc-text">内部实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E5%92%8C%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-number">2.</span> <span class="toc-text">创建和初始化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E5%88%87%E7%89%87"><span class="toc-number">3.</span> <span class="toc-text">使用切片</span></a></li></ol>
-      </div>
-    
-
-    <div id="share-footer" style="display: none">
-      <ul>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://tugohost.github.io/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E5%88%87%E7%89%87%E7%9A%84%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0%E5%92%8C%E5%9F%BA%E7%A1%80%E5%8A%9F%E8%83%BD/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://tugohost.github.io/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E5%88%87%E7%89%87%E7%9A%84%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0%E5%92%8C%E5%9F%BA%E7%A1%80%E5%8A%9F%E8%83%BD/&text=Go语言中切片的内部实现和基础功能"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://tugohost.github.io/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E5%88%87%E7%89%87%E7%9A%84%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0%E5%92%8C%E5%9F%BA%E7%A1%80%E5%8A%9F%E8%83%BD/&title=Go语言中切片的内部实现和基础功能"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://tugohost.github.io/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E5%88%87%E7%89%87%E7%9A%84%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0%E5%92%8C%E5%9F%BA%E7%A1%80%E5%8A%9F%E8%83%BD/&is_video=false&description=Go语言中切片的内部实现和基础功能"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=Go语言中切片的内部实现和基础功能&body=Check out this article: https://tugohost.github.io/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E5%88%87%E7%89%87%E7%9A%84%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0%E5%92%8C%E5%9F%BA%E7%A1%80%E5%8A%9F%E8%83%BD/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://tugohost.github.io/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E5%88%87%E7%89%87%E7%9A%84%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0%E5%92%8C%E5%9F%BA%E7%A1%80%E5%8A%9F%E8%83%BD/&title=Go语言中切片的内部实现和基础功能"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://tugohost.github.io/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E5%88%87%E7%89%87%E7%9A%84%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0%E5%92%8C%E5%9F%BA%E7%A1%80%E5%8A%9F%E8%83%BD/&title=Go语言中切片的内部实现和基础功能"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://tugohost.github.io/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E5%88%87%E7%89%87%E7%9A%84%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0%E5%92%8C%E5%9F%BA%E7%A1%80%E5%8A%9F%E8%83%BD/&title=Go语言中切片的内部实现和基础功能"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://tugohost.github.io/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E5%88%87%E7%89%87%E7%9A%84%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0%E5%92%8C%E5%9F%BA%E7%A1%80%E5%8A%9F%E8%83%BD/&title=Go语言中切片的内部实现和基础功能"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://tugohost.github.io/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E5%88%87%E7%89%87%E7%9A%84%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0%E5%92%8C%E5%9F%BA%E7%A1%80%E5%8A%9F%E8%83%BD/&name=Go语言中切片的内部实现和基础功能&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://tugohost.github.io/2019/05/20/Go%E8%AF%AD%E8%A8%80%E4%B8%AD%E5%88%87%E7%89%87%E7%9A%84%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0%E5%92%8C%E5%9F%BA%E7%A1%80%E5%8A%9F%E8%83%BD/&t=Go语言中切片的内部实现和基础功能"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
-</ul>
-
-    </div>
-
-    <div id="actions-footer">
-        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
-        
-          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
-        
-        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
-        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
-    </div>
-
-  </div>
-</div>
-
-        
-        <footer id="footer">
-  <div class="footer-left">
-    Copyright &copy;
-    
-    
-    2018-2025
-    TUGOhost
-  </div>
-  <div class="footer-right">
-    <nav>
-      <ul>
-        <!--
-       --><li><a href="/">Home</a></li><!--
-     --><!--
-       --><li><a href="/about/">About</a></li><!--
-     --><!--
-       --><li><a href="/archives/">Writing</a></li><!--
-     --><!--
-       --><li><a target="_blank" rel="noopener" href="https://github.com/TUGOhost">Projects</a></li><!--
-     --><!--
-       --><li><a href="/books/">Books</a></li><!--
-     --><!--
-       --><li><a href="/photo/">Photo</a></li><!--
-     -->
-      </ul>
-    </nav>
-  </div>
-</footer>
-
-    </div>
-    <!-- styles -->
-
-
-
-  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
-
-
-    <!-- jquery -->
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
-
-
-
-
-<!-- clipboard -->
-
-  
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
-  
-  <script type="text/javascript">
-  $(function() {
-    // copy-btn HTML
-    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
-    btn += '<i class="fa-regular fa-clone"></i>';
-    btn += '</span>';
-    // mount it!
-    $(".highlight table").before(btn);
-    var clip = new ClipboardJS('.btn-copy', {
-      text: function(trigger) {
-        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
-      }
-    });
-    clip.on('success', function(e) {
-      e.trigger.setAttribute('aria-label', "Copied!");
-      e.clearSelection();
-    })
-  })
-  </script>
-
-
-<script src="/js/main.js"></script>
-
-<!-- search -->
-
-<!-- Baidu Analytics -->
-
-<!-- Cloudflare Analytics -->
-
-<!-- Disqus Comments -->
-
-<!-- utterances Comments -->
-
-</body>
-</html>
+<p><code>slice := []int{10,20,30,40,50}slice[1] = 25</code></p>
+<p>使用切片创建切片</p>
+<p><code>slice := []int{10,20,30,40,50}newSlice := slice[1:3]</code></p>
+<ol>
+<li>切片增长
+相对于数组而言，使用切片的一个好处是，可以按需增加切片的容量。Go语言内置的append函数会处理增加长度时的所有操作细节。
+要使用append，需要一个被操作的切片和一个要追加的值:</li>
+</ol>
+<p><code>slice := []int{10,20,30,40,50}newSlice := slice[1:3]newSlice = append(newSlice, 60)</code></p>
+<p><img alt="img" loading="lazy" decoding="async" width="849" height="507" src="/_astro/4.Y364akmR_2rmJUS.webp" srcset=""></p>  </div> </div> <aside class="toc" aria-label="Table of contents"> <a style="padding-left: 0.8rem" href="#内部实现"> 内部实现 </a><a style="padding-left: 0.8rem" href="#创建和初始化"> 创建和初始化 </a><a style="padding-left: 0.8rem" href="#使用切片"> 使用切片 </a> </aside> </article>  </main> <footer class="site-footer"> <span>© 2026 TUGOhost</span> <span>  <a href="https://github.com/TUGOhost">GitHub</a> ·  <a href="mailto:huo4nbtf@duck.com">Mail</a> </span> </footer> </div> <dialog class="lightbox" data-lightbox aria-label="Image preview"> <div class="lightbox-inner"> <button type="button">Close</button> <img alt=""> </div> </dialog> <script type="module" src="data:text/javascript;base64,Y29uc3Qgcm9vdCA9IGRvY3VtZW50LmRvY3VtZW50RWxlbWVudDsKY29uc3QgdG9nZ2xlID0gZG9jdW1lbnQucXVlcnlTZWxlY3RvcigiW2RhdGEtdGhlbWUtdG9nZ2xlXSIpOwpjb25zdCBsYWJlbCA9IHRvZ2dsZT8ucXVlcnlTZWxlY3RvcigiW2RhdGEtdGhlbWUtbGFiZWxdIik7CmNvbnN0IG1vZGVzID0gWyJhdXRvIiwgImxpZ2h0IiwgImRhcmsiXTsKCmZ1bmN0aW9uIGdldFNhdmVkTW9kZSgpIHsKICBsZXQgc2F2ZWQgPSBudWxsOwogIHRyeSB7CiAgICBzYXZlZCA9IHdpbmRvdy5sb2NhbFN0b3JhZ2UuZ2V0SXRlbSgidGhlbWUiKTsKICB9IGNhdGNoIHsKICAgIHNhdmVkID0gbnVsbDsKICB9CiAgcmV0dXJuIG1vZGVzLmluY2x1ZGVzKHNhdmVkKSA/IHNhdmVkIDogImF1dG8iOwp9CgpmdW5jdGlvbiBzZXRNb2RlKG1vZGUpIHsKICByb290LmRhdGFzZXQudGhlbWUgPSBtb2RlOwogIHRyeSB7CiAgICBpZiAobW9kZSA9PT0gImF1dG8iKSB7CiAgICAgIHdpbmRvdy5sb2NhbFN0b3JhZ2UucmVtb3ZlSXRlbSgidGhlbWUiKTsKICAgIH0gZWxzZSB7CiAgICAgIHdpbmRvdy5sb2NhbFN0b3JhZ2Uuc2V0SXRlbSgidGhlbWUiLCBtb2RlKTsKICAgIH0KICB9IGNhdGNoIHsKICAgIC8vIFRoZW1lIHN3aXRjaGluZyBzdGlsbCB3b3JrcyBmb3IgdGhlIGN1cnJlbnQgcGFnZSB3aGVuIHN0b3JhZ2UgaXMgdW5hdmFpbGFibGUuCiAgfQogIGlmIChsYWJlbCkgewogICAgbGFiZWwudGV4dENvbnRlbnQgPSBtb2RlID09PSAiYXV0byIgPyAiQXV0byIgOiBtb2RlID09PSAibGlnaHQiID8gIkxpZ2h0IiA6ICJEYXJrIjsKICB9CiAgdG9nZ2xlPy5zZXRBdHRyaWJ1dGUoImFyaWEtbGFiZWwiLCBgVGhlbWU6ICR7bW9kZX1gKTsKfQoKc2V0TW9kZShnZXRTYXZlZE1vZGUoKSk7Cgp0b2dnbGU/LmFkZEV2ZW50TGlzdGVuZXIoImNsaWNrIiwgKCkgPT4gewogIGNvbnN0IGN1cnJlbnQgPSByb290LmRhdGFzZXQudGhlbWUgfHwgImF1dG8iOwogIGNvbnN0IG5leHQgPSBtb2Rlc1sobW9kZXMuaW5kZXhPZihjdXJyZW50KSArIDEpICUgbW9kZXMubGVuZ3RoXTsKICBzZXRNb2RlKG5leHQpOwp9KTsK"></script> <script type="module" src="data:text/javascript;base64,Y29uc3QgZGlhbG9nID0gZG9jdW1lbnQucXVlcnlTZWxlY3RvcigiW2RhdGEtbGlnaHRib3hdIik7CmNvbnN0IGltYWdlID0gZGlhbG9nPy5xdWVyeVNlbGVjdG9yKCJpbWciKTsKY29uc3QgY2xvc2VCdXR0b24gPSBkaWFsb2c/LnF1ZXJ5U2VsZWN0b3IoImJ1dHRvbiIpOwoKZG9jdW1lbnQuYWRkRXZlbnRMaXN0ZW5lcigiY2xpY2siLCAoZXZlbnQpID0+IHsKICBjb25zdCB0YXJnZXQgPSBldmVudC50YXJnZXQ7CiAgaWYgKCEodGFyZ2V0IGluc3RhbmNlb2YgSFRNTEltYWdlRWxlbWVudCkpIHsKICAgIHJldHVybjsKICB9CiAgaWYgKCF0YXJnZXQuY2xvc2VzdCgiLmFydGljbGUtY29udGVudCIpKSB7CiAgICByZXR1cm47CiAgfQogIGlmICghZGlhbG9nIHx8ICFpbWFnZSkgewogICAgcmV0dXJuOwogIH0KCiAgaW1hZ2Uuc3JjID0gdGFyZ2V0LmN1cnJlbnRTcmMgfHwgdGFyZ2V0LnNyYzsKICBpbWFnZS5hbHQgPSB0YXJnZXQuYWx0IHx8ICIiOwogIGRpYWxvZy5zaG93TW9kYWwoKTsKfSk7CgpjbG9zZUJ1dHRvbj8uYWRkRXZlbnRMaXN0ZW5lcigiY2xpY2siLCAoKSA9PiBkaWFsb2c/LmNsb3NlKCkpOwoKZGlhbG9nPy5hZGRFdmVudExpc3RlbmVyKCJjbGljayIsIChldmVudCkgPT4gewogIGlmIChldmVudC50YXJnZXQgPT09IGRpYWxvZykgewogICAgZGlhbG9nLmNsb3NlKCk7CiAgfQp9KTsK"></script> </body> </html>

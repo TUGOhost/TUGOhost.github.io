@@ -1,223 +1,22 @@
-<!DOCTYPE html>
-<html lang=en>
-<head>
-    <!-- so meta -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="HandheldFriendly" content="True">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-    <meta name="description" content="转载自: 补天付费厂商漏洞挖掘小技巧 补天不收的漏洞 补天付费厂商漏洞挖掘小技巧1、子域名收集 ​    不要想着去撸主站，主站一出来几乎被人轮了个遍，跟大牛抢肉吃，难，放弃。 ​    所以我们一般都是百度找子域名  例如www.xxxxx.com是主站，关键字 inurl:xxxxx.com。如果这样能找到不少子域名。   1.1 补天不收的漏洞 ​    1、反射XSS ​    2、CSR">
-<meta property="og:type" content="article">
-<meta property="og:title" content="补天付费厂商漏洞挖掘小技巧">
-<meta property="og:url" content="https://tugohost.github.io/2018/02/13/%E8%A1%A5%E5%A4%A9%E4%BB%98%E8%B4%B9%E5%8E%82%E5%95%86%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E5%B0%8F%E6%8A%80%E5%B7%A7/index.html">
-<meta property="og:site_name" content="TUGOhost">
-<meta property="og:description" content="转载自: 补天付费厂商漏洞挖掘小技巧 补天不收的漏洞 补天付费厂商漏洞挖掘小技巧1、子域名收集 ​    不要想着去撸主站，主站一出来几乎被人轮了个遍，跟大牛抢肉吃，难，放弃。 ​    所以我们一般都是百度找子域名  例如www.xxxxx.com是主站，关键字 inurl:xxxxx.com。如果这样能找到不少子域名。   1.1 补天不收的漏洞 ​    1、反射XSS ​    2、CSR">
-<meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://tugohost.github.io/2018/02/13/%E8%A1%A5%E5%A4%A9%E4%BB%98%E8%B4%B9%E5%8E%82%E5%95%86%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E5%B0%8F%E6%8A%80%E5%B7%A7/1.jpg">
-<meta property="og:image" content="https://tugohost.github.io/2018/02/13/%E8%A1%A5%E5%A4%A9%E4%BB%98%E8%B4%B9%E5%8E%82%E5%95%86%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E5%B0%8F%E6%8A%80%E5%B7%A7/2.jpg">
-<meta property="og:image" content="https://tugohost.github.io/2018/02/13/%E8%A1%A5%E5%A4%A9%E4%BB%98%E8%B4%B9%E5%8E%82%E5%95%86%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E5%B0%8F%E6%8A%80%E5%B7%A7/3.jpg">
-<meta property="og:image" content="https://tugohost.github.io/2018/02/13/%E8%A1%A5%E5%A4%A9%E4%BB%98%E8%B4%B9%E5%8E%82%E5%95%86%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E5%B0%8F%E6%8A%80%E5%B7%A7/4.jpg">
-<meta property="og:image" content="https://tugohost.github.io/2018/02/13/%E8%A1%A5%E5%A4%A9%E4%BB%98%E8%B4%B9%E5%8E%82%E5%95%86%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E5%B0%8F%E6%8A%80%E5%B7%A7/5.jpg">
-<meta property="og:image" content="https://tugohost.github.io/2018/02/13/%E8%A1%A5%E5%A4%A9%E4%BB%98%E8%B4%B9%E5%8E%82%E5%95%86%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E5%B0%8F%E6%8A%80%E5%B7%A7/6.jpg">
-<meta property="og:image" content="https://tugohost.github.io/2018/02/13/%E8%A1%A5%E5%A4%A9%E4%BB%98%E8%B4%B9%E5%8E%82%E5%95%86%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E5%B0%8F%E6%8A%80%E5%B7%A7/9.jpg">
-<meta property="og:image" content="https://tugohost.github.io/2018/02/13/%E8%A1%A5%E5%A4%A9%E4%BB%98%E8%B4%B9%E5%8E%82%E5%95%86%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E5%B0%8F%E6%8A%80%E5%B7%A7/7.jpg">
-<meta property="og:image" content="https://tugohost.github.io/2018/02/13/%E8%A1%A5%E5%A4%A9%E4%BB%98%E8%B4%B9%E5%8E%82%E5%95%86%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E5%B0%8F%E6%8A%80%E5%B7%A7/8.jpg">
-<meta property="og:image" content="https://tugohost.github.io/2018/02/13/%E8%A1%A5%E5%A4%A9%E4%BB%98%E8%B4%B9%E5%8E%82%E5%95%86%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E5%B0%8F%E6%8A%80%E5%B7%A7/1.png">
-<meta property="og:image" content="https://tugohost.github.io/2018/02/13/%E8%A1%A5%E5%A4%A9%E4%BB%98%E8%B4%B9%E5%8E%82%E5%95%86%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E5%B0%8F%E6%8A%80%E5%B7%A7/2.png">
-<meta property="article:published_time" content="2018-02-13T02:28:25.000Z">
-<meta property="article:modified_time" content="2025-11-10T08:53:08.163Z">
-<meta property="article:author" content="TUGOhost">
-<meta property="article:tag" content="漏洞">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://tugohost.github.io/2018/02/13/%E8%A1%A5%E5%A4%A9%E4%BB%98%E8%B4%B9%E5%8E%82%E5%95%86%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E5%B0%8F%E6%8A%80%E5%B7%A7/1.jpg">
-    
-    
-      
-        
-          <link rel="shortcut icon" href="/images/favicon.ico">
-        
-      
-      
-        
-          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
-        
-      
-      
-        
-          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
-        
-      
-    
-    <!-- title -->
-    <title>补天付费厂商漏洞挖掘小技巧</title>
-    <!-- async scripts -->
-    <!-- Google Analytics -->
-
-
-    <!-- Umami Analytics -->
-
-
-    <!-- styles -->
-    
-<link rel="stylesheet" href="/css/style.css">
-
-    <!-- persian styles -->
-    
-    <!-- rss -->
-    
-    
-	<!-- mathjax -->
-	
-<meta name="generator" content="Hexo 6.3.0"></head>
-
-<body class="max-width mx-auto px3 ltr">
-    
-      <div id="header-post">
-  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
-  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
-  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
-  <span id="menu">
-    <span id="nav">
-      <ul>
-        <!--
-       --><li><a href="/">Home</a></li><!--
-     --><!--
-       --><li><a href="/about/">About</a></li><!--
-     --><!--
-       --><li><a href="/archives/">Writing</a></li><!--
-     --><!--
-       --><li><a target="_blank" rel="noopener" href="https://github.com/TUGOhost">Projects</a></li><!--
-     --><!--
-       --><li><a href="/books/">Books</a></li><!--
-     --><!--
-       --><li><a href="/photo/">Photo</a></li><!--
-     -->
-      </ul>
-    </span>
-    <br/>
-    <span id="actions">
-      <ul>
-        
-        <li><a class="icon" aria-label="Previous post" href="/2018/04/30/CISCN2018-WP/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
-        
-        
-        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
-        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
-      </ul>
-      <span id="i-prev" class="info" style="display:none;">Previous post</span>
-      <span id="i-next" class="info" style="display:none;">Next post</span>
-      <span id="i-top" class="info" style="display:none;">Back to top</span>
-      <span id="i-share" class="info" style="display:none;">Share post</span>
-    </span>
-    <br/>
-    <div id="share" style="display: none">
-      <ul>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://tugohost.github.io/2018/02/13/%E8%A1%A5%E5%A4%A9%E4%BB%98%E8%B4%B9%E5%8E%82%E5%95%86%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E5%B0%8F%E6%8A%80%E5%B7%A7/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://tugohost.github.io/2018/02/13/%E8%A1%A5%E5%A4%A9%E4%BB%98%E8%B4%B9%E5%8E%82%E5%95%86%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E5%B0%8F%E6%8A%80%E5%B7%A7/&text=补天付费厂商漏洞挖掘小技巧"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://tugohost.github.io/2018/02/13/%E8%A1%A5%E5%A4%A9%E4%BB%98%E8%B4%B9%E5%8E%82%E5%95%86%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E5%B0%8F%E6%8A%80%E5%B7%A7/&title=补天付费厂商漏洞挖掘小技巧"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://tugohost.github.io/2018/02/13/%E8%A1%A5%E5%A4%A9%E4%BB%98%E8%B4%B9%E5%8E%82%E5%95%86%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E5%B0%8F%E6%8A%80%E5%B7%A7/&is_video=false&description=补天付费厂商漏洞挖掘小技巧"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=补天付费厂商漏洞挖掘小技巧&body=Check out this article: https://tugohost.github.io/2018/02/13/%E8%A1%A5%E5%A4%A9%E4%BB%98%E8%B4%B9%E5%8E%82%E5%95%86%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E5%B0%8F%E6%8A%80%E5%B7%A7/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://tugohost.github.io/2018/02/13/%E8%A1%A5%E5%A4%A9%E4%BB%98%E8%B4%B9%E5%8E%82%E5%95%86%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E5%B0%8F%E6%8A%80%E5%B7%A7/&title=补天付费厂商漏洞挖掘小技巧"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://tugohost.github.io/2018/02/13/%E8%A1%A5%E5%A4%A9%E4%BB%98%E8%B4%B9%E5%8E%82%E5%95%86%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E5%B0%8F%E6%8A%80%E5%B7%A7/&title=补天付费厂商漏洞挖掘小技巧"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://tugohost.github.io/2018/02/13/%E8%A1%A5%E5%A4%A9%E4%BB%98%E8%B4%B9%E5%8E%82%E5%95%86%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E5%B0%8F%E6%8A%80%E5%B7%A7/&title=补天付费厂商漏洞挖掘小技巧"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://tugohost.github.io/2018/02/13/%E8%A1%A5%E5%A4%A9%E4%BB%98%E8%B4%B9%E5%8E%82%E5%95%86%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E5%B0%8F%E6%8A%80%E5%B7%A7/&title=补天付费厂商漏洞挖掘小技巧"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://tugohost.github.io/2018/02/13/%E8%A1%A5%E5%A4%A9%E4%BB%98%E8%B4%B9%E5%8E%82%E5%95%86%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E5%B0%8F%E6%8A%80%E5%B7%A7/&name=补天付费厂商漏洞挖掘小技巧&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://tugohost.github.io/2018/02/13/%E8%A1%A5%E5%A4%A9%E4%BB%98%E8%B4%B9%E5%8E%82%E5%95%86%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E5%B0%8F%E6%8A%80%E5%B7%A7/&t=补天付费厂商漏洞挖掘小技巧"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
-</ul>
-
-    </div>
-    
-    
-      <div id="toc">
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%A1%A5%E5%A4%A9%E4%BB%98%E8%B4%B9%E5%8E%82%E5%95%86%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E5%B0%8F%E6%8A%80%E5%B7%A7"><span class="toc-number">1.</span> <span class="toc-text">补天付费厂商漏洞挖掘小技巧</span></a></li></ol>
-      </div>
-    
-  </span>
-</div>
-
-    
-    <div class="content index py4 ">
-        <header id="header">
-  <a class="u-url u-uid" href="/">
-  
-    
-      <img id="logo" alt class="u-logo" src="/images/logo.png" />
-    
-  
-    <div id="title">
-      <h1 class="p-name">TUGOhost</h1>
-    </div>
-  </a>
-  <div id="nav">
-    <ul>
-      <li class="icon">
-        <a href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-2x"></i></a>
-      </li>
-      <!--
-     --><li><a href="/">Home</a></li><!--
-   --><!--
-     --><li><a href="/about/">About</a></li><!--
-   --><!--
-     --><li><a href="/archives/">Writing</a></li><!--
-   --><!--
-     --><li><a target="_blank" rel="noopener" href="https://github.com/TUGOhost">Projects</a></li><!--
-   --><!--
-     --><li><a href="/books/">Books</a></li><!--
-   --><!--
-     --><li><a href="/photo/">Photo</a></li><!--
-   -->
-      <li>
-        <button id="theme-toggle" aria-label="Toggle theme" title="切换深色/浅色主题">
-          <i class="fa-solid fa-moon"></i>
-        </button>
-      </li>
-    </ul>
-  </div>
-</header>
-
-        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
-  <header>
-    
-    <h1 class="posttitle p-name" itemprop="name headline">
-        补天付费厂商漏洞挖掘小技巧
-    </h1>
-
-
-
-    <div class="meta">
-      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
-        <span class="p-name" itemprop="name">TUGOhost</span>
-      </span>
-      
-    <div class="postdate">
-      
-        <time datetime="2018-02-13T02:28:25.000Z" class="dt-published" itemprop="datePublished">2018-02-13</time>
-        
-      
-    </div>
-
-
-      
-
-      
-    <div class="article-tag">
-        <i class="fa-solid fa-tag"></i>
-        <a class="p-category" href="/tags/%E6%BC%8F%E6%B4%9E/" rel="tag">漏洞</a>
-    </div>
-
-
-    </div>
-  </header>
-  
-
-  <div class="content e-content" itemprop="articleBody">
-    <p>转载自:</p>
-<p><a target="_blank" rel="noopener" href="https://bbs.ichunqiu.com/thread-9602-1-1.html">补天付费厂商漏洞挖掘小技巧</a></p>
-<p><a target="_blank" rel="noopener" href="https://bbs.ichunqiu.com/thread-33204-1-1.html">补天不收的漏洞</a></p>
-<h1 id="补天付费厂商漏洞挖掘小技巧"><a href="#补天付费厂商漏洞挖掘小技巧" class="headerlink" title="补天付费厂商漏洞挖掘小技巧"></a>补天付费厂商漏洞挖掘小技巧</h1><p><strong>1、子域名收集</strong></p>
+<!DOCTYPE html><html lang="zh-CN" data-theme="auto"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="转载自:"><meta name="color-scheme" content="light dark"><link rel="icon" href="/images/favicon.ico"><link rel="apple-touch-icon" href="/images/apple-touch-icon.png"><title>补天付费厂商漏洞挖掘小技巧 · TUGOhost</title><script>
+      (() => {
+        let saved = null;
+        try {
+          saved = window.localStorage.getItem("theme");
+        } catch {
+          saved = null;
+        }
+        document.documentElement.dataset.theme =
+          saved === "light" || saved === "dark" ? saved : "auto";
+      })();
+    </script><link rel="stylesheet" href="/_astro/BaseLayout.CPniBOtw.css"></head> <body> <div class="site-shell"> <header class="site-header"> <a class="brand" href="/" aria-label="TUGOhost home"> <span class="brand-mark" aria-hidden="true">T</span> <span class="brand-text"> <span class="brand-title">TUGOhost</span> <span class="brand-subtitle">日常记录与技术分享</span> </span> </a> <nav class="site-nav" aria-label="Main navigation"> <a href="/"> 首页 </a><a href="/tech/"> 技术 </a><a href="/daily/"> 日常 </a><a href="/archives/"> 归档 </a><a href="/tags/"> 标签 </a><a href="/books/"> 书单 </a><a href="/photo/"> 照片 </a><a href="/about/"> 关于 </a> <button class="theme-toggle" type="button" data-theme-toggle aria-label="Theme: auto"> <span data-theme-label>Auto</span> </button> </nav> </header> <main class="main">  <article class="post-frame tech"> <div class="post-body"> <header class="post-header"> <span class="post-kicker tech"> Tech </span> <h1 class="post-title">补天付费厂商漏洞挖掘小技巧</h1> <p class="post-summary">转载自:</p> <div class="post-meta"> <time datetime="2018-02-13T02:28:25.000Z">2018-02-13</time> <span> · </span> <a href="/2018/02/13/补天付费厂商漏洞挖掘小技巧/">Permalink</a> </div> <nav class="post-tags" aria-label="Post tags"> <a href="/tags/%E6%BC%8F%E6%B4%9E/">漏洞</a> </nav> </header> <div class="article-content">  <p>转载自:</p>
+<p><a href="https://bbs.ichunqiu.com/thread-9602-1-1.html">补天付费厂商漏洞挖掘小技巧</a></p>
+<p><a href="https://bbs.ichunqiu.com/thread-33204-1-1.html">补天不收的漏洞</a></p>
+<h1 id="补天付费厂商漏洞挖掘小技巧">补天付费厂商漏洞挖掘小技巧</h1>
+<p><strong>1、子域名收集</strong></p>
 <p>​    不要想着去撸主站，主站一出来几乎被人轮了个遍，跟大牛抢肉吃，难，放弃。</p>
-<p>​    所以我们一般都是百度找子域名  例如<a target="_blank" rel="noopener" href="http://www.xxxxx.com/">www.xxxxx.com</a>是主站，关键字 inurl:xxxxx.com。如果这样能找到不少子域名。</p>
-<p>  <strong>1.1 补天不收的漏洞</strong></p>
+<p>​    所以我们一般都是百度找子域名  例如<a href="http://www.xxxxx.com/">www.xxxxx.com</a>是主站，关键字 inurl:xxxxx.com。如果这样能找到不少子域名。</p>
+<p><strong>1.1 补天不收的漏洞</strong></p>
 <p>​    1、反射XSS</p>
 <p>​    2、CSRF</p>
 <p>​    3、目录遍历</p>
@@ -232,41 +31,43 @@
 <p>　12、DOS不收</p>
 <p>　　</p>
 <p><strong>2、尝试常用漏洞</strong></p>
-<p> ** 2.1 爆破**</p>
+<p>** 2.1 爆破**</p>
 <p>​    找到一个系统，如果没验证码，那么爆破吧，得到一发账号，进后台才有意思。</p>
 <p>​    不怕神一样的队友，就怕猪一般的对手~</p>
-<p><img src="/2018/02/13/%E8%A1%A5%E5%A4%A9%E4%BB%98%E8%B4%B9%E5%8E%82%E5%95%86%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E5%B0%8F%E6%8A%80%E5%B7%A7/1.jpg"></p>
+<p><img alt="" loading="lazy" decoding="async" width="204" height="204" src="/_astro/1.HxLttNpR_Z10L6o6.webp" srcset=""></p>
 <p><strong>2.2 CMS通用漏洞</strong></p>
-<p>​    如果网站是利用某CMS建站的，可以去试试CMS通用漏洞，特别是如果有前台高危漏洞，那就很有意思。<br>958256651<br>​    比如dedeCMS爆管理员账号密码的，siteserver后台密码重置漏洞等等经典案例。有时候用起来，事半功倍。</p>
+<p>​    如果网站是利用某CMS建站的，可以去试试CMS通用漏洞，特别是如果有前台高危漏洞，那就很有意思。
+958256651
+​    比如dedeCMS爆管理员账号密码的，siteserver后台密码重置漏洞等等经典案例。有时候用起来，事半功倍。</p>
 <p><strong>2.3 SQL注入漏洞</strong></p>
 <p>​    有人网站是第三方开发的，第三方的水平又不行，所到之处，全是注入。</p>
-<p><img src="/2018/02/13/%E8%A1%A5%E5%A4%A9%E4%BB%98%E8%B4%B9%E5%8E%82%E5%95%86%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E5%B0%8F%E6%8A%80%E5%B7%A7/2.jpg"></p>
+<p><img alt="" loading="lazy" decoding="async" width="137" height="102" src="/_astro/2.B4RoQR5U_Z1ypbxT.webp" srcset=""></p>
 <p><strong>2.4 XSS漏洞</strong></p>
 <p>​    补天不收反射XSS，所以我们得找存储型，根据挖付费的经验，能弹个框就行了。哪怕是self-XSS。</p>
-<p><img src="/2018/02/13/%E8%A1%A5%E5%A4%A9%E4%BB%98%E8%B4%B9%E5%8E%82%E5%95%86%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E5%B0%8F%E6%8A%80%E5%B7%A7/3.jpg"></p>
+<p><img alt="" loading="lazy" decoding="async" width="618" height="373" src="/_astro/3.CZJNf7Xr_ZjmV1h.webp" srcset=""></p>
 <p>如果是盲打的话，少数网站做了cookie的httponly。这样JS是无法读取到cookie的，难不成我们就真没办法了？教大家一个猥琐的小技巧，XSS的本身是在网页上插入你自己的html代码，但我干嘛非要用JS读取你cookie，我可以构造一个表单让你填啊~理由是登录过期、二次验证啥的，这不就得到账号密码了么？</p>
-<p><img src="/2018/02/13/%E8%A1%A5%E5%A4%A9%E4%BB%98%E8%B4%B9%E5%8E%82%E5%95%86%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E5%B0%8F%E6%8A%80%E5%B7%A7/4.jpg"></p>
+<p><img alt="" loading="lazy" decoding="async" width="303" height="121" src="/_astro/4.Bw1xGPDI_1Vz5fE.webp" srcset=""></p>
 <p><strong>2.5 越权和逻辑漏洞</strong></p>
 <p><strong>2.5.1  越权</strong></p>
 <p>​    付费厂商多见于ID参数，比如typeID、OrderID等等，这里只是举例。更改ID，可以越权看其他ID的信息。还有AWVS扫目录，有的后台未授权访问，可以利用。</p>
 <p><strong>2.5.2  逻辑漏洞</strong></p>
 <p>​    比如四位验证码，没做错误次数限制，0000-9999一共一万种搭配方式，burp跑一下，很快就得到了。或者支付逻辑漏洞（多见于商城或者网站账户充值），任       意用户密码重置（补天说这是高危漏洞）</p>
-<p><img src="/2018/02/13/%E8%A1%A5%E5%A4%A9%E4%BB%98%E8%B4%B9%E5%8E%82%E5%95%86%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E5%B0%8F%E6%8A%80%E5%B7%A7/5.jpg"></p>
-<p>** 2.6 任意文件上传&#x2F;下载**</p>
+<p><img alt="" loading="lazy" decoding="async" width="300" height="300" src="/_astro/5.DIARGIIN_Z1HVKOA.webp" srcset=""></p>
+<p>** 2.6 任意文件上传/下载**</p>
 <p>​    任意文件上传，找个上传点，上传你的文(mu)件(ma)，这时候啥00截断啊，解析漏洞啊<del>霹雳啪啦往脸上糊啊</del></p>
 <p>​    任意文件下载，找数据库配置文件呗。如果有网站备份（一般是压缩包），嘿嘿嘿~赶紧看看里面有没有数据库啊</p>
 <p><strong>2.7 非web问题</strong></p>
 <p>​    IIS的解析漏洞、struts2框架的命令执行漏洞、java反序列化命令执行漏洞、等等等等。。。。。</p>
-<p><img src="/2018/02/13/%E8%A1%A5%E5%A4%A9%E4%BB%98%E8%B4%B9%E5%8E%82%E5%95%86%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E5%B0%8F%E6%8A%80%E5%B7%A7/6.jpg"></p>
+<p><img alt="" loading="lazy" decoding="async" width="198" height="198" src="/_astro/6.IRBSJwA3_Zmkiwm.webp" srcset=""></p>
 <p><strong>3、我想说的</strong></p>
 <p>​    有人问我为什么不再说一点其他的漏洞，我只想用一张图来表示。</p>
-<p><img src="/2018/02/13/%E8%A1%A5%E5%A4%A9%E4%BB%98%E8%B4%B9%E5%8E%82%E5%95%86%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E5%B0%8F%E6%8A%80%E5%B7%A7/9.jpg"></p>
+<p><img alt="" loading="lazy" decoding="async" width="170" height="228" src="/_astro/9.BpMHZ7CG_xwTKe.webp" srcset=""></p>
 <hr>
 <hr>
 <p>我自己会在挖洞过程中补充以上未提到的点。。</p>
 <hr>
 <p>最后说句</p>
-<p><img src="/2018/02/13/%E8%A1%A5%E5%A4%A9%E4%BB%98%E8%B4%B9%E5%8E%82%E5%95%86%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E5%B0%8F%E6%8A%80%E5%B7%A7/7.jpg"></p>
+<p><img alt="" loading="lazy" decoding="async" width="700" height="800" src="/_astro/7.BZabRugw_Z15Y6zB.webp" srcset=""></p>
 <hr>
 <p>2.14</p>
 <p>记录下，今天凌晨，疯狂刷补天的公益SRC中的大学和学院。</p>
@@ -279,160 +80,104 @@
 <p>不知啥意思啦。。。</p>
 <p>并且，对于这种刷洞的，那个学校心理要有点number，什么985，211就不要搭理了，因为自己根本没他们学校的学生牛逼哈。</p>
 <p>今天情人节，你和谁过呢？</p>
-<p><img src="/2018/02/13/%E8%A1%A5%E5%A4%A9%E4%BB%98%E8%B4%B9%E5%8E%82%E5%95%86%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E5%B0%8F%E6%8A%80%E5%B7%A7/8.jpg"></p>
+<p><img alt="" loading="lazy" decoding="async" width="1280" height="520" src="/_astro/8.CgBHV7H5_ZEiqNi.webp" srcset=""></p>
 <p>并晒下近期的挖洞情况。。</p>
-<p><img src="/2018/02/13/%E8%A1%A5%E5%A4%A9%E4%BB%98%E8%B4%B9%E5%8E%82%E5%95%86%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E5%B0%8F%E6%8A%80%E5%B7%A7/1.png"></p>
-<p><img src="/2018/02/13/%E8%A1%A5%E5%A4%A9%E4%BB%98%E8%B4%B9%E5%8E%82%E5%95%86%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E5%B0%8F%E6%8A%80%E5%B7%A7/2.png"></p>
+<p><img alt="" loading="lazy" decoding="async" width="1210" height="847" src="/_astro/1.BXdc1Sbn_ZHaIYU.webp" srcset=""></p>
+<p><img alt="" loading="lazy" decoding="async" width="1207" height="385" src="/_astro/2.CAE1AOHL_1nd2U2.webp" srcset=""></p>
 <hr>
-<p> 2018.3.1</p>
+<p>2018.3.1</p>
 <p>放一个爬补天公益SRC的厂商URL的爬虫</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">import</span> json</span><br><span class="line"> <span class="number">2</span> <span class="keyword">import</span> requests</span><br><span class="line"> <span class="number">3</span> <span class="keyword">import</span> time</span><br><span class="line"> <span class="number">4</span> <span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</span><br><span class="line"> <span class="number">5</span> </span><br><span class="line"> <span class="number">6</span> <span class="keyword">def</span> <span class="title function_">spider</span>():</span><br><span class="line"> <span class="number">7</span>     <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string"> 8     爬取所有公益厂商的ID</span></span><br><span class="line"><span class="string"> 9     保存为id.txt</span></span><br><span class="line"><span class="string">10     :return:</span></span><br><span class="line"><span class="string">11     &#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="number">12</span>     headers = &#123;</span><br><span class="line"><span class="number">13</span>         <span class="string">&#x27;Host&#x27;</span>: <span class="string">&#x27;butian.360.cn&#x27;</span>,</span><br><span class="line"><span class="number">14</span>         <span class="string">&#x27;User-Agent&#x27;</span>: <span class="string">&#x27;Mozilla/5.0 (Windows NT 10.0; WOW64; rv:54.0) Gecko/20100101 Firefox/54.0&#x27;</span>,</span><br><span class="line"><span class="number">15</span>         <span class="string">&#x27;Accept&#x27;</span>: <span class="string">&#x27;application/json, text/javascript, */*; q=0.01&#x27;</span>,</span><br><span class="line"><span class="number">16</span>         <span class="string">&#x27;Accept-Language&#x27;</span>: <span class="string">&#x27;zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3&#x27;</span>,</span><br><span class="line"><span class="number">17</span>         <span class="string">&#x27;Accept-Encoding&#x27;</span>: <span class="string">&#x27;gzip, deflate&#x27;</span>,</span><br><span class="line"><span class="number">18</span>         <span class="string">&#x27;Content-Type&#x27;</span>: <span class="string">&#x27;application/x-www-form-urlencoded; charset=UTF-8&#x27;</span>,</span><br><span class="line"><span class="number">19</span>         <span class="string">&#x27;X-Requested-With&#x27;</span>: <span class="string">&#x27;XMLHttpRequest&#x27;</span>,</span><br><span class="line"><span class="number">20</span>         <span class="string">&#x27;Referer&#x27;</span>: <span class="string">&#x27;http://butian.360.cn/Reward/pub//Message/send&#x27;</span>,</span><br><span class="line"><span class="number">21</span>         <span class="string">&#x27;Cookie&#x27;</span>: <span class="comment">#放你登录时的cookies</span></span><br><span class="line"><span class="number">22</span>         <span class="string">&#x27;Connection&#x27;</span>: <span class="string">&#x27;keep-alive&#x27;</span></span><br><span class="line"><span class="number">23</span>     &#125;</span><br><span class="line"><span class="number">24</span>     <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,<span class="number">149</span>):</span><br><span class="line"><span class="number">25</span>         data=&#123;</span><br><span class="line"><span class="number">26</span>             <span class="string">&#x27;p&#x27;</span>: i,</span><br><span class="line"><span class="number">27</span>             <span class="string">&#x27;token&#x27;</span>: <span class="string">&#x27;&#x27;</span></span><br><span class="line"><span class="number">28</span>         &#125;</span><br><span class="line"><span class="number">29</span>         time.sleep(<span class="number">3</span>)</span><br><span class="line"><span class="number">30</span>         <span class="keyword">try</span>:</span><br><span class="line"><span class="number">31</span>             res = requests.post(<span class="string">&#x27;http://butian.360.cn/Reward/pub/Message/send&#x27;</span>, data=data,headers=headers,timeout=(<span class="number">4</span>,<span class="number">20</span>))</span><br><span class="line"><span class="number">32</span>         <span class="keyword">except</span> requests.exceptions.ConnectionError <span class="keyword">as</span> identifier:</span><br><span class="line"><span class="number">33</span>             <span class="built_in">print</span>(identifier)</span><br><span class="line"><span class="number">34</span>         allResult = &#123;&#125;</span><br><span class="line"><span class="number">35</span>         allResult = json.loads(res.text)</span><br><span class="line"><span class="number">36</span>         currentPage = <span class="built_in">str</span>(allResult[<span class="string">&#x27;data&#x27;</span>][<span class="string">&#x27;current&#x27;</span>])</span><br><span class="line"><span class="number">37</span>         currentNum = <span class="built_in">str</span>(<span class="built_in">len</span>(allResult[<span class="string">&#x27;data&#x27;</span>][<span class="string">&#x27;list&#x27;</span>]))</span><br><span class="line"><span class="number">38</span>         <span class="built_in">print</span>(<span class="string">&#x27;正在获取第&#x27;</span> + currentPage + <span class="string">&#x27;页厂商数据&#x27;</span>)</span><br><span class="line"><span class="number">39</span>         <span class="built_in">print</span>(<span class="string">&#x27;本页共有&#x27;</span> + currentNum + <span class="string">&#x27;条厂商&#x27;</span>)</span><br><span class="line"><span class="number">40</span>         <span class="keyword">for</span> num <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">int</span>(currentNum)):</span><br><span class="line"><span class="number">41</span>             <span class="built_in">print</span>(<span class="string">&#x27;厂商名字:&#x27;</span>+allResult[<span class="string">&#x27;data&#x27;</span>][<span class="string">&#x27;list&#x27;</span>][<span class="built_in">int</span>(num)][<span class="string">&#x27;company_name&#x27;</span>]+<span class="string">&#x27;\t\t厂商类型:&#x27;</span>+allResult\</span><br><span class="line"><span class="number">42</span>                   [<span class="string">&#x27;data&#x27;</span>][<span class="string">&#x27;list&#x27;</span>][<span class="built_in">int</span>(num)][<span class="string">&#x27;industry&#x27;</span>]+<span class="string">&#x27;\t\t厂商ID:&#x27;</span>+allResult[<span class="string">&#x27;data&#x27;</span>][<span class="string">&#x27;list&#x27;</span>][<span class="built_in">int</span>(num)][<span class="string">&#x27;company_id&#x27;</span>])</span><br><span class="line"><span class="number">43</span>             base=<span class="string">&#x27;http://butian.360.cn/Loo/submit?cid=&#x27;</span></span><br><span class="line"><span class="number">44</span>             <span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;id.txt&#x27;</span>,<span class="string">&#x27;a&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line"><span class="number">45</span>                 f.write(base+allResult[<span class="string">&#x27;data&#x27;</span>][<span class="string">&#x27;list&#x27;</span>][<span class="built_in">int</span>(num)][<span class="string">&#x27;company_id&#x27;</span>]+<span class="string">&#x27;\n&#x27;</span>)</span><br><span class="line"><span class="number">46</span> <span class="keyword">def</span> <span class="title function_">Url</span>():</span><br><span class="line"><span class="number">47</span>     <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">48     遍历所有的ID前段时间，看了菜鸟入门，较浅的认识一下golang的语法习惯和规则，然后跟别人做了个爬虫项目，但是对于golang语言的语法结构还不是很懂。又看了遍《go实战》第二章。.md</span></span><br><span class="line"><span class="string">49     取得对应的域名</span></span><br><span class="line"><span class="string">50     保存为target.txt</span></span><br><span class="line"><span class="string">51     :return:</span></span><br><span class="line"><span class="string">52     &#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="number">53</span>     headers=&#123;</span><br><span class="line"><span class="number">54</span>         <span class="string">&#x27;Host&#x27;</span>:<span class="string">&#x27;butian.360.cn&#x27;</span>,</span><br><span class="line"><span class="number">55</span>         <span class="string">&#x27;User-Agent&#x27;</span>:<span class="string">&#x27;Mozilla/5.0 (Windows NT 10.0; WOW64; rv:54.0) Gecko/20100101 Firefox/54.0&#x27;</span>,</span><br><span class="line"><span class="number">56</span>         <span class="string">&#x27;Accept&#x27;</span>: <span class="string">&#x27;text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8&#x27;</span>,</span><br><span class="line"><span class="number">57</span>         <span class="string">&#x27;Accept-Language&#x27;</span>:<span class="string">&#x27;zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3&#x27;</span>,</span><br><span class="line"><span class="number">58</span>         <span class="string">&#x27;Accept-Encoding&#x27;</span>: <span class="string">&#x27;gzip, deflate&#x27;</span>,</span><br><span class="line"><span class="number">59</span>         <span class="string">&#x27;Referer&#x27;</span>:<span class="string">&#x27;http://butian.360.cn/Reward/pub&#x27;</span>,</span><br><span class="line"><span class="number">60</span>         <span class="string">&#x27;Cookie&#x27;</span>: <span class="comment">#放你登录时的cookies</span></span><br><span class="line"><span class="number">61</span>         <span class="string">&#x27;Connection&#x27;</span>:<span class="string">&#x27;keep-alive&#x27;</span>,</span><br><span class="line"><span class="number">62</span>         <span class="string">&#x27;Upgrade-Insecure-Requests&#x27;</span>: <span class="string">&#x27;1&#x27;</span>,</span><br><span class="line"><span class="number">63</span>         <span class="string">&#x27;Cache-Control&#x27;</span>:<span class="string">&#x27;max-age=0&#x27;</span></span><br><span class="line"><span class="number">64</span>     &#125;</span><br><span class="line"><span class="number">65</span>     <span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;id.txt&#x27;</span>,<span class="string">&#x27;r&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line"><span class="number">66</span>         <span class="keyword">for</span> target <span class="keyword">in</span> f.readlines():</span><br><span class="line"><span class="number">67</span>             target=target.strip()</span><br><span class="line"><span class="number">68</span>             getUrl=requests.get(target,headers=headers,timeout=(<span class="number">4</span>,<span class="number">20</span>))</span><br><span class="line"><span class="number">69</span>             result=getUrl.text</span><br><span class="line"><span class="number">70</span>             info=BeautifulSoup(result,<span class="string">&#x27;lxml&#x27;</span>)</span><br><span class="line"><span class="number">71</span>             time.sleep(<span class="number">5</span>)</span><br><span class="line"><span class="number">72</span>             url=info.find(name=<span class="string">&#x27;input&#x27;</span>, attrs=&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;host&quot;</span>&#125;)</span><br><span class="line"><span class="number">73</span>             name = info.find(name=<span class="string">&#x27;input&#x27;</span>, attrs=&#123;<span class="string">&quot;name&quot;</span>: <span class="string">&quot;company_name&quot;</span>&#125;)</span><br><span class="line"><span class="number">74</span>             lastUrl=url.attrs[<span class="string">&#x27;value&#x27;</span>]</span><br><span class="line"><span class="number">75</span>             <span class="built_in">print</span>(<span class="string">&#x27;厂商:&#x27;</span> + name.attrs[<span class="string">&#x27;value&#x27;</span>] + <span class="string">&#x27;\t网址:&#x27;</span> + url.attrs[<span class="string">&#x27;value&#x27;</span>])</span><br><span class="line"><span class="number">76</span>             <span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;target.txt&#x27;</span>,<span class="string">&#x27;a&#x27;</span>) <span class="keyword">as</span> t:</span><br><span class="line"><span class="number">77</span>                 t.write(lastUrl+<span class="string">&#x27;\n&#x27;</span>)</span><br><span class="line"><span class="number">78</span>             time.sleep(<span class="number">5</span>)</span><br><span class="line"><span class="number">79</span>     <span class="built_in">print</span>(<span class="string">&#x27;The target is right!&#x27;</span>)</span><br><span class="line"><span class="number">80</span> <span class="keyword">if</span> __name__==<span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line"><span class="number">81</span> </span><br><span class="line"><span class="number">82</span>     data = &#123;</span><br><span class="line"><span class="number">83</span>             <span class="string">&#x27;s&#x27;</span>: <span class="string">&#x27;1&#x27;</span>,</span><br><span class="line"><span class="number">84</span>             <span class="string">&#x27;p&#x27;</span>: <span class="string">&#x27;1&#x27;</span>,</span><br><span class="line"><span class="number">85</span>             <span class="string">&#x27;token&#x27;</span>: <span class="string">&#x27;&#x27;</span></span><br><span class="line"><span class="number">86</span>         &#125;</span><br><span class="line"><span class="number">87</span>     res = requests.post(<span class="string">&#x27;http://butian.360.cn/Reward/pub/Message/send&#x27;</span>, data=data)</span><br><span class="line"><span class="number">88</span>     allResult = &#123;&#125;</span><br><span class="line"><span class="number">89</span>     allResult = json.loads(res.text)</span><br><span class="line"><span class="number">90</span>     allPages = <span class="built_in">str</span>(allResult[<span class="string">&#x27;data&#x27;</span>][<span class="string">&#x27;count&#x27;</span>])</span><br><span class="line"><span class="number">91</span>     <span class="built_in">print</span>(<span class="string">&#x27;共&#x27;</span> + allPages + <span class="string">&#x27;页&#x27;</span>)</span><br><span class="line"><span class="number">92</span>     spider()</span><br><span class="line"><span class="number">93</span>     Url()</span><br></pre></td></tr></table></figure>
-
-  </div>
-</article>
-
-
-
-        
-          <div id="footer-post-container">
-  <div id="footer-post">
-
-    <div id="nav-footer" style="display: none">
-      <ul>
-        
-          <li><a href="/">Home</a></li>
-        
-          <li><a href="/about/">About</a></li>
-        
-          <li><a href="/archives/">Writing</a></li>
-        
-          <li><a target="_blank" rel="noopener" href="https://github.com/TUGOhost">Projects</a></li>
-        
-          <li><a href="/books/">Books</a></li>
-        
-          <li><a href="/photo/">Photo</a></li>
-        
-      </ul>
-    </div>
-
-    
-    
-      <div id="toc-footer" style="display: none">
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%A1%A5%E5%A4%A9%E4%BB%98%E8%B4%B9%E5%8E%82%E5%95%86%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E5%B0%8F%E6%8A%80%E5%B7%A7"><span class="toc-number">1.</span> <span class="toc-text">补天付费厂商漏洞挖掘小技巧</span></a></li></ol>
-      </div>
-    
-
-    <div id="share-footer" style="display: none">
-      <ul>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://tugohost.github.io/2018/02/13/%E8%A1%A5%E5%A4%A9%E4%BB%98%E8%B4%B9%E5%8E%82%E5%95%86%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E5%B0%8F%E6%8A%80%E5%B7%A7/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://tugohost.github.io/2018/02/13/%E8%A1%A5%E5%A4%A9%E4%BB%98%E8%B4%B9%E5%8E%82%E5%95%86%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E5%B0%8F%E6%8A%80%E5%B7%A7/&text=补天付费厂商漏洞挖掘小技巧"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://tugohost.github.io/2018/02/13/%E8%A1%A5%E5%A4%A9%E4%BB%98%E8%B4%B9%E5%8E%82%E5%95%86%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E5%B0%8F%E6%8A%80%E5%B7%A7/&title=补天付费厂商漏洞挖掘小技巧"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://tugohost.github.io/2018/02/13/%E8%A1%A5%E5%A4%A9%E4%BB%98%E8%B4%B9%E5%8E%82%E5%95%86%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E5%B0%8F%E6%8A%80%E5%B7%A7/&is_video=false&description=补天付费厂商漏洞挖掘小技巧"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=补天付费厂商漏洞挖掘小技巧&body=Check out this article: https://tugohost.github.io/2018/02/13/%E8%A1%A5%E5%A4%A9%E4%BB%98%E8%B4%B9%E5%8E%82%E5%95%86%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E5%B0%8F%E6%8A%80%E5%B7%A7/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://tugohost.github.io/2018/02/13/%E8%A1%A5%E5%A4%A9%E4%BB%98%E8%B4%B9%E5%8E%82%E5%95%86%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E5%B0%8F%E6%8A%80%E5%B7%A7/&title=补天付费厂商漏洞挖掘小技巧"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://tugohost.github.io/2018/02/13/%E8%A1%A5%E5%A4%A9%E4%BB%98%E8%B4%B9%E5%8E%82%E5%95%86%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E5%B0%8F%E6%8A%80%E5%B7%A7/&title=补天付费厂商漏洞挖掘小技巧"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://tugohost.github.io/2018/02/13/%E8%A1%A5%E5%A4%A9%E4%BB%98%E8%B4%B9%E5%8E%82%E5%95%86%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E5%B0%8F%E6%8A%80%E5%B7%A7/&title=补天付费厂商漏洞挖掘小技巧"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://tugohost.github.io/2018/02/13/%E8%A1%A5%E5%A4%A9%E4%BB%98%E8%B4%B9%E5%8E%82%E5%95%86%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E5%B0%8F%E6%8A%80%E5%B7%A7/&title=补天付费厂商漏洞挖掘小技巧"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://tugohost.github.io/2018/02/13/%E8%A1%A5%E5%A4%A9%E4%BB%98%E8%B4%B9%E5%8E%82%E5%95%86%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E5%B0%8F%E6%8A%80%E5%B7%A7/&name=补天付费厂商漏洞挖掘小技巧&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://tugohost.github.io/2018/02/13/%E8%A1%A5%E5%A4%A9%E4%BB%98%E8%B4%B9%E5%8E%82%E5%95%86%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E5%B0%8F%E6%8A%80%E5%B7%A7/&t=补天付费厂商漏洞挖掘小技巧"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
-</ul>
-
-    </div>
-
-    <div id="actions-footer">
-        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
-        
-          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
-        
-        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
-        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
-    </div>
-
-  </div>
-</div>
-
-        
-        <footer id="footer">
-  <div class="footer-left">
-    Copyright &copy;
-    
-    
-    2018-2025
-    TUGOhost
-  </div>
-  <div class="footer-right">
-    <nav>
-      <ul>
-        <!--
-       --><li><a href="/">Home</a></li><!--
-     --><!--
-       --><li><a href="/about/">About</a></li><!--
-     --><!--
-       --><li><a href="/archives/">Writing</a></li><!--
-     --><!--
-       --><li><a target="_blank" rel="noopener" href="https://github.com/TUGOhost">Projects</a></li><!--
-     --><!--
-       --><li><a href="/books/">Books</a></li><!--
-     --><!--
-       --><li><a href="/photo/">Photo</a></li><!--
-     -->
-      </ul>
-    </nav>
-  </div>
-</footer>
-
-    </div>
-    <!-- styles -->
-
-
-
-  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
-
-
-    <!-- jquery -->
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
-
-
-
-
-<!-- clipboard -->
-
-  
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
-  
-  <script type="text/javascript">
-  $(function() {
-    // copy-btn HTML
-    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
-    btn += '<i class="fa-regular fa-clone"></i>';
-    btn += '</span>';
-    // mount it!
-    $(".highlight table").before(btn);
-    var clip = new ClipboardJS('.btn-copy', {
-      text: function(trigger) {
-        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
-      }
-    });
-    clip.on('success', function(e) {
-      e.trigger.setAttribute('aria-label', "Copied!");
-      e.clearSelection();
-    })
-  })
-  </script>
-
-
-<script src="/js/main.js"></script>
-
-<!-- search -->
-
-<!-- Baidu Analytics -->
-
-<!-- Cloudflare Analytics -->
-
-<!-- Disqus Comments -->
-
-<!-- utterances Comments -->
-
-</body>
-</html>
+<pre><code class="language-python"> 1 import json
+ 2 import requests
+ 3 import time
+ 4 from bs4 import BeautifulSoup
+ 5 
+ 6 def spider():
+ 7     '''
+ 8     爬取所有公益厂商的ID
+ 9     保存为id.txt
+10     :return:
+11     '''
+12     headers = {
+13         'Host': 'butian.360.cn',
+14         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:54.0) Gecko/20100101 Firefox/54.0',
+15         'Accept': 'application/json, text/javascript, */*; q=0.01',
+16         'Accept-Language': 'zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3',
+17         'Accept-Encoding': 'gzip, deflate',
+18         'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+19         'X-Requested-With': 'XMLHttpRequest',
+20         'Referer': 'http://butian.360.cn/Reward/pub//Message/send',
+21         'Cookie': #放你登录时的cookies
+22         'Connection': 'keep-alive'
+23     }
+24     for i in range(1,149):
+25         data={
+26             'p': i,
+27             'token': ''
+28         }
+29         time.sleep(3)
+30         try:
+31             res = requests.post('http://butian.360.cn/Reward/pub/Message/send', data=data,headers=headers,timeout=(4,20))
+32         except requests.exceptions.ConnectionError as identifier:
+33             print(identifier)
+34         allResult = {}
+35         allResult = json.loads(res.text)
+36         currentPage = str(allResult['data']['current'])
+37         currentNum = str(len(allResult['data']['list']))
+38         print('正在获取第' + currentPage + '页厂商数据')
+39         print('本页共有' + currentNum + '条厂商')
+40         for num in range(int(currentNum)):
+41             print('厂商名字:'+allResult['data']['list'][int(num)]['company_name']+'\t\t厂商类型:'+allResult\
+42                   ['data']['list'][int(num)]['industry']+'\t\t厂商ID:'+allResult['data']['list'][int(num)]['company_id'])
+43             base='http://butian.360.cn/Loo/submit?cid='
+44             with open('id.txt','a') as f:
+45                 f.write(base+allResult['data']['list'][int(num)]['company_id']+'\n')
+46 def Url():
+47     '''
+48     遍历所有的ID前段时间，看了菜鸟入门，较浅的认识一下golang的语法习惯和规则，然后跟别人做了个爬虫项目，但是对于golang语言的语法结构还不是很懂。又看了遍《go实战》第二章。.md
+49     取得对应的域名
+50     保存为target.txt
+51     :return:
+52     '''
+53     headers={
+54         'Host':'butian.360.cn',
+55         'User-Agent':'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:54.0) Gecko/20100101 Firefox/54.0',
+56         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+57         'Accept-Language':'zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3',
+58         'Accept-Encoding': 'gzip, deflate',
+59         'Referer':'http://butian.360.cn/Reward/pub',
+60         'Cookie': #放你登录时的cookies
+61         'Connection':'keep-alive',
+62         'Upgrade-Insecure-Requests': '1',
+63         'Cache-Control':'max-age=0'
+64     }
+65     with open('id.txt','r') as f:
+66         for target in f.readlines():
+67             target=target.strip()
+68             getUrl=requests.get(target,headers=headers,timeout=(4,20))
+69             result=getUrl.text
+70             info=BeautifulSoup(result,'lxml')
+71             time.sleep(5)
+72             url=info.find(name='input', attrs={"name":"host"})
+73             name = info.find(name='input', attrs={"name": "company_name"})
+74             lastUrl=url.attrs['value']
+75             print('厂商:' + name.attrs['value'] + '\t网址:' + url.attrs['value'])
+76             with open('target.txt','a') as t:
+77                 t.write(lastUrl+'\n')
+78             time.sleep(5)
+79     print('The target is right!')
+80 if __name__=='__main__':
+81 
+82     data = {
+83             's': '1',
+84             'p': '1',
+85             'token': ''
+86         }
+87     res = requests.post('http://butian.360.cn/Reward/pub/Message/send', data=data)
+88     allResult = {}
+89     allResult = json.loads(res.text)
+90     allPages = str(allResult['data']['count'])
+91     print('共' + allPages + '页')
+92     spider()
+93     Url()
+</code></pre>  </div> </div>  </article>  </main> <footer class="site-footer"> <span>© 2026 TUGOhost</span> <span>  <a href="https://github.com/TUGOhost">GitHub</a> ·  <a href="mailto:huo4nbtf@duck.com">Mail</a> </span> </footer> </div> <dialog class="lightbox" data-lightbox aria-label="Image preview"> <div class="lightbox-inner"> <button type="button">Close</button> <img alt=""> </div> </dialog> <script type="module" src="data:text/javascript;base64,Y29uc3Qgcm9vdCA9IGRvY3VtZW50LmRvY3VtZW50RWxlbWVudDsKY29uc3QgdG9nZ2xlID0gZG9jdW1lbnQucXVlcnlTZWxlY3RvcigiW2RhdGEtdGhlbWUtdG9nZ2xlXSIpOwpjb25zdCBsYWJlbCA9IHRvZ2dsZT8ucXVlcnlTZWxlY3RvcigiW2RhdGEtdGhlbWUtbGFiZWxdIik7CmNvbnN0IG1vZGVzID0gWyJhdXRvIiwgImxpZ2h0IiwgImRhcmsiXTsKCmZ1bmN0aW9uIGdldFNhdmVkTW9kZSgpIHsKICBsZXQgc2F2ZWQgPSBudWxsOwogIHRyeSB7CiAgICBzYXZlZCA9IHdpbmRvdy5sb2NhbFN0b3JhZ2UuZ2V0SXRlbSgidGhlbWUiKTsKICB9IGNhdGNoIHsKICAgIHNhdmVkID0gbnVsbDsKICB9CiAgcmV0dXJuIG1vZGVzLmluY2x1ZGVzKHNhdmVkKSA/IHNhdmVkIDogImF1dG8iOwp9CgpmdW5jdGlvbiBzZXRNb2RlKG1vZGUpIHsKICByb290LmRhdGFzZXQudGhlbWUgPSBtb2RlOwogIHRyeSB7CiAgICBpZiAobW9kZSA9PT0gImF1dG8iKSB7CiAgICAgIHdpbmRvdy5sb2NhbFN0b3JhZ2UucmVtb3ZlSXRlbSgidGhlbWUiKTsKICAgIH0gZWxzZSB7CiAgICAgIHdpbmRvdy5sb2NhbFN0b3JhZ2Uuc2V0SXRlbSgidGhlbWUiLCBtb2RlKTsKICAgIH0KICB9IGNhdGNoIHsKICAgIC8vIFRoZW1lIHN3aXRjaGluZyBzdGlsbCB3b3JrcyBmb3IgdGhlIGN1cnJlbnQgcGFnZSB3aGVuIHN0b3JhZ2UgaXMgdW5hdmFpbGFibGUuCiAgfQogIGlmIChsYWJlbCkgewogICAgbGFiZWwudGV4dENvbnRlbnQgPSBtb2RlID09PSAiYXV0byIgPyAiQXV0byIgOiBtb2RlID09PSAibGlnaHQiID8gIkxpZ2h0IiA6ICJEYXJrIjsKICB9CiAgdG9nZ2xlPy5zZXRBdHRyaWJ1dGUoImFyaWEtbGFiZWwiLCBgVGhlbWU6ICR7bW9kZX1gKTsKfQoKc2V0TW9kZShnZXRTYXZlZE1vZGUoKSk7Cgp0b2dnbGU/LmFkZEV2ZW50TGlzdGVuZXIoImNsaWNrIiwgKCkgPT4gewogIGNvbnN0IGN1cnJlbnQgPSByb290LmRhdGFzZXQudGhlbWUgfHwgImF1dG8iOwogIGNvbnN0IG5leHQgPSBtb2Rlc1sobW9kZXMuaW5kZXhPZihjdXJyZW50KSArIDEpICUgbW9kZXMubGVuZ3RoXTsKICBzZXRNb2RlKG5leHQpOwp9KTsK"></script> <script type="module" src="data:text/javascript;base64,Y29uc3QgZGlhbG9nID0gZG9jdW1lbnQucXVlcnlTZWxlY3RvcigiW2RhdGEtbGlnaHRib3hdIik7CmNvbnN0IGltYWdlID0gZGlhbG9nPy5xdWVyeVNlbGVjdG9yKCJpbWciKTsKY29uc3QgY2xvc2VCdXR0b24gPSBkaWFsb2c/LnF1ZXJ5U2VsZWN0b3IoImJ1dHRvbiIpOwoKZG9jdW1lbnQuYWRkRXZlbnRMaXN0ZW5lcigiY2xpY2siLCAoZXZlbnQpID0+IHsKICBjb25zdCB0YXJnZXQgPSBldmVudC50YXJnZXQ7CiAgaWYgKCEodGFyZ2V0IGluc3RhbmNlb2YgSFRNTEltYWdlRWxlbWVudCkpIHsKICAgIHJldHVybjsKICB9CiAgaWYgKCF0YXJnZXQuY2xvc2VzdCgiLmFydGljbGUtY29udGVudCIpKSB7CiAgICByZXR1cm47CiAgfQogIGlmICghZGlhbG9nIHx8ICFpbWFnZSkgewogICAgcmV0dXJuOwogIH0KCiAgaW1hZ2Uuc3JjID0gdGFyZ2V0LmN1cnJlbnRTcmMgfHwgdGFyZ2V0LnNyYzsKICBpbWFnZS5hbHQgPSB0YXJnZXQuYWx0IHx8ICIiOwogIGRpYWxvZy5zaG93TW9kYWwoKTsKfSk7CgpjbG9zZUJ1dHRvbj8uYWRkRXZlbnRMaXN0ZW5lcigiY2xpY2siLCAoKSA9PiBkaWFsb2c/LmNsb3NlKCkpOwoKZGlhbG9nPy5hZGRFdmVudExpc3RlbmVyKCJjbGljayIsIChldmVudCkgPT4gewogIGlmIChldmVudC50YXJnZXQgPT09IGRpYWxvZykgewogICAgZGlhbG9nLmNsb3NlKCk7CiAgfQp9KTsK"></script> </body> </html>
